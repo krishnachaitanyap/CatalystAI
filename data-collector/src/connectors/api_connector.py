@@ -995,16 +995,67 @@ class WSDLConnector:
         return schema_details
     
     def _extract_complex_type_details(self, complex_type: ET.Element, root: ET.Element = None) -> Dict[str, Any]:
-        """Extract details from a complex type definition with recursive nested element collection"""
+        """Extract details from a complex type definition with recursive nested element collection and inheritance support"""
         details = {
             'type': 'complex',
             'attributes': [],
             'elements': [],
             'sequences': [],
-            'nested_attributes': []  # New field for all nested leaf attributes
+            'nested_attributes': [],  # New field for all nested leaf attributes
+            'inherited_attributes': []  # New field for inherited attributes
         }
         
-        # Extract sequence elements
+        # Check for complexContent with extension (inheritance)
+        complex_content = complex_type.find('xsd:complexContent', self.namespaces)
+        if complex_content is not None:
+            extension = complex_content.find('xsd:extension', self.namespaces)
+            if extension is not None:
+                base_type = extension.get('base', '')
+                print(f"Found inheritance: extending {base_type}")
+                
+                # Extract inherited attributes from base type
+                if base_type and ':' in base_type:
+                    prefix, type_name = base_type.split(':', 1)
+                    base_complex_type = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+                    if base_complex_type is not None:
+                        base_details = self._extract_complex_type_details(base_complex_type, root)
+                        details['inherited_attributes'] = base_details.get('attributes', [])
+                        details['attributes'].extend(base_details.get('attributes', []))
+                
+                # Extract sequences from extension
+                sequences = extension.findall('xsd:sequence', self.namespaces)
+                for sequence in sequences:
+                    sequence_details = {
+                        'elements': []
+                    }
+                    
+                    elements = sequence.findall('xsd:element', self.namespaces)
+                    for element in elements:
+                        element_details = {
+                            'name': element.get('name', ''),
+                            'type': element.get('type', ''),
+                            'min_occurs': element.get('minOccurs', '1'),
+                            'max_occurs': element.get('maxOccurs', '1'),
+                            'nillable': element.get('nillable', 'false'),
+                            'description': ''
+                        }
+                        
+                        # Look for documentation
+                        doc = element.find('xsd:annotation/xsd:documentation', self.namespaces)
+                        if doc is not None and doc.text:
+                            element_details['description'] = doc.text.strip()
+                        
+                        sequence_details['elements'].append(element_details)
+                        details['attributes'].append(element_details)
+                        
+                        # Check if this element has nested complex type (recursive extraction)
+                        if root is not None:
+                            nested_attributes = self._extract_nested_attributes(element, root)
+                            details['nested_attributes'].extend(nested_attributes)
+                    
+                    details['sequences'].append(sequence_details)
+        
+        # Extract direct sequence elements (for non-inherited complex types)
         sequences = complex_type.findall('xsd:sequence', self.namespaces)
         for sequence in sequences:
             sequence_details = {
