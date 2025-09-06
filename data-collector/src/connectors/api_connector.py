@@ -469,23 +469,45 @@ class SwaggerConnector:
     def _extract_detailed_request_body(self, request_body: Dict[str, Any]) -> Dict[str, Any]:
         """Extract detailed request body information for OpenAPI 3.x"""
         if not request_body:
-            return {}
+            return {
+                'description': '',
+                'required': False,
+                'content': {},
+                'all_attributes': [],
+                'searchable_content': ''
+            }
         
         detailed_body = {
             'description': request_body.get('description', ''),
             'required': request_body.get('required', False),
-            'content': {}
+            'content': {},
+            'all_attributes': [],
+            'searchable_content': ''
         }
         
         content = request_body.get('content', {})
+        all_attributes = []
+        searchable_parts = []
+        
         for content_type, content_schema in content.items():
             schema_info = content_schema.get('schema', {})
+            properties = self._extract_schema_properties(schema_info)
+            
             detailed_body['content'][content_type] = {
                 'schema': schema_info,
                 'example': content_schema.get('example', ''),
                 'examples': content_schema.get('examples', {}),
-                'properties': self._extract_schema_properties(schema_info)
+                'properties': properties
             }
+            
+            # Collect all attributes for vectorization
+            all_attributes.extend(list(properties.values()))
+            searchable_parts.append(f"Content-Type: {content_type}")
+            if content_schema.get('example'):
+                searchable_parts.append(f"Example: {content_schema['example']}")
+        
+        detailed_body['all_attributes'] = all_attributes
+        detailed_body['searchable_content'] = ' '.join(searchable_parts)
         
         return detailed_body
     
@@ -495,16 +517,27 @@ class SwaggerConnector:
         body_params = [p for p in operation.get('parameters', []) if p.get('in') == 'body']
         
         if not body_params:
-            return {}
+            return {
+                'description': '',
+                'required': False,
+                'schema': {},
+                'properties': {},
+                'all_attributes': [],
+                'searchable_content': ''
+            }
         
         body_param = body_params[0]  # Usually only one body parameter
         schema = body_param.get('schema', {})
+        
+        properties = self._extract_schema_properties(schema)
         
         return {
             'description': body_param.get('description', ''),
             'required': body_param.get('required', False),
             'schema': schema,
-            'properties': self._extract_schema_properties(schema)
+            'properties': properties,
+            'all_attributes': properties,
+            'searchable_content': f"Schema: {schema.get('type', 'object')} Description: {body_param.get('description', '')}"
         }
     
     def _extract_detailed_responses(self, responses: Dict[str, Any]) -> Dict[str, Any]:
@@ -515,19 +548,34 @@ class SwaggerConnector:
             detailed_response = {
                 'description': response_info.get('description', ''),
                 'headers': response_info.get('headers', {}),
-                'content': {}
+                'content': {},
+                'all_attributes': [],
+                'searchable_content': ''
             }
             
             content = response_info.get('content', {})
+            all_attributes = []
+            searchable_parts = []
+            
             for content_type, content_schema in content.items():
                 schema_info = content_schema.get('schema', {})
+                properties = self._extract_schema_properties(schema_info)
+                
                 detailed_response['content'][content_type] = {
                     'schema': schema_info,
                     'example': content_schema.get('example', ''),
                     'examples': content_schema.get('examples', {}),
-                    'properties': self._extract_schema_properties(schema_info)
+                    'properties': properties
                 }
+                
+                # Collect all attributes for vectorization
+                all_attributes.extend(properties)
+                searchable_parts.append(f"Status: {status_code} Content-Type: {content_type}")
+                if content_schema.get('example'):
+                    searchable_parts.append(f"Example: {content_schema['example']}")
             
+            detailed_response['all_attributes'] = all_attributes
+            detailed_response['searchable_content'] = ' '.join(searchable_parts)
             detailed_responses[status_code] = detailed_response
         
         return detailed_responses
@@ -538,11 +586,14 @@ class SwaggerConnector:
         
         for status_code, response_info in responses.items():
             schema = response_info.get('schema', {})
+            properties = self._extract_schema_properties(schema)
             detailed_responses[status_code] = {
                 'description': response_info.get('description', ''),
                 'schema': schema,
                 'headers': response_info.get('headers', {}),
-                'properties': self._extract_schema_properties(schema)
+                'properties': properties,
+                'all_attributes': list(properties.values()),
+                'searchable_content': f"Status: {status_code} Description: {response_info.get('description', '')} Schema: {schema.get('type', 'object')}"
             }
         
         return detailed_responses
@@ -606,6 +657,247 @@ class SwaggerConnector:
                 })
         
         return examples
+    
+    def display_vectorization_metrics(self, common_spec: CommonAPISpec) -> Dict[str, Any]:
+        """
+        Display comprehensive metrics for vectorization and embedding preparation
+        
+        Args:
+            common_spec: The CommonAPISpec object to analyze
+            
+        Returns:
+            Dictionary containing all metrics for programmatic access
+        """
+        metrics = {
+            'api_overview': {},
+            'endpoint_metrics': [],
+            'attribute_metrics': {},
+            'text_content_metrics': {},
+            'embedding_preparation': {},
+            'quality_indicators': {},
+            'recommendations': []
+        }
+        
+        print("\n" + "=" * 100)
+        print("🔍 **VECTORIZATION & EMBEDDING METRICS ANALYSIS**")
+        print("=" * 100)
+        
+        # 1. API Overview Metrics
+        print("\n📊 **1. API OVERVIEW METRICS**")
+        print("-" * 50)
+        
+        metrics['api_overview'] = {
+            'api_name': common_spec.api_name,
+            'api_version': common_spec.version,
+            'total_endpoints': len(common_spec.endpoints),
+            'api_type': getattr(common_spec, 'api_type', 'unknown'),
+            'base_url': common_spec.base_url,
+            'description_length': len(common_spec.description) if common_spec.description else 0,
+            'has_namespaces': bool(getattr(common_spec, 'namespaces', None)),
+            'namespace_count': len(common_spec.namespaces) if hasattr(common_spec, 'namespaces') and common_spec.namespaces else 0
+        }
+        
+        print(f"🏷️  API Name: {metrics['api_overview']['api_name']}")
+        print(f"📝 API Version: {metrics['api_overview']['api_version']}")
+        print(f"🔗 Total Endpoints: {metrics['api_overview']['total_endpoints']}")
+        print(f"📋 API Type: {metrics['api_overview']['api_type']}")
+        print(f"🌐 Base URL: {metrics['api_overview']['base_url']}")
+        print(f"📄 Description Length: {metrics['api_overview']['description_length']} chars")
+        print(f"🏗️  Has Namespaces: {metrics['api_overview']['has_namespaces']}")
+        if metrics['api_overview']['has_namespaces']:
+            print(f"📦 Namespace Count: {metrics['api_overview']['namespace_count']}")
+        
+        # 2. Endpoint-Level Metrics
+        print("\n📊 **2. ENDPOINT-LEVEL METRICS**")
+        print("-" * 50)
+        
+        total_parameters = 0
+        total_request_attributes = 0
+        total_response_attributes = 0
+        total_nested_attributes = 0
+        
+        for i, endpoint in enumerate(common_spec.endpoints):
+            endpoint_metrics = {
+                'endpoint_index': i,
+                'path': endpoint['path'],
+                'method': endpoint['method'],
+                'parameter_count': len(endpoint['parameters']),
+                'request_attribute_count': len(endpoint['request_body']['all_attributes']),
+                'response_attribute_count': sum(len(resp['all_attributes']) for resp in endpoint['responses'].values()),
+                'nested_attribute_count': sum(len(param.get('nested_attributes', [])) for param in endpoint['parameters']),
+                'has_request_body': bool(endpoint['request_body']['all_attributes']),
+                'response_count': len(endpoint['responses']),
+                'searchable_content_length': len(endpoint['request_body']['searchable_content']) + 
+                                           sum(len(resp['searchable_content']) for resp in endpoint['responses'].values())
+            }
+            
+            metrics['endpoint_metrics'].append(endpoint_metrics)
+            
+            total_parameters += endpoint_metrics['parameter_count']
+            total_request_attributes += endpoint_metrics['request_attribute_count']
+            total_response_attributes += endpoint_metrics['response_attribute_count']
+            total_nested_attributes += endpoint_metrics['nested_attribute_count']
+            
+            print(f"📍 Endpoint {i+1}: {endpoint['path']} ({endpoint['method']})")
+            print(f"   📥 Parameters: {endpoint_metrics['parameter_count']}")
+            print(f"   📋 Request Attributes: {endpoint_metrics['request_attribute_count']}")
+            print(f"   📤 Response Attributes: {endpoint_metrics['response_attribute_count']}")
+            print(f"   🔗 Nested Attributes: {endpoint_metrics['nested_attribute_count']}")
+            print(f"   📄 Searchable Content: {endpoint_metrics['searchable_content_length']} chars")
+            print()
+        
+        # 3. Attribute-Level Metrics
+        print("\n📊 **3. ATTRIBUTE-LEVEL METRICS**")
+        print("-" * 50)
+        
+        metrics['attribute_metrics'] = {
+            'total_parameters': total_parameters,
+            'total_request_attributes': total_request_attributes,
+            'total_response_attributes': total_response_attributes,
+            'total_nested_attributes': total_nested_attributes,
+            'total_attributes': total_request_attributes + total_response_attributes + total_nested_attributes,
+            'avg_attributes_per_endpoint': (total_request_attributes + total_response_attributes + total_nested_attributes) / len(common_spec.endpoints) if common_spec.endpoints else 0
+        }
+        
+        print(f"📥 Total Parameters: {metrics['attribute_metrics']['total_parameters']}")
+        print(f"📋 Total Request Attributes: {metrics['attribute_metrics']['total_request_attributes']}")
+        print(f"📤 Total Response Attributes: {metrics['attribute_metrics']['total_response_attributes']}")
+        print(f"🔗 Total Nested Attributes: {metrics['attribute_metrics']['total_nested_attributes']}")
+        print(f"📊 Total Attributes: {metrics['attribute_metrics']['total_attributes']}")
+        print(f"📈 Avg Attributes per Endpoint: {metrics['attribute_metrics']['avg_attributes_per_endpoint']:.2f}")
+        
+        # 4. Text Content Analysis
+        print("\n📊 **4. TEXT CONTENT ANALYSIS**")
+        print("-" * 50)
+        
+        all_text_content = []
+        if common_spec.description:
+            all_text_content.append(common_spec.description)
+        
+        for endpoint in common_spec.endpoints:
+            all_text_content.append(endpoint['request_body']['searchable_content'])
+            for response in endpoint['responses'].values():
+                all_text_content.append(response['searchable_content'])
+        
+        combined_text = ' '.join(all_text_content)
+        
+        metrics['text_content_metrics'] = {
+            'total_text_length': len(combined_text),
+            'word_count': len(combined_text.split()),
+            'unique_words': len(set(combined_text.lower().split())),
+            'avg_word_length': sum(len(word) for word in combined_text.split()) / len(combined_text.split()) if combined_text.split() else 0,
+            'text_density': len(combined_text) / metrics['attribute_metrics']['total_attributes'] if metrics['attribute_metrics']['total_attributes'] > 0 else 0,
+            'has_meaningful_content': len(combined_text.strip()) > 100
+        }
+        
+        print(f"📄 Total Text Length: {metrics['text_content_metrics']['total_text_length']} chars")
+        print(f"📝 Word Count: {metrics['text_content_metrics']['word_count']}")
+        print(f"🔤 Unique Words: {metrics['text_content_metrics']['unique_words']}")
+        print(f"📏 Avg Word Length: {metrics['text_content_metrics']['avg_word_length']:.2f}")
+        print(f"📊 Text Density: {metrics['text_content_metrics']['text_density']:.2f} chars/attribute")
+        print(f"✅ Has Meaningful Content: {metrics['text_content_metrics']['has_meaningful_content']}")
+        
+        # 5. Embedding Preparation Metrics
+        print("\n📊 **5. EMBEDDING PREPARATION METRICS**")
+        print("-" * 50)
+        
+        # Estimate token count (rough approximation: 1 token ≈ 4 characters)
+        estimated_tokens = len(combined_text) // 4
+        
+        metrics['embedding_preparation'] = {
+            'estimated_tokens': estimated_tokens,
+            'embedding_dimensions_needed': min(1536, max(384, len(combined_text) // 10)),  # Adaptive dimension sizing
+            'chunking_recommended': len(combined_text) > 8000,  # OpenAI context limit consideration
+            'optimal_chunk_size': min(512, max(128, len(combined_text) // 20)),
+            'chunk_overlap_recommended': 50,
+            'vector_db_storage_size': len(combined_text) * 2,  # Rough estimate including metadata
+            'embedding_cost_estimate': estimated_tokens * 0.0001  # Rough OpenAI pricing
+        }
+        
+        print(f"🎯 Estimated Tokens: {metrics['embedding_preparation']['estimated_tokens']}")
+        print(f"📐 Recommended Embedding Dimensions: {metrics['embedding_preparation']['embedding_dimensions_needed']}")
+        print(f"✂️  Chunking Recommended: {metrics['embedding_preparation']['chunking_recommended']}")
+        print(f"📏 Optimal Chunk Size: {metrics['embedding_preparation']['optimal_chunk_size']}")
+        print(f"🔄 Recommended Chunk Overlap: {metrics['embedding_preparation']['chunk_overlap_recommended']}")
+        print(f"💾 Estimated Vector DB Storage: {metrics['embedding_preparation']['vector_db_storage_size']} bytes")
+        print(f"💰 Estimated Embedding Cost: ${metrics['embedding_preparation']['embedding_cost_estimate']:.4f}")
+        
+        # 6. Quality Indicators
+        print("\n📊 **6. QUALITY INDICATORS**")
+        print("-" * 50)
+        
+        quality_score = 0
+        max_score = 100
+        
+        # Check various quality factors
+        if metrics['api_overview']['description_length'] > 50:
+            quality_score += 15
+        if metrics['attribute_metrics']['total_attributes'] > 0:
+            quality_score += 20
+        if metrics['text_content_metrics']['has_meaningful_content']:
+            quality_score += 25
+        if metrics['attribute_metrics']['total_nested_attributes'] > 0:
+            quality_score += 15
+        if metrics['api_overview']['has_namespaces']:
+            quality_score += 10
+        if metrics['endpoint_metrics'] and len(metrics['endpoint_metrics']) > 0:
+            quality_score += 15
+        
+        metrics['quality_indicators'] = {
+            'overall_quality_score': quality_score,
+            'max_possible_score': max_score,
+            'quality_percentage': (quality_score / max_score) * 100,
+            'has_description': metrics['api_overview']['description_length'] > 0,
+            'has_attributes': metrics['attribute_metrics']['total_attributes'] > 0,
+            'has_nested_structure': metrics['attribute_metrics']['total_nested_attributes'] > 0,
+            'has_namespaces': metrics['api_overview']['has_namespaces'],
+            'is_ready_for_embedding': quality_score >= 60
+        }
+        
+        print(f"⭐ Overall Quality Score: {quality_score}/{max_score} ({metrics['quality_indicators']['quality_percentage']:.1f}%)")
+        print(f"📝 Has Description: {metrics['quality_indicators']['has_description']}")
+        print(f"📋 Has Attributes: {metrics['quality_indicators']['has_attributes']}")
+        print(f"🔗 Has Nested Structure: {metrics['quality_indicators']['has_nested_structure']}")
+        print(f"🏗️  Has Namespaces: {metrics['quality_indicators']['has_namespaces']}")
+        print(f"✅ Ready for Embedding: {metrics['quality_indicators']['is_ready_for_embedding']}")
+        
+        # 7. Recommendations
+        print("\n📊 **7. RECOMMENDATIONS**")
+        print("-" * 50)
+        
+        recommendations = []
+        
+        if not metrics['quality_indicators']['has_description']:
+            recommendations.append("Add API description to improve searchability")
+        
+        if metrics['attribute_metrics']['total_attributes'] == 0:
+            recommendations.append("No attributes found - check API specification parsing")
+        
+        if metrics['text_content_metrics']['total_text_length'] < 100:
+            recommendations.append("Very little text content - consider adding more descriptive information")
+        
+        if metrics['embedding_preparation']['chunking_recommended']:
+            recommendations.append("Consider chunking for large content to optimize embedding performance")
+        
+        if metrics['quality_indicators']['quality_percentage'] < 60:
+            recommendations.append("Quality score below 60% - review API specification completeness")
+        
+        if metrics['attribute_metrics']['total_nested_attributes'] == 0 and metrics['attribute_metrics']['total_attributes'] > 0:
+            recommendations.append("Consider adding nested structures for better attribute organization")
+        
+        if not recommendations:
+            recommendations.append("API specification looks good for vectorization!")
+        
+        metrics['recommendations'] = recommendations
+        
+        for i, rec in enumerate(recommendations, 1):
+            print(f"💡 {i}. {rec}")
+        
+        print("\n" + "=" * 100)
+        print("✅ **VECTORIZATION METRICS ANALYSIS COMPLETE**")
+        print("=" * 100)
+        
+        return metrics
 
 class WSDLConnector:
     """Connector for WSDL specifications"""
@@ -1586,7 +1878,487 @@ class WSDLConnector:
             
         except Exception as e:
             print(f"❌ Error printing JSON: {str(e)}")
-
+    
+    def display_vectorization_metrics(self, common_spec: CommonAPISpec) -> Dict[str, Any]:
+        """
+        Display comprehensive metrics for vectorization and embedding preparation
+        
+        Args:
+            common_spec: The CommonAPISpec object to analyze
+            
+        Returns:
+            Dictionary containing all metrics for programmatic access
+        """
+        metrics = {
+            'api_overview': {},
+            'endpoint_metrics': [],
+            'attribute_metrics': {},
+            'text_content_metrics': {},
+            'embedding_preparation': {},
+            'quality_indicators': {},
+            'recommendations': []
+        }
+        
+        print("\n" + "=" * 100)
+        print("🔍 **VECTORIZATION & EMBEDDING METRICS ANALYSIS**")
+        print("=" * 100)
+        
+        # 1. API Overview Metrics
+        print("\n📊 **1. API OVERVIEW METRICS**")
+        print("-" * 50)
+        
+        metrics['api_overview'] = {
+            'api_name': common_spec.api_name,
+            'api_version': common_spec.version,
+            'total_endpoints': len(common_spec.endpoints),
+            'api_type': getattr(common_spec, 'api_type', 'unknown'),
+            'base_url': common_spec.base_url,
+            'description_length': len(common_spec.description) if common_spec.description else 0,
+            'has_namespaces': bool(getattr(common_spec, 'namespaces', None)),
+            'namespace_count': len(common_spec.namespaces) if hasattr(common_spec, 'namespaces') and common_spec.namespaces else 0
+        }
+        
+        print(f"🏷️  API Name: {metrics['api_overview']['api_name']}")
+        print(f"📝 API Version: {metrics['api_overview']['api_version']}")
+        print(f"🔗 Total Endpoints: {metrics['api_overview']['total_endpoints']}")
+        print(f"📋 API Type: {metrics['api_overview']['api_type']}")
+        print(f"🌐 Base URL: {metrics['api_overview']['base_url']}")
+        print(f"📄 Description Length: {metrics['api_overview']['description_length']} chars")
+        print(f"🏗️  Has Namespaces: {metrics['api_overview']['has_namespaces']}")
+        if metrics['api_overview']['has_namespaces']:
+            print(f"📦 Namespace Count: {metrics['api_overview']['namespace_count']}")
+        
+        # 2. Endpoint-Level Metrics
+        print("\n📊 **2. ENDPOINT-LEVEL METRICS**")
+        print("-" * 50)
+        
+        total_parameters = 0
+        total_request_attributes = 0
+        total_response_attributes = 0
+        total_nested_attributes = 0
+        
+        for i, endpoint in enumerate(common_spec.endpoints):
+            endpoint_metrics = {
+                'endpoint_index': i,
+                'path': endpoint['path'],
+                'method': endpoint['method'],
+                'parameter_count': len(endpoint['parameters']),
+                'request_attribute_count': len(endpoint['request_body']['all_attributes']),
+                'response_attribute_count': sum(len(resp['all_attributes']) for resp in endpoint['responses'].values()),
+                'nested_attribute_count': sum(len(param.get('nested_attributes', [])) for param in endpoint['parameters']),
+                'has_request_body': bool(endpoint['request_body']['all_attributes']),
+                'response_count': len(endpoint['responses']),
+                'searchable_content_length': len(endpoint['request_body']['searchable_content']) + 
+                                           sum(len(resp['searchable_content']) for resp in endpoint['responses'].values())
+            }
+            
+            metrics['endpoint_metrics'].append(endpoint_metrics)
+            
+            total_parameters += endpoint_metrics['parameter_count']
+            total_request_attributes += endpoint_metrics['request_attribute_count']
+            total_response_attributes += endpoint_metrics['response_attribute_count']
+            total_nested_attributes += endpoint_metrics['nested_attribute_count']
+            
+            print(f"📍 Endpoint {i+1}: {endpoint['path']} ({endpoint['method']})")
+            print(f"   📥 Parameters: {endpoint_metrics['parameter_count']}")
+            print(f"   📋 Request Attributes: {endpoint_metrics['request_attribute_count']}")
+            print(f"   📤 Response Attributes: {endpoint_metrics['response_attribute_count']}")
+            print(f"   🔗 Nested Attributes: {endpoint_metrics['nested_attribute_count']}")
+            print(f"   📄 Searchable Content: {endpoint_metrics['searchable_content_length']} chars")
+            print()
+        
+        # 3. Attribute-Level Metrics
+        print("\n📊 **3. ATTRIBUTE-LEVEL METRICS**")
+        print("-" * 50)
+        
+        metrics['attribute_metrics'] = {
+            'total_parameters': total_parameters,
+            'total_request_attributes': total_request_attributes,
+            'total_response_attributes': total_response_attributes,
+            'total_nested_attributes': total_nested_attributes,
+            'total_attributes': total_request_attributes + total_response_attributes + total_nested_attributes,
+            'avg_attributes_per_endpoint': (total_request_attributes + total_response_attributes + total_nested_attributes) / len(common_spec.endpoints) if common_spec.endpoints else 0
+        }
+        
+        print(f"📥 Total Parameters: {metrics['attribute_metrics']['total_parameters']}")
+        print(f"📋 Total Request Attributes: {metrics['attribute_metrics']['total_request_attributes']}")
+        print(f"📤 Total Response Attributes: {metrics['attribute_metrics']['total_response_attributes']}")
+        print(f"🔗 Total Nested Attributes: {metrics['attribute_metrics']['total_nested_attributes']}")
+        print(f"📊 Total Attributes: {metrics['attribute_metrics']['total_attributes']}")
+        print(f"📈 Avg Attributes per Endpoint: {metrics['attribute_metrics']['avg_attributes_per_endpoint']:.2f}")
+        
+        # 4. Text Content Analysis
+        print("\n📊 **4. TEXT CONTENT ANALYSIS**")
+        print("-" * 50)
+        
+        all_text_content = []
+        if common_spec.description:
+            all_text_content.append(common_spec.description)
+        
+        for endpoint in common_spec.endpoints:
+            all_text_content.append(endpoint['request_body']['searchable_content'])
+            for response in endpoint['responses'].values():
+                all_text_content.append(response['searchable_content'])
+        
+        combined_text = ' '.join(all_text_content)
+        
+        metrics['text_content_metrics'] = {
+            'total_text_length': len(combined_text),
+            'word_count': len(combined_text.split()),
+            'unique_words': len(set(combined_text.lower().split())),
+            'avg_word_length': sum(len(word) for word in combined_text.split()) / len(combined_text.split()) if combined_text.split() else 0,
+            'text_density': len(combined_text) / metrics['attribute_metrics']['total_attributes'] if metrics['attribute_metrics']['total_attributes'] > 0 else 0,
+            'has_meaningful_content': len(combined_text.strip()) > 100
+        }
+        
+        print(f"📄 Total Text Length: {metrics['text_content_metrics']['total_text_length']} chars")
+        print(f"📝 Word Count: {metrics['text_content_metrics']['word_count']}")
+        print(f"🔤 Unique Words: {metrics['text_content_metrics']['unique_words']}")
+        print(f"📏 Avg Word Length: {metrics['text_content_metrics']['avg_word_length']:.2f}")
+        print(f"📊 Text Density: {metrics['text_content_metrics']['text_density']:.2f} chars/attribute")
+        print(f"✅ Has Meaningful Content: {metrics['text_content_metrics']['has_meaningful_content']}")
+        
+        # 5. Embedding Preparation Metrics
+        print("\n📊 **5. EMBEDDING PREPARATION METRICS**")
+        print("-" * 50)
+        
+        # Estimate token count (rough approximation: 1 token ≈ 4 characters)
+        estimated_tokens = len(combined_text) // 4
+        
+        metrics['embedding_preparation'] = {
+            'estimated_tokens': estimated_tokens,
+            'embedding_dimensions_needed': min(1536, max(384, len(combined_text) // 10)),  # Adaptive dimension sizing
+            'chunking_recommended': len(combined_text) > 8000,  # OpenAI context limit consideration
+            'optimal_chunk_size': min(512, max(128, len(combined_text) // 20)),
+            'chunk_overlap_recommended': 50,
+            'vector_db_storage_size': len(combined_text) * 2,  # Rough estimate including metadata
+            'embedding_cost_estimate': estimated_tokens * 0.0001  # Rough OpenAI pricing
+        }
+        
+        print(f"🎯 Estimated Tokens: {metrics['embedding_preparation']['estimated_tokens']}")
+        print(f"📐 Recommended Embedding Dimensions: {metrics['embedding_preparation']['embedding_dimensions_needed']}")
+        print(f"✂️  Chunking Recommended: {metrics['embedding_preparation']['chunking_recommended']}")
+        print(f"📏 Optimal Chunk Size: {metrics['embedding_preparation']['optimal_chunk_size']}")
+        print(f"🔄 Recommended Chunk Overlap: {metrics['embedding_preparation']['chunk_overlap_recommended']}")
+        print(f"💾 Estimated Vector DB Storage: {metrics['embedding_preparation']['vector_db_storage_size']} bytes")
+        print(f"💰 Estimated Embedding Cost: ${metrics['embedding_preparation']['embedding_cost_estimate']:.4f}")
+        
+        # 6. Quality Indicators
+        print("\n📊 **6. QUALITY INDICATORS**")
+        print("-" * 50)
+        
+        quality_score = 0
+        max_score = 100
+        
+        # Check various quality factors
+        if metrics['api_overview']['description_length'] > 50:
+            quality_score += 15
+        if metrics['attribute_metrics']['total_attributes'] > 0:
+            quality_score += 20
+        if metrics['text_content_metrics']['has_meaningful_content']:
+            quality_score += 25
+        if metrics['attribute_metrics']['total_nested_attributes'] > 0:
+            quality_score += 15
+        if metrics['api_overview']['has_namespaces']:
+            quality_score += 10
+        if metrics['endpoint_metrics'] and len(metrics['endpoint_metrics']) > 0:
+            quality_score += 15
+        
+        metrics['quality_indicators'] = {
+            'overall_quality_score': quality_score,
+            'max_possible_score': max_score,
+            'quality_percentage': (quality_score / max_score) * 100,
+            'has_description': metrics['api_overview']['description_length'] > 0,
+            'has_attributes': metrics['attribute_metrics']['total_attributes'] > 0,
+            'has_nested_structure': metrics['attribute_metrics']['total_nested_attributes'] > 0,
+            'has_namespaces': metrics['api_overview']['has_namespaces'],
+            'is_ready_for_embedding': quality_score >= 60
+        }
+        
+        print(f"⭐ Overall Quality Score: {quality_score}/{max_score} ({metrics['quality_indicators']['quality_percentage']:.1f}%)")
+        print(f"📝 Has Description: {metrics['quality_indicators']['has_description']}")
+        print(f"📋 Has Attributes: {metrics['quality_indicators']['has_attributes']}")
+        print(f"🔗 Has Nested Structure: {metrics['quality_indicators']['has_nested_structure']}")
+        print(f"🏗️  Has Namespaces: {metrics['quality_indicators']['has_namespaces']}")
+        print(f"✅ Ready for Embedding: {metrics['quality_indicators']['is_ready_for_embedding']}")
+        
+        # 7. Recommendations
+        print("\n📊 **7. RECOMMENDATIONS**")
+        print("-" * 50)
+        
+        recommendations = []
+        
+        if not metrics['quality_indicators']['has_description']:
+            recommendations.append("Add API description to improve searchability")
+        
+        if metrics['attribute_metrics']['total_attributes'] == 0:
+            recommendations.append("No attributes found - check API specification parsing")
+        
+        if metrics['text_content_metrics']['total_text_length'] < 100:
+            recommendations.append("Very little text content - consider adding more descriptive information")
+        
+        if metrics['embedding_preparation']['chunking_recommended']:
+            recommendations.append("Consider chunking for large content to optimize embedding performance")
+        
+        if metrics['quality_indicators']['quality_percentage'] < 60:
+            recommendations.append("Quality score below 60% - review API specification completeness")
+        
+        if metrics['attribute_metrics']['total_nested_attributes'] == 0 and metrics['attribute_metrics']['total_attributes'] > 0:
+            recommendations.append("Consider adding nested structures for better attribute organization")
+        
+        if not recommendations:
+            recommendations.append("API specification looks good for vectorization!")
+        
+        metrics['recommendations'] = recommendations
+        
+        for i, rec in enumerate(recommendations, 1):
+            print(f"💡 {i}. {rec}")
+        
+        print("\n" + "=" * 100)
+        print("✅ **VECTORIZATION METRICS ANALYSIS COMPLETE**")
+        print("=" * 100)
+        
+        return metrics
+    
+    def display_vectorization_metrics(self, common_spec: CommonAPISpec) -> Dict[str, Any]:
+        """
+        Display comprehensive metrics for vectorization and embedding preparation
+        
+        Args:
+            common_spec: The CommonAPISpec object to analyze
+            
+        Returns:
+            Dictionary containing all metrics for programmatic access
+        """
+        metrics = {
+            'api_overview': {},
+            'endpoint_metrics': [],
+            'attribute_metrics': {},
+            'text_content_metrics': {},
+            'embedding_preparation': {},
+            'quality_indicators': {},
+            'recommendations': []
+        }
+        
+        print("\n" + "=" * 100)
+        print("🔍 **VECTORIZATION & EMBEDDING METRICS ANALYSIS**")
+        print("=" * 100)
+        
+        # 1. API Overview Metrics
+        print("\n📊 **1. API OVERVIEW METRICS**")
+        print("-" * 50)
+        
+        metrics['api_overview'] = {
+            'api_name': common_spec.api_name,
+            'api_version': common_spec.version,
+            'total_endpoints': len(common_spec.endpoints),
+            'api_type': getattr(common_spec, 'api_type', 'unknown'),
+            'base_url': common_spec.base_url,
+            'description_length': len(common_spec.description) if common_spec.description else 0,
+            'has_namespaces': bool(getattr(common_spec, 'namespaces', None)),
+            'namespace_count': len(common_spec.namespaces) if hasattr(common_spec, 'namespaces') and common_spec.namespaces else 0
+        }
+        
+        print(f"🏷️  API Name: {metrics['api_overview']['api_name']}")
+        print(f"📝 API Version: {metrics['api_overview']['api_version']}")
+        print(f"🔗 Total Endpoints: {metrics['api_overview']['total_endpoints']}")
+        print(f"📋 API Type: {metrics['api_overview']['api_type']}")
+        print(f"🌐 Base URL: {metrics['api_overview']['base_url']}")
+        print(f"📄 Description Length: {metrics['api_overview']['description_length']} chars")
+        print(f"🏗️  Has Namespaces: {metrics['api_overview']['has_namespaces']}")
+        if metrics['api_overview']['has_namespaces']:
+            print(f"📦 Namespace Count: {metrics['api_overview']['namespace_count']}")
+        
+        # 2. Endpoint-Level Metrics
+        print("\n📊 **2. ENDPOINT-LEVEL METRICS**")
+        print("-" * 50)
+        
+        total_parameters = 0
+        total_request_attributes = 0
+        total_response_attributes = 0
+        total_nested_attributes = 0
+        
+        for i, endpoint in enumerate(common_spec.endpoints):
+            endpoint_metrics = {
+                'endpoint_index': i,
+                'path': endpoint['path'],
+                'method': endpoint['method'],
+                'parameter_count': len(endpoint['parameters']),
+                'request_attribute_count': len(endpoint['request_body']['all_attributes']),
+                'response_attribute_count': sum(len(resp['all_attributes']) for resp in endpoint['responses'].values()),
+                'nested_attribute_count': sum(len(param.get('nested_attributes', [])) for param in endpoint['parameters']),
+                'has_request_body': bool(endpoint['request_body']['all_attributes']),
+                'response_count': len(endpoint['responses']),
+                'searchable_content_length': len(endpoint['request_body']['searchable_content']) + 
+                                           sum(len(resp['searchable_content']) for resp in endpoint['responses'].values())
+            }
+            
+            metrics['endpoint_metrics'].append(endpoint_metrics)
+            
+            total_parameters += endpoint_metrics['parameter_count']
+            total_request_attributes += endpoint_metrics['request_attribute_count']
+            total_response_attributes += endpoint_metrics['response_attribute_count']
+            total_nested_attributes += endpoint_metrics['nested_attribute_count']
+            
+            print(f"📍 Endpoint {i+1}: {endpoint['path']} ({endpoint['method']})")
+            print(f"   📥 Parameters: {endpoint_metrics['parameter_count']}")
+            print(f"   📋 Request Attributes: {endpoint_metrics['request_attribute_count']}")
+            print(f"   📤 Response Attributes: {endpoint_metrics['response_attribute_count']}")
+            print(f"   🔗 Nested Attributes: {endpoint_metrics['nested_attribute_count']}")
+            print(f"   📄 Searchable Content: {endpoint_metrics['searchable_content_length']} chars")
+            print()
+        
+        # 3. Attribute-Level Metrics
+        print("\n📊 **3. ATTRIBUTE-LEVEL METRICS**")
+        print("-" * 50)
+        
+        metrics['attribute_metrics'] = {
+            'total_parameters': total_parameters,
+            'total_request_attributes': total_request_attributes,
+            'total_response_attributes': total_response_attributes,
+            'total_nested_attributes': total_nested_attributes,
+            'total_attributes': total_request_attributes + total_response_attributes + total_nested_attributes,
+            'avg_attributes_per_endpoint': (total_request_attributes + total_response_attributes + total_nested_attributes) / len(common_spec.endpoints) if common_spec.endpoints else 0
+        }
+        
+        print(f"📥 Total Parameters: {metrics['attribute_metrics']['total_parameters']}")
+        print(f"📋 Total Request Attributes: {metrics['attribute_metrics']['total_request_attributes']}")
+        print(f"📤 Total Response Attributes: {metrics['attribute_metrics']['total_response_attributes']}")
+        print(f"🔗 Total Nested Attributes: {metrics['attribute_metrics']['total_nested_attributes']}")
+        print(f"📊 Total Attributes: {metrics['attribute_metrics']['total_attributes']}")
+        print(f"📈 Avg Attributes per Endpoint: {metrics['attribute_metrics']['avg_attributes_per_endpoint']:.2f}")
+        
+        # 4. Text Content Analysis
+        print("\n📊 **4. TEXT CONTENT ANALYSIS**")
+        print("-" * 50)
+        
+        all_text_content = []
+        if common_spec.description:
+            all_text_content.append(common_spec.description)
+        
+        for endpoint in common_spec.endpoints:
+            all_text_content.append(endpoint['request_body']['searchable_content'])
+            for response in endpoint['responses'].values():
+                all_text_content.append(response['searchable_content'])
+        
+        combined_text = ' '.join(all_text_content)
+        
+        metrics['text_content_metrics'] = {
+            'total_text_length': len(combined_text),
+            'word_count': len(combined_text.split()),
+            'unique_words': len(set(combined_text.lower().split())),
+            'avg_word_length': sum(len(word) for word in combined_text.split()) / len(combined_text.split()) if combined_text.split() else 0,
+            'text_density': len(combined_text) / metrics['attribute_metrics']['total_attributes'] if metrics['attribute_metrics']['total_attributes'] > 0 else 0,
+            'has_meaningful_content': len(combined_text.strip()) > 100
+        }
+        
+        print(f"📄 Total Text Length: {metrics['text_content_metrics']['total_text_length']} chars")
+        print(f"📝 Word Count: {metrics['text_content_metrics']['word_count']}")
+        print(f"🔤 Unique Words: {metrics['text_content_metrics']['unique_words']}")
+        print(f"📏 Avg Word Length: {metrics['text_content_metrics']['avg_word_length']:.2f}")
+        print(f"📊 Text Density: {metrics['text_content_metrics']['text_density']:.2f} chars/attribute")
+        print(f"✅ Has Meaningful Content: {metrics['text_content_metrics']['has_meaningful_content']}")
+        
+        # 5. Embedding Preparation Metrics
+        print("\n📊 **5. EMBEDDING PREPARATION METRICS**")
+        print("-" * 50)
+        
+        # Estimate token count (rough approximation: 1 token ≈ 4 characters)
+        estimated_tokens = len(combined_text) // 4
+        
+        metrics['embedding_preparation'] = {
+            'estimated_tokens': estimated_tokens,
+            'embedding_dimensions_needed': min(1536, max(384, len(combined_text) // 10)),  # Adaptive dimension sizing
+            'chunking_recommended': len(combined_text) > 8000,  # OpenAI context limit consideration
+            'optimal_chunk_size': min(512, max(128, len(combined_text) // 20)),
+            'chunk_overlap_recommended': 50,
+            'vector_db_storage_size': len(combined_text) * 2,  # Rough estimate including metadata
+            'embedding_cost_estimate': estimated_tokens * 0.0001  # Rough OpenAI pricing
+        }
+        
+        print(f"🎯 Estimated Tokens: {metrics['embedding_preparation']['estimated_tokens']}")
+        print(f"📐 Recommended Embedding Dimensions: {metrics['embedding_preparation']['embedding_dimensions_needed']}")
+        print(f"✂️  Chunking Recommended: {metrics['embedding_preparation']['chunking_recommended']}")
+        print(f"📏 Optimal Chunk Size: {metrics['embedding_preparation']['optimal_chunk_size']}")
+        print(f"🔄 Recommended Chunk Overlap: {metrics['embedding_preparation']['chunk_overlap_recommended']}")
+        print(f"💾 Estimated Vector DB Storage: {metrics['embedding_preparation']['vector_db_storage_size']} bytes")
+        print(f"💰 Estimated Embedding Cost: ${metrics['embedding_preparation']['embedding_cost_estimate']:.4f}")
+        
+        # 6. Quality Indicators
+        print("\n📊 **6. QUALITY INDICATORS**")
+        print("-" * 50)
+        
+        quality_score = 0
+        max_score = 100
+        
+        # Check various quality factors
+        if metrics['api_overview']['description_length'] > 50:
+            quality_score += 15
+        if metrics['attribute_metrics']['total_attributes'] > 0:
+            quality_score += 20
+        if metrics['text_content_metrics']['has_meaningful_content']:
+            quality_score += 25
+        if metrics['attribute_metrics']['total_nested_attributes'] > 0:
+            quality_score += 15
+        if metrics['api_overview']['has_namespaces']:
+            quality_score += 10
+        if metrics['endpoint_metrics'] and len(metrics['endpoint_metrics']) > 0:
+            quality_score += 15
+        
+        metrics['quality_indicators'] = {
+            'overall_quality_score': quality_score,
+            'max_possible_score': max_score,
+            'quality_percentage': (quality_score / max_score) * 100,
+            'has_description': metrics['api_overview']['description_length'] > 0,
+            'has_attributes': metrics['attribute_metrics']['total_attributes'] > 0,
+            'has_nested_structure': metrics['attribute_metrics']['total_nested_attributes'] > 0,
+            'has_namespaces': metrics['api_overview']['has_namespaces'],
+            'is_ready_for_embedding': quality_score >= 60
+        }
+        
+        print(f"⭐ Overall Quality Score: {quality_score}/{max_score} ({metrics['quality_indicators']['quality_percentage']:.1f}%)")
+        print(f"📝 Has Description: {metrics['quality_indicators']['has_description']}")
+        print(f"📋 Has Attributes: {metrics['quality_indicators']['has_attributes']}")
+        print(f"🔗 Has Nested Structure: {metrics['quality_indicators']['has_nested_structure']}")
+        print(f"🏗️  Has Namespaces: {metrics['quality_indicators']['has_namespaces']}")
+        print(f"✅ Ready for Embedding: {metrics['quality_indicators']['is_ready_for_embedding']}")
+        
+        # 7. Recommendations
+        print("\n📊 **7. RECOMMENDATIONS**")
+        print("-" * 50)
+        
+        recommendations = []
+        
+        if not metrics['quality_indicators']['has_description']:
+            recommendations.append("Add API description to improve searchability")
+        
+        if metrics['attribute_metrics']['total_attributes'] == 0:
+            recommendations.append("No attributes found - check WSDL parsing")
+        
+        if metrics['text_content_metrics']['total_text_length'] < 100:
+            recommendations.append("Very little text content - consider adding more descriptive information")
+        
+        if metrics['embedding_preparation']['chunking_recommended']:
+            recommendations.append("Consider chunking for large content to optimize embedding performance")
+        
+        if metrics['quality_indicators']['quality_percentage'] < 60:
+            recommendations.append("Quality score below 60% - review API specification completeness")
+        
+        if metrics['attribute_metrics']['total_nested_attributes'] == 0 and metrics['attribute_metrics']['total_attributes'] > 0:
+            recommendations.append("Consider adding nested structures for better attribute organization")
+        
+        if not recommendations:
+            recommendations.append("API specification looks good for vectorization!")
+        
+        metrics['recommendations'] = recommendations
+        
+        for i, rec in enumerate(recommendations, 1):
+            print(f"💡 {i}. {rec}")
+        
+        print("\n" + "=" * 100)
+        print("✅ **VECTORIZATION METRICS ANALYSIS COMPLETE**")
+        print("=" * 100)
+        
 class APIConnectorManager:
     """Main manager for API connectors"""
     
@@ -1626,7 +2398,7 @@ class APIConnectorManager:
             print(f"✅ Created new collection: {self.collection_name}")
             return collection
     
-    def convert_and_store(self, file_path: str, api_type: str = 'auto', verbose: bool = False) -> bool:
+    def convert_and_store(self, file_path: str, api_type: str = 'auto', verbose: bool = False, metrics: bool = False) -> bool:
         """Convert API spec to common structure and store in ChromaDB"""
         
         try:
@@ -1645,6 +2417,13 @@ class APIConnectorManager:
             # Print converted data if verbose mode
             if verbose:
                 self._print_converted_data(common_spec)
+            
+            # Display metrics if requested
+            if metrics:
+                if api_type == 'wsdl':
+                    self.wsdl_connector.display_vectorization_metrics(common_spec)
+                else:
+                    self.swagger_connector.display_vectorization_metrics(common_spec)
             
             # Store in ChromaDB
             return self._store_in_chromadb(common_spec)

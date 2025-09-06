@@ -38,6 +38,8 @@ Examples:
                                help='API specification type (default: auto-detect)')
     convert_parser.add_argument('--verbose', '-v', action='store_true',
                                help='Print detailed converted data to console')
+    convert_parser.add_argument('--metrics', '-m', action='store_true',
+                               help='Display vectorization and embedding metrics')
     
     # Convert URL command
     convert_url_parser = subparsers.add_parser('convert-url', help='Convert API specification from URL')
@@ -46,6 +48,8 @@ Examples:
                                    help='API specification type (default: auto-detect)')
     convert_url_parser.add_argument('--verbose', '-v', action='store_true',
                                    help='Print detailed converted data to console')
+    convert_url_parser.add_argument('--metrics', '-m', action='store_true',
+                                   help='Display vectorization and embedding metrics')
     
     # List command
     subparsers.add_parser('list', help='List all stored API specifications')
@@ -71,9 +75,9 @@ Examples:
     try:
         if args.command == 'convert':
             print(f"🔄 Converting API specification: {args.file_path}")
-            success = manager.convert_and_store(args.file_path, args.type, args.verbose)
+            success = manager.convert_and_store(args.file_path, args.type, args.verbose, args.metrics)
             if success:
-                if not args.verbose:
+                if not args.verbose and not args.metrics:
                     print("✅ API specification successfully converted and stored")
             else:
                 print("❌ Failed to convert API specification")
