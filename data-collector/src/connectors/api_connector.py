@@ -1099,14 +1099,16 @@ class WSDLConnector:
                         }
                         nested_attributes.append(nested_attr)
                         
-                        # Recursively process further nested elements
-                        nested_attributes.extend(
-                            self._extract_nested_attributes(
-                                ET.Element('element', nested_element), 
-                                root, 
-                                current_path
+                        # Find the actual XML element for recursive processing
+                        actual_element = complex_type_elem.find(f'.//xsd:element[@name="{nested_element["name"]}"]', self.namespaces)
+                        if actual_element is not None:
+                            nested_attributes.extend(
+                                self._extract_nested_attributes(
+                                    actual_element, 
+                                    root, 
+                                    current_path
+                                )
                             )
-                        )
         
         # Also check for inline complex type definition
         inline_complex_type = element.find('xsd:complexType', self.namespaces)
@@ -1128,14 +1130,16 @@ class WSDLConnector:
                     }
                     nested_attributes.append(nested_attr)
                     
-                    # Recursively process further nested elements
-                    nested_attributes.extend(
-                        self._extract_nested_attributes(
-                            ET.Element('element', nested_element), 
-                            root, 
-                            current_path
+                    # Find the actual XML element for recursive processing
+                    actual_element = inline_complex_type.find(f'.//xsd:element[@name="{nested_element["name"]}"]', self.namespaces)
+                    if actual_element is not None:
+                        nested_attributes.extend(
+                            self._extract_nested_attributes(
+                                actual_element, 
+                                root, 
+                                current_path
+                            )
                         )
-                    )
         
         return nested_attributes
     
