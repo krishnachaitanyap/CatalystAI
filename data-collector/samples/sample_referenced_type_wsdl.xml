@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://tempuri.org/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  targetNamespace="http://tempuri.org/">
+  
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/">
+      
+      <!-- Complex type definition -->
+      <xsd:complexType name="GetWeatherRequest">
+        <xsd:sequence>
+          <xsd:element name="CityName" type="xsd:string"/>
+          <xsd:element name="CountryCode" type="xsd:string"/>
+          <xsd:element name="ContactInfo">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="Email" type="xsd:string"/>
+                <xsd:element name="Phone" type="xsd:string"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      
+      <!-- Element that references the complex type -->
+      <xsd:element name="GetWeatherRq" type="tns:GetWeatherRequest"/>
+      
+      <!-- Response type -->
+      <xsd:complexType name="GetWeatherResponse">
+        <xsd:sequence>
+          <xsd:element name="Temperature" type="xsd:float"/>
+          <xsd:element name="Humidity" type="xsd:int"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      
+      <xsd:element name="GetWeatherRs" type="tns:GetWeatherResponse"/>
+      
+    </xsd:schema>
+  </wsdl:types>
+  
+  <wsdl:message name="GetWeatherRequest">
+    <wsdl:part name="parameters" element="tns:GetWeatherRq"/>
+  </wsdl:message>
+  
+  <wsdl:message name="GetWeatherResponse">
+    <wsdl:part name="parameters" element="tns:GetWeatherRs"/>
+  </wsdl:message>
+  
+  <wsdl:portType name="WeatherService">
+    <wsdl:operation name="GetWeather">
+      <wsdl:input message="tns:GetWeatherRequest"/>
+      <wsdl:output message="tns:GetWeatherResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <wsdl:binding name="WeatherServiceSoap" type="tns:WeatherService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetWeather">
+      <soap:operation soapAction="http://tempuri.org/GetWeather" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  
+  <wsdl:service name="WeatherService">
+    <wsdl:port name="WeatherServiceSoap" binding="tns:WeatherServiceSoap">
+      <soap:address location="http://localhost:8080/WeatherService.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+  
+</wsdl:definitions>

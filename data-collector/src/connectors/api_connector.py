@@ -967,12 +967,23 @@ class WSDLConnector:
             'max_occurs': element_elem.get('maxOccurs', '1')
         }
         
-        # Look for complex type definition
+        # Look for inline complex type definition
         complex_type = element_elem.find('xsd:complexType', self.namespaces)
         if complex_type is not None:
             schema_details['complex_type'] = self._extract_complex_type_details(complex_type, root)
             schema_details['attributes'] = schema_details['complex_type'].get('attributes', [])
             schema_details['nested_attributes'] = schema_details['complex_type'].get('nested_attributes', [])
+        
+        # Look for referenced complex type definition
+        elif schema_details['type'] and ':' in schema_details['type']:
+            # Handle qualified type names (e.g., "tns:GetWeatherRequest")
+            prefix, type_name = schema_details['type'].split(':', 1)
+            referenced_complex_type = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+            
+            if referenced_complex_type is not None:
+                schema_details['complex_type'] = self._extract_complex_type_details(referenced_complex_type, root)
+                schema_details['attributes'] = schema_details['complex_type'].get('attributes', [])
+                schema_details['nested_attributes'] = schema_details['complex_type'].get('nested_attributes', [])
         
         # Look for simple type definition
         simple_type = element_elem.find('xsd:simpleType', self.namespaces)
