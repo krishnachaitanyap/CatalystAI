@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AttributeHierarchyView from './AttributeHierarchyView';
 
 interface ApiSpec {
   id: string;
@@ -177,6 +178,23 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
                 min_length: '',
                 max_length: '',
                 pattern: ''
+              },
+              {
+                name: 'offset',
+                in: 'query',
+                description: 'Number of users to skip',
+                required: false,
+                type: 'integer',
+                format: 'int32',
+                schema: {},
+                example: '0',
+                enum: [],
+                default: '0',
+                minimum: '0',
+                maximum: '',
+                min_length: '',
+                max_length: '',
+                pattern: ''
               }
             ],
             request_body: {
@@ -191,12 +209,205 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
                 description: 'Successful response',
                 headers: {},
                 content: {},
-                all_attributes: [],
+                all_attributes: [
+                  {
+                    name: 'users',
+                    type: 'array',
+                    description: 'List of users',
+                    properties: [
+                      {
+                        name: 'id',
+                        type: 'integer',
+                        description: 'User ID',
+                        required: true
+                      },
+                      {
+                        name: 'name',
+                        type: 'string',
+                        description: 'User full name',
+                        required: true
+                      },
+                      {
+                        name: 'email',
+                        type: 'string',
+                        description: 'User email address',
+                        required: true
+                      },
+                      {
+                        name: 'profile',
+                        type: 'object',
+                        description: 'User profile information',
+                        properties: [
+                          {
+                            name: 'avatar',
+                            type: 'string',
+                            description: 'Profile avatar URL',
+                            required: false
+                          },
+                          {
+                            name: 'bio',
+                            type: 'string',
+                            description: 'User biography',
+                            required: false
+                          },
+                          {
+                            name: 'preferences',
+                            type: 'object',
+                            description: 'User preferences',
+                            properties: [
+                              {
+                                name: 'theme',
+                                type: 'string',
+                                description: 'UI theme preference',
+                                required: false
+                              },
+                              {
+                                name: 'notifications',
+                                type: 'boolean',
+                                description: 'Email notifications enabled',
+                                required: false
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    name: 'pagination',
+                    type: 'object',
+                    description: 'Pagination information',
+                    properties: [
+                      {
+                        name: 'total',
+                        type: 'integer',
+                        description: 'Total number of users',
+                        required: true
+                      },
+                      {
+                        name: 'limit',
+                        type: 'integer',
+                        description: 'Number of users per page',
+                        required: true
+                      },
+                      {
+                        name: 'offset',
+                        type: 'integer',
+                        description: 'Current page offset',
+                        required: true
+                      }
+                    ]
+                  }
+                ],
                 searchable_content: 'Status: 200 Description: Successful response'
               }
             },
             tags: ['users'],
             operation_id: 'getUsers',
+            deprecated: false
+          },
+          {
+            path: '/api/v1/users',
+            method: 'POST',
+            summary: 'Create user',
+            description: 'Create a new user',
+            parameters: [],
+            request_body: {
+              description: 'User data',
+              required: true,
+              content: {},
+              all_attributes: [
+                {
+                  name: 'name',
+                  type: 'string',
+                  description: 'User full name',
+                  required: true
+                },
+                {
+                  name: 'email',
+                  type: 'string',
+                  description: 'User email address',
+                  required: true
+                },
+                {
+                  name: 'password',
+                  type: 'string',
+                  description: 'User password',
+                  required: true
+                },
+                {
+                  name: 'profile',
+                  type: 'object',
+                  description: 'User profile information',
+                  required: false,
+                  properties: [
+                    {
+                      name: 'bio',
+                      type: 'string',
+                      description: 'User biography',
+                      required: false
+                    },
+                    {
+                      name: 'preferences',
+                      type: 'object',
+                      description: 'User preferences',
+                      required: false,
+                      properties: [
+                        {
+                          name: 'theme',
+                          type: 'string',
+                          description: 'UI theme preference',
+                          required: false
+                        },
+                        {
+                          name: 'notifications',
+                          type: 'boolean',
+                          description: 'Email notifications enabled',
+                          required: false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              searchable_content: 'User data for creation'
+            },
+            responses: {
+              '201': {
+                description: 'User created successfully',
+                headers: {},
+                content: {},
+                all_attributes: [
+                  {
+                    name: 'id',
+                    type: 'integer',
+                    description: 'Created user ID',
+                    required: true
+                  },
+                  {
+                    name: 'name',
+                    type: 'string',
+                    description: 'User full name',
+                    required: true
+                  },
+                  {
+                    name: 'email',
+                    type: 'string',
+                    description: 'User email address',
+                    required: true
+                  },
+                  {
+                    name: 'created_at',
+                    type: 'string',
+                    description: 'User creation timestamp',
+                    required: true
+                  }
+                ],
+                searchable_content: 'Status: 201 Description: User created successfully'
+              }
+            },
+            tags: ['users'],
+            operation_id: 'createUser',
             deprecated: false
           }
         ],
@@ -360,7 +571,7 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
             { id: 'basic', label: 'Basic Info', icon: '📋' },
             { id: 'endpoints', label: 'Endpoints', icon: '🔗' },
             { id: 'auth', label: 'Authentication', icon: '🔐' },
-            { id: 'advanced', label: 'Advanced', icon: '⚙️' }
+            { id: 'advanced', label: 'Attributes', icon: '📊' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -541,64 +752,61 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
 
           {activeTab === 'advanced' && (
             <div className="space-y-6">
-              <h4 className="text-lg font-medium text-gray-900">Advanced Settings</h4>
+              <h4 className="text-lg font-medium text-gray-900">Request & Response Attributes</h4>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  SDK Languages
-                </label>
-                <div className="mt-2 space-y-2">
-                  {['Python', 'JavaScript', 'Java', 'C#', 'Go', 'Ruby', 'PHP', 'Swift', 'Kotlin'].map((lang) => (
-                    <label key={lang} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={commonSpec.sdk_languages.includes(lang)}
-                        onChange={(e) => {
-                          const languages = e.target.checked
-                            ? [...commonSpec.sdk_languages, lang]
-                            : commonSpec.sdk_languages.filter(l => l !== lang);
-                          updateCommonSpec({ sdk_languages: languages });
-                        }}
-                        className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                      />
-                      <span className="ml-2 text-sm text-gray-700">{lang}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Tags
-                </label>
-                <input
-                  type="text"
-                  value={commonSpec.tags.join(', ')}
-                  onChange={(e) => updateCommonSpec({ tags: e.target.value.split(',').map(t => t.trim()).filter(t => t) })}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="api, rest, enterprise"
+              {/* Request Attributes */}
+              <div className="space-y-4">
+                <AttributeHierarchyView 
+                  endpoints={commonSpec.endpoints} 
+                  title="Request Attributes" 
                 />
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Contact Name
-                  </label>
-                  <input
-                    type="text"
-                    value={commonSpec.contact_info.name}
-                    onChange={(e) => updateCommonSpec({ 
-                      contact_info: { 
-                        ...commonSpec.contact_info, 
-                        name: e.target.value 
-                      } 
-                    })}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
+
+              {/* Response Attributes */}
+              <div className="space-y-4">
+                <AttributeHierarchyView 
+                  endpoints={commonSpec.endpoints} 
+                  title="Response Attributes" 
+                />
+              </div>
+
+              {/* Additional Settings */}
+              <div className="border-t pt-6">
+                <h5 className="text-md font-medium text-gray-900 mb-4">Additional Settings</h5>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Tags
+                    </label>
+                    <input
+                      type="text"
+                      value={commonSpec.tags.join(', ')}
+                      onChange={(e) => updateCommonSpec({ tags: e.target.value.split(',').map(t => t.trim()).filter(t => t) })}
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="api, rest, enterprise"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Contact Name
+                    </label>
+                    <input
+                      type="text"
+                      value={commonSpec.contact_info.name}
+                      onChange={(e) => updateCommonSpec({ 
+                        contact_info: { 
+                          ...commonSpec.contact_info, 
+                          name: e.target.value 
+                        } 
+                      })}
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
                 </div>
                 
-                <div>
+                <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-700">
                     Contact Email
                   </label>
