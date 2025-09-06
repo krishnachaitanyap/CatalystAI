@@ -61,6 +61,7 @@ class CommonAPISpec:
     license_info: Dict[str, str]
     external_docs: List[Dict[str, str]]
     examples: List[Dict[str, Any]]
+    namespaces: Dict[str, str] = None
     schema_version: str = "1.0"
     created_at: str = ""
     updated_at: str = ""
@@ -680,6 +681,7 @@ class WSDLConnector:
             license_info={},
             external_docs=[],
             examples=self._generate_soap_examples(endpoints),
+            namespaces=types_info.get('namespaces', {}),
             created_at=datetime.now().isoformat(),
             updated_at=datetime.now().isoformat()
         )
@@ -1209,22 +1211,66 @@ class WSDLConnector:
         return bindings
     
     def _extract_wsdl_types(self, root: ET.Element) -> Dict[str, Any]:
-        """Extract type definitions from WSDL"""
+        """Extract type definitions and namespace information from WSDL"""
         
         types_info = {
             'schemas': [],
             'elements': [],
-            'complex_types': []
+            'complex_types': [],
+            'namespaces': {}
         }
+        
+        # Extract all namespace declarations from the root element
+        all_namespaces = {}
+        
+        # Extract from XML string using regex
+        try:
+            import xml.etree.ElementTree as ET
+            import re
+            xml_str = ET.tostring(root, encoding='unicode')
+            xmlns_pattern = r'xmlns(?::(\w+))?="([^"]+)"'
+            matches = re.findall(xmlns_pattern, xml_str)
+            
+            for match in matches:
+                prefix = match[0] if match[0] else 'default'
+                uri = match[1]
+                all_namespaces[prefix] = uri
+                
+        except Exception as e:
+            print(f"Warning: Could not extract namespaces: {e}")
+        
+        # Also extract targetNamespace from attributes
+        if 'targetNamespace' in root.attrib:
+            all_namespaces['targetNamespace'] = root.attrib['targetNamespace']
+        
+        # Get comprehensive namespace information
+        namespace_info = self._extract_namespace_info(root)
+        types_info['namespaces'] = all_namespaces
+        types_info['detailed_namespaces'] = namespace_info
         
         # Look for schema elements
         schemas = root.findall('.//xsd:schema', self.namespaces)
         for schema in schemas:
             schema_info = {
                 'target_namespace': schema.get('targetNamespace', ''),
+                'element_form_default': schema.get('elementFormDefault', 'unqualified'),
+                'attribute_form_default': schema.get('attributeFormDefault', 'unqualified'),
+                'namespaces': {},
                 'elements': [],
                 'complex_types': []
             }
+            
+            # Extract namespace declarations from schema element
+            schema_namespaces = {}
+            for prefix, uri in schema.attrib.items():
+                if prefix.startswith('xmlns'):
+                    if prefix == 'xmlns':
+                        schema_namespaces['default'] = uri
+                    else:
+                        ns_prefix = prefix.split(':', 1)[1] if ':' in prefix else prefix[6:]
+                        schema_namespaces[ns_prefix] = uri
+            
+            schema_info['namespaces'] = schema_namespaces
             
             # Extract elements
             elements = schema.findall('.//xsd:element', self.namespaces)
@@ -1261,6 +1307,75 @@ class WSDLConnector:
             types_info['schemas'].append(schema_info)
         
         return types_info
+    
+    def _extract_namespace_info(self, root: ET.Element) -> Dict[str, Any]:
+        """Extract comprehensive namespace information from WSDL"""
+        namespace_info = {
+            'root_namespaces': {},
+            'schema_namespaces': [],
+            'target_namespaces': [],
+            'imported_namespaces': []
+        }
+        
+        # Extract root-level namespaces from the XML string
+        try:
+            # Parse the XML string to get namespace declarations
+            import xml.etree.ElementTree as ET
+            xml_str = ET.tostring(root, encoding='unicode')
+            
+            # Extract xmlns declarations using regex
+            import re
+            xmlns_pattern = r'xmlns(?::(\w+))?="([^"]+)"'
+            matches = re.findall(xmlns_pattern, xml_str)
+            
+            for match in matches:
+                prefix = match[0] if match[0] else 'default'
+                uri = match[1]
+                namespace_info['root_namespaces'][prefix] = uri
+                
+        except Exception as e:
+            print(f"Warning: Could not extract root namespaces: {e}")
+        
+        # Also extract from root attributes (for targetNamespace)
+        for prefix, uri in root.attrib.items():
+            if prefix == 'targetNamespace':
+                namespace_info['root_namespaces']['targetNamespace'] = uri
+        
+        # Extract schema-level namespaces
+        schemas = root.findall('.//xsd:schema', self.namespaces)
+        for schema in schemas:
+            schema_ns = {
+                'target_namespace': schema.get('targetNamespace', ''),
+                'element_form_default': schema.get('elementFormDefault', 'unqualified'),
+                'attribute_form_default': schema.get('attributeFormDefault', 'unqualified'),
+                'namespaces': {}
+            }
+            
+            # Extract namespaces declared in this schema
+            for prefix, uri in schema.attrib.items():
+                if prefix.startswith('xmlns'):
+                    if prefix == 'xmlns':
+                        schema_ns['namespaces']['default'] = uri
+                    else:
+                        ns_prefix = prefix.split(':', 1)[1] if ':' in prefix else prefix[6:]
+                        schema_ns['namespaces'][ns_prefix] = uri
+            
+            namespace_info['schema_namespaces'].append(schema_ns)
+            
+            # Collect target namespaces
+            if schema_ns['target_namespace']:
+                namespace_info['target_namespaces'].append(schema_ns['target_namespace'])
+        
+        # Extract imported namespaces
+        imports = root.findall('.//xsd:import', self.namespaces)
+        for imp in imports:
+            import_info = {
+                'namespace': imp.get('namespace', ''),
+                'schema_location': imp.get('schemaLocation', '')
+            }
+            namespace_info['imported_namespaces'].append(import_info)
+        
+        return namespace_info
     
     def _extract_wsdl_auth(self, root: ET.Element) -> Dict[str, Any]:
         """Extract authentication information from WSDL"""
