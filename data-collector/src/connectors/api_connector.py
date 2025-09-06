@@ -844,6 +844,7 @@ class WSDLConnector:
                 'soap_part': True,
                 'schema_details': schema_details,
                 'attributes': schema_details.get('attributes', []),
+                'nested_attributes': schema_details.get('nested_attributes', []),
                 'searchable_content': self._create_searchable_content(schema_details)
             }
             parameters.append(param_info)
@@ -879,12 +880,14 @@ class WSDLConnector:
                 'type': part.get('type', ''),
                 'schema_details': schema_details,
                 'attributes': schema_details.get('attributes', []),
+                'nested_attributes': schema_details.get('nested_attributes', []),
                 'searchable_content': self._create_searchable_content(schema_details)
             }
             body_info['parts'].append(part_info)
             
-            # Collect all attributes for easy searching
+            # Collect all attributes for easy searching (including nested)
             all_attributes.extend(schema_details.get('attributes', []))
+            all_attributes.extend(schema_details.get('nested_attributes', []))
             searchable_parts.append(self._create_searchable_content(schema_details))
         
         body_info['all_attributes'] = all_attributes
@@ -922,12 +925,14 @@ class WSDLConnector:
                 'type': part.get('type', ''),
                 'schema_details': schema_details,
                 'attributes': schema_details.get('attributes', []),
+                'nested_attributes': schema_details.get('nested_attributes', []),
                 'searchable_content': self._create_searchable_content(schema_details)
             }
             response_info['200']['parts'].append(part_info)
             
-            # Collect all attributes for easy searching
+            # Collect all attributes for easy searching (including nested)
             all_attributes.extend(schema_details.get('attributes', []))
+            all_attributes.extend(schema_details.get('nested_attributes', []))
             searchable_parts.append(self._create_searchable_content(schema_details))
         
         response_info['200']['all_attributes'] = all_attributes
@@ -965,8 +970,9 @@ class WSDLConnector:
         # Look for complex type definition
         complex_type = element_elem.find('xsd:complexType', self.namespaces)
         if complex_type is not None:
-            schema_details['complex_type'] = self._extract_complex_type_details(complex_type)
+            schema_details['complex_type'] = self._extract_complex_type_details(complex_type, root)
             schema_details['attributes'] = schema_details['complex_type'].get('attributes', [])
+            schema_details['nested_attributes'] = schema_details['complex_type'].get('nested_attributes', [])
         
         # Look for simple type definition
         simple_type = element_elem.find('xsd:simpleType', self.namespaces)
@@ -975,13 +981,14 @@ class WSDLConnector:
         
         return schema_details
     
-    def _extract_complex_type_details(self, complex_type: ET.Element) -> Dict[str, Any]:
-        """Extract details from a complex type definition"""
+    def _extract_complex_type_details(self, complex_type: ET.Element, root: ET.Element = None) -> Dict[str, Any]:
+        """Extract details from a complex type definition with recursive nested element collection"""
         details = {
             'type': 'complex',
             'attributes': [],
             'elements': [],
-            'sequences': []
+            'sequences': [],
+            'nested_attributes': []  # New field for all nested leaf attributes
         }
         
         # Extract sequence elements
@@ -1009,6 +1016,11 @@ class WSDLConnector:
                 
                 sequence_details['elements'].append(element_details)
                 details['attributes'].append(element_details)
+                
+                # Check if this element has nested complex type (recursive extraction)
+                if root is not None:
+                    nested_attributes = self._extract_nested_attributes(element, root)
+                    details['nested_attributes'].extend(nested_attributes)
             
             details['sequences'].append(sequence_details)
         
@@ -1032,8 +1044,87 @@ class WSDLConnector:
                 
                 choice_details['elements'].append(element_details)
                 details['attributes'].append(element_details)
+                
+                # Check if this element has nested complex type (recursive extraction)
+                if root is not None:
+                    nested_attributes = self._extract_nested_attributes(element, root)
+                    details['nested_attributes'].extend(nested_attributes)
         
         return details
+    
+    def _extract_nested_attributes(self, element: ET.Element, root: ET.Element, parent_path: str = "") -> List[Dict[str, Any]]:
+        """Recursively extract all nested attributes until leaf nodes"""
+        nested_attributes = []
+        element_name = element.get('name', '')
+        element_type = element.get('type', '')
+        
+        # Build the path for nested elements
+        current_path = f"{parent_path}.{element_name}" if parent_path else element_name
+        
+        # Check if this element has a complex type definition
+        if element_type and ':' in element_type:
+            # Handle qualified type names (e.g., "tns:DailyForecast")
+            prefix, type_name = element_type.split(':', 1)
+            complex_type_elem = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+            
+            if complex_type_elem is not None:
+                # Recursively extract nested complex type details
+                nested_details = self._extract_complex_type_details(complex_type_elem, root)
+                
+                # Process nested sequences
+                for sequence in nested_details.get('sequences', []):
+                    for nested_element in sequence.get('elements', []):
+                        nested_attr = {
+                            'name': nested_element['name'],
+                            'type': nested_element['type'],
+                            'min_occurs': nested_element['min_occurs'],
+                            'max_occurs': nested_element['max_occurs'],
+                            'nillable': nested_element['nillable'],
+                            'description': nested_element['description'],
+                            'parent_path': current_path,
+                            'is_nested': True
+                        }
+                        nested_attributes.append(nested_attr)
+                        
+                        # Recursively process further nested elements
+                        nested_attributes.extend(
+                            self._extract_nested_attributes(
+                                ET.Element('element', nested_element), 
+                                root, 
+                                current_path
+                            )
+                        )
+        
+        # Also check for inline complex type definition
+        inline_complex_type = element.find('xsd:complexType', self.namespaces)
+        if inline_complex_type is not None:
+            nested_details = self._extract_complex_type_details(inline_complex_type, root)
+            
+            # Process nested sequences
+            for sequence in nested_details.get('sequences', []):
+                for nested_element in sequence.get('elements', []):
+                    nested_attr = {
+                        'name': nested_element['name'],
+                        'type': nested_element['type'],
+                        'min_occurs': nested_element['min_occurs'],
+                        'max_occurs': nested_element['max_occurs'],
+                        'nillable': nested_element['nillable'],
+                        'description': nested_element['description'],
+                        'parent_path': current_path,
+                        'is_nested': True
+                    }
+                    nested_attributes.append(nested_attr)
+                    
+                    # Recursively process further nested elements
+                    nested_attributes.extend(
+                        self._extract_nested_attributes(
+                            ET.Element('element', nested_element), 
+                            root, 
+                            current_path
+                        )
+                    )
+        
+        return nested_attributes
     
     def _extract_simple_type_details(self, simple_type: ET.Element) -> Dict[str, Any]:
         """Extract details from a simple type definition"""
