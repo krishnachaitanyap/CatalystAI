@@ -759,6 +759,8 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
                 <AttributeHierarchyView 
                   endpoints={commonSpec.endpoints} 
                   title="Request Attributes" 
+                  showRequest={true}
+                  showResponse={false}
                 />
               </div>
 
@@ -767,6 +769,8 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
                 <AttributeHierarchyView 
                   endpoints={commonSpec.endpoints} 
                   title="Response Attributes" 
+                  showRequest={false}
+                  showResponse={true}
                 />
               </div>
 

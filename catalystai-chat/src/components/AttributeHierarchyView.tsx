@@ -14,12 +14,18 @@ interface AttributeNode {
 interface AttributeHierarchyViewProps {
   endpoints: any[];
   title: string;
+  showRequest?: boolean;
+  showResponse?: boolean;
 }
 
-const AttributeHierarchyView: React.FC<AttributeHierarchyViewProps> = ({ endpoints, title }) => {
+const AttributeHierarchyView: React.FC<AttributeHierarchyViewProps> = ({ 
+  endpoints, 
+  title, 
+  showRequest = true, 
+  showResponse = true 
+}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
-  const [showOnlyMatched, setShowOnlyMatched] = useState(false);
 
   // Build hierarchical structure from endpoints
   const attributeTree = useMemo(() => {
@@ -35,60 +41,68 @@ const AttributeHierarchyView: React.FC<AttributeHierarchyViewProps> = ({ endpoin
         children: []
       };
 
-      // Add request parameters
-      if (endpoint.parameters && endpoint.parameters.length > 0) {
-        const requestNode: AttributeNode = {
-          name: 'Request Parameters',
-          type: 'group',
-          level: 1,
-          path: `endpoint-${endpointIndex}-request`,
-          children: endpoint.parameters.map((param: any, paramIndex: number) => ({
-            name: param.name,
-            type: param.type || 'string',
-            description: param.description,
-            required: param.required,
-            level: 2,
-            path: `endpoint-${endpointIndex}-request-${paramIndex}`,
-            children: []
-          }))
-        };
-        endpointNode.children!.push(requestNode);
-      }
-
-      // Add request body attributes
-      if (endpoint.request_body && endpoint.request_body.all_attributes && endpoint.request_body.all_attributes.length > 0) {
-        const requestBodyNode: AttributeNode = {
-          name: 'Request Body',
-          type: 'group',
-          level: 1,
-          path: `endpoint-${endpointIndex}-request-body`,
-          children: buildAttributeHierarchy(endpoint.request_body.all_attributes, `endpoint-${endpointIndex}-request-body`, 2)
-        };
-        endpointNode.children!.push(requestBodyNode);
-      }
-
-      // Add response attributes
-      Object.entries(endpoint.responses || {}).forEach(([statusCode, response]: [string, any]) => {
-        if (response.all_attributes && response.all_attributes.length > 0) {
-          const responseNode: AttributeNode = {
-            name: `Response ${statusCode}`,
+      // Add request attributes if showRequest is true
+      if (showRequest) {
+        // Add request parameters
+        if (endpoint.parameters && endpoint.parameters.length > 0) {
+          const requestNode: AttributeNode = {
+            name: 'Request Parameters',
             type: 'group',
             level: 1,
-            path: `endpoint-${endpointIndex}-response-${statusCode}`,
-            children: buildAttributeHierarchy(response.all_attributes, `endpoint-${endpointIndex}-response-${statusCode}`, 2)
+            path: `endpoint-${endpointIndex}-request`,
+            children: endpoint.parameters.map((param: any, paramIndex: number) => ({
+              name: param.name,
+              type: param.type || 'string',
+              description: param.description,
+              required: param.required,
+              level: 2,
+              path: `endpoint-${endpointIndex}-request-${paramIndex}`,
+              children: []
+            }))
           };
-          endpointNode.children!.push(responseNode);
+          endpointNode.children!.push(requestNode);
         }
-      });
 
-      tree.push(endpointNode);
+        // Add request body attributes
+        if (endpoint.request_body && endpoint.request_body.all_attributes && endpoint.request_body.all_attributes.length > 0) {
+          const requestBodyNode: AttributeNode = {
+            name: 'Request Body',
+            type: 'group',
+            level: 1,
+            path: `endpoint-${endpointIndex}-request-body`,
+            children: buildAttributeHierarchy(endpoint.request_body.all_attributes, `endpoint-${endpointIndex}-request-body`, 2)
+          };
+          endpointNode.children!.push(requestBodyNode);
+        }
+      }
+
+      // Add response attributes if showResponse is true
+      if (showResponse) {
+        Object.entries(endpoint.responses || {}).forEach(([statusCode, response]: [string, any]) => {
+          if (response.all_attributes && response.all_attributes.length > 0) {
+            const responseNode: AttributeNode = {
+              name: `Response ${statusCode}`,
+              type: 'group',
+              level: 1,
+              path: `endpoint-${endpointIndex}-response-${statusCode}`,
+              children: buildAttributeHierarchy(response.all_attributes, `endpoint-${endpointIndex}-response-${statusCode}`, 2)
+            };
+            endpointNode.children!.push(responseNode);
+          }
+        });
+      }
+
+      // Only add endpoint if it has children
+      if (endpointNode.children!.length > 0) {
+        tree.push(endpointNode);
+      }
     });
 
     return tree;
-  }, [endpoints]);
+  }, [endpoints, showRequest, showResponse, buildAttributeHierarchy]);
 
   // Recursively build attribute hierarchy
-  const buildAttributeHierarchy = (attributes: any[], parentPath: string, level: number): AttributeNode[] => {
+  const buildAttributeHierarchy = React.useCallback((attributes: any[], parentPath: string, level: number): AttributeNode[] => {
     return attributes.map((attr, index) => {
       const node: AttributeNode = {
         name: attr.name || attr.title || `Attribute ${index + 1}`,
@@ -122,7 +136,7 @@ const AttributeHierarchyView: React.FC<AttributeHierarchyViewProps> = ({ endpoin
 
       return node;
     });
-  };
+  }, []);
 
   // Filter tree based on search term
   const filteredTree = useMemo(() => {
