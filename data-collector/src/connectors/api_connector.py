@@ -1240,6 +1240,80 @@ class WSDLConnector:
             examples.append(example)
         
         return examples
+    
+    def convert_to_json(self, common_spec: CommonAPISpec, indent: int = 2, ensure_ascii: bool = False) -> str:
+        """
+        Convert CommonAPISpec to JSON format
+        
+        Args:
+            common_spec: The CommonAPISpec object to convert
+            indent: JSON indentation level (default: 2)
+            ensure_ascii: Whether to ensure ASCII encoding (default: False)
+            
+        Returns:
+            JSON string representation of the CommonAPISpec
+        """
+        try:
+            # Convert to dictionary using asdict
+            spec_dict = asdict(common_spec)
+            
+            # Convert to JSON string
+            json_str = json.dumps(spec_dict, indent=indent, ensure_ascii=ensure_ascii)
+            
+            return json_str
+            
+        except Exception as e:
+            raise ValueError(f"Error converting CommonAPISpec to JSON: {str(e)}")
+    
+    def convert_to_json_file(self, common_spec: CommonAPISpec, file_path: str, indent: int = 2, ensure_ascii: bool = False) -> bool:
+        """
+        Convert CommonAPISpec to JSON and save to file
+        
+        Args:
+            common_spec: The CommonAPISpec object to convert
+            file_path: Path where to save the JSON file
+            indent: JSON indentation level (default: 2)
+            ensure_ascii: Whether to ensure ASCII encoding (default: False)
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            # Convert to JSON string
+            json_str = self.convert_to_json(common_spec, indent, ensure_ascii)
+            
+            # Write to file
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(json_str)
+            
+            print(f"✅ JSON file saved successfully: {file_path}")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Error saving JSON file: {str(e)}")
+            return False
+    
+    def print_json(self, common_spec: CommonAPISpec, indent: int = 2, ensure_ascii: bool = False) -> None:
+        """
+        Print CommonAPISpec as formatted JSON to console
+        
+        Args:
+            common_spec: The CommonAPISpec object to print
+            indent: JSON indentation level (default: 2)
+            ensure_ascii: Whether to ensure ASCII encoding (default: False)
+        """
+        try:
+            json_str = self.convert_to_json(common_spec, indent, ensure_ascii)
+            print("\n" + "=" * 80)
+            print("📋 **WSDL API SPECIFICATION (JSON FORMAT)**")
+            print("=" * 80)
+            print(json_str)
+            print("\n" + "=" * 80)
+            print("✅ **JSON CONVERSION COMPLETE**")
+            print("=" * 80)
+            
+        except Exception as e:
+            print(f"❌ Error printing JSON: {str(e)}")
 
 class APIConnectorManager:
     """Main manager for API connectors"""
