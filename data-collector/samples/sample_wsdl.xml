@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://tempuri.org/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://tempuri.org/"
+             elementFormDefault="qualified">
+
+  <types>
+    <xsd:schema targetNamespace="http://tempuri.org/">
+      <xsd:element name="GetWeatherRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CityName" type="xsd:string"/>
+            <xsd:element name="CountryCode" type="xsd:string" minOccurs="0"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      
+      <xsd:element name="GetWeatherResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Temperature" type="xsd:float"/>
+            <xsd:element name="Humidity" type="xsd:int"/>
+            <xsd:element name="Description" type="xsd:string"/>
+            <xsd:element name="WindSpeed" type="xsd:float"/>
+            <xsd:element name="Pressure" type="xsd:float"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      
+      <xsd:element name="GetForecastRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="CityName" type="xsd:string"/>
+            <xsd:element name="Days" type="xsd:int"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      
+      <xsd:element name="GetForecastResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="ForecastDays" type="xsd:int"/>
+            <xsd:element name="DailyForecast" type="tns:DailyForecast" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      
+      <xsd:complexType name="DailyForecast">
+        <xsd:sequence>
+          <xsd:element name="Date" type="xsd:date"/>
+          <xsd:element name="HighTemp" type="xsd:float"/>
+          <xsd:element name="LowTemp" type="xsd:float"/>
+          <xsd:element name="Description" type="xsd:string"/>
+          <xsd:element name="PrecipitationChance" type="xsd:float"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+
+  <message name="GetWeatherSoapIn">
+    <part name="parameters" element="tns:GetWeatherRequest"/>
+  </message>
+  
+  <message name="GetWeatherSoapOut">
+    <part name="parameters" element="tns:GetWeatherResponse"/>
+  </message>
+  
+  <message name="GetForecastSoapIn">
+    <part name="parameters" element="tns:GetForecastRequest"/>
+  </message>
+  
+  <message name="GetForecastSoapOut">
+    <part name="parameters" element="tns:GetForecastResponse"/>
+  </message>
+
+  <portType name="WeatherServiceSoap">
+    <operation name="GetWeather">
+      <documentation>Get current weather information for a city</documentation>
+      <input message="tns:GetWeatherSoapIn"/>
+      <output message="tns:GetWeatherSoapOut"/>
+    </operation>
+    
+    <operation name="GetForecast">
+      <documentation>Get weather forecast for a city for specified number of days</documentation>
+      <input message="tns:GetForecastSoapIn"/>
+      <output message="tns:GetForecastSoapOut"/>
+    </operation>
+  </portType>
+
+  <binding name="WeatherServiceSoap" type="tns:WeatherServiceSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    
+    <operation name="GetWeather">
+      <soap:operation soapAction="http://tempuri.org/GetWeather" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    
+    <operation name="GetForecast">
+      <soap:operation soapAction="http://tempuri.org/GetForecast" style="document"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="WeatherService">
+    <documentation>Weather Service provides current weather and forecast information</documentation>
+    <port name="WeatherServiceSoap" binding="tns:WeatherServiceSoap">
+      <soap:address location="http://localhost:8080/WeatherService.asmx"/>
+    </port>
+  </service>
+
+</definitions>

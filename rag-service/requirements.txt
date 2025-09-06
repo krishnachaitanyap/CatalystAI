@@ -1,0 +1,49 @@
+# Core FastAPI and async dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Vector database clients
+weaviate-client==3.25.3
+qdrant-client==1.7.0
+pinecone-client==2.2.4
+
+# Embedding models and ML
+sentence-transformers==2.2.2
+transformers==4.36.2
+torch==2.1.1
+numpy==1.24.3
+
+# Document processing
+langchain==0.1.0
+langchain-community==0.0.10
+beautifulsoup4==4.12.2
+markdown==3.5.1
+python-multipart==0.0.6
+
+# API parsing
+openapi-spec-validator==0.7.1
+graphql-core==3.2.3
+zeep==4.2.1
+xmlschema==2.4.1
+
+# Database and caching
+redis==5.0.1
+asyncpg==0.29.0
+sqlalchemy==2.0.23
+
+# HTTP and networking
+httpx==0.25.2
+aiofiles==23.2.1
+
+# Utilities
+python-dotenv==1.0.0
+loguru==0.7.2
+tenacity==8.2.3
+
+# Development
+pytest==7.4.3
+pytest-asyncio==0.21.1
+black==23.11.0
+isort==5.12.0
