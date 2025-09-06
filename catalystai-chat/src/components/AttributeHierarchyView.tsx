@@ -27,6 +27,43 @@ const AttributeHierarchyView: React.FC<AttributeHierarchyViewProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
 
+  // Recursively build attribute hierarchy
+  const buildAttributeHierarchy = React.useCallback((attributes: any[], parentPath: string, level: number): AttributeNode[] => {
+    return attributes.map((attr, index) => {
+      const node: AttributeNode = {
+        name: attr.name || attr.title || `Attribute ${index + 1}`,
+        type: attr.type || 'object',
+        description: attr.description,
+        required: attr.required,
+        level,
+        path: `${parentPath}-${index}`,
+        children: []
+      };
+
+      // Handle nested properties
+      if (attr.properties && Array.isArray(attr.properties)) {
+        node.children = buildAttributeHierarchy(attr.properties, node.path, level + 1);
+      } else if (attr.properties && typeof attr.properties === 'object') {
+        node.children = Object.entries(attr.properties).map(([key, value]: [string, any], propIndex) => ({
+          name: key,
+          type: value.type || 'string',
+          description: value.description,
+          required: value.required,
+          level: level + 1,
+          path: `${node.path}-prop-${propIndex}`,
+          children: []
+        }));
+      }
+
+      // Handle nested items (for arrays)
+      if (attr.items && attr.items.properties) {
+        node.children = buildAttributeHierarchy([attr.items], node.path, level + 1);
+      }
+
+      return node;
+    });
+  }, []);
+
   // Build hierarchical structure from endpoints
   const attributeTree = useMemo(() => {
     const tree: AttributeNode[] = [];
@@ -100,43 +137,6 @@ const AttributeHierarchyView: React.FC<AttributeHierarchyViewProps> = ({
 
     return tree;
   }, [endpoints, showRequest, showResponse, buildAttributeHierarchy]);
-
-  // Recursively build attribute hierarchy
-  const buildAttributeHierarchy = React.useCallback((attributes: any[], parentPath: string, level: number): AttributeNode[] => {
-    return attributes.map((attr, index) => {
-      const node: AttributeNode = {
-        name: attr.name || attr.title || `Attribute ${index + 1}`,
-        type: attr.type || 'object',
-        description: attr.description,
-        required: attr.required,
-        level,
-        path: `${parentPath}-${index}`,
-        children: []
-      };
-
-      // Handle nested properties
-      if (attr.properties && Array.isArray(attr.properties)) {
-        node.children = buildAttributeHierarchy(attr.properties, node.path, level + 1);
-      } else if (attr.properties && typeof attr.properties === 'object') {
-        node.children = Object.entries(attr.properties).map(([key, value]: [string, any], propIndex) => ({
-          name: key,
-          type: value.type || 'string',
-          description: value.description,
-          required: value.required,
-          level: level + 1,
-          path: `${node.path}-prop-${propIndex}`,
-          children: []
-        }));
-      }
-
-      // Handle nested items (for arrays)
-      if (attr.items && attr.items.properties) {
-        node.children = buildAttributeHierarchy([attr.items], node.path, level + 1);
-      }
-
-      return node;
-    });
-  }, []);
 
   // Filter tree based on search term
   const filteredTree = useMemo(() => {
