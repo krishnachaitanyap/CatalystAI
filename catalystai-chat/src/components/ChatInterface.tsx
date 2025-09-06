@@ -36,35 +36,31 @@ export const ChatInterface: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <SparklesIcon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">CatalystAI</h1>
-              <p className="text-sm text-gray-500">Intelligent API Discovery & Integration</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={handleClearChat}
-              className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-              title="Clear chat"
-            >
-              <TrashIcon className="w-4 h-4" />
-              <span>Clear Chat</span>
-            </button>
-          </div>
+    <div className="space-y-6">
+      {/* Chat Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-xl font-semibold text-gray-900">
+            💬 Chat Interface
+          </h3>
+          <p className="text-sm text-gray-600">
+            Ask questions about API discovery, integration, and best practices
+          </p>
         </div>
+        <button
+          onClick={handleClearChat}
+          className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+          title="Clear chat"
+        >
+          <TrashIcon className="w-4 h-4" />
+          <span>Clear Chat</span>
+        </button>
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4" onScroll={handleScroll}>
+      {/* Chat Container */}
+      <div className="bg-white rounded-lg shadow-sm border">
+        {/* Chat Messages */}
+        <div className="h-96 overflow-y-auto px-6 py-4 space-y-4" onScroll={handleScroll}>
         {state.messages.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -96,37 +92,38 @@ export const ChatInterface: React.FC = () => {
           ))
         )}
         
-        {/* Scroll to bottom anchor */}
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Scroll to Bottom Button */}
-      {showScrollButton && (
-        <button
-          onClick={scrollToBottom}
-          className="fixed bottom-24 right-6 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200 hover:scale-105"
-          title="Scroll to bottom"
-        >
-          <ArrowDownIcon className="w-5 h-5" />
-        </button>
-      )}
-
-      {/* Error Display */}
-      {state.error && (
-        <div className="mx-6 mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-center space-x-2">
-            <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-xs">!</span>
-            </div>
-            <span className="text-red-800 font-medium">Error</span>
-          </div>
-          <p className="text-red-700 mt-2">{state.error}</p>
+          {/* Scroll to bottom anchor */}
+          <div ref={messagesEndRef} />
         </div>
-      )}
 
-      {/* Chat Input */}
-      <div className="bg-white border-t border-gray-200 px-6 py-4">
-        <ChatInput onSendMessage={sendMessage} isLoading={isLoading} />
+        {/* Scroll to Bottom Button */}
+        {showScrollButton && (
+          <button
+            onClick={scrollToBottom}
+            className="absolute bottom-20 right-6 w-10 h-10 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-all duration-200 hover:scale-105"
+            title="Scroll to bottom"
+          >
+            <ArrowDownIcon className="w-4 h-4" />
+          </button>
+        )}
+
+        {/* Error Display */}
+        {state.error && (
+          <div className="px-6 py-3 bg-red-50 border-t border-red-200">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-xs">!</span>
+              </div>
+              <span className="text-red-800 font-medium text-sm">Error</span>
+            </div>
+            <p className="text-red-700 text-sm mt-1">{state.error}</p>
+          </div>
+        )}
+
+        {/* Chat Input */}
+        <div className="border-t border-gray-200 px-6 py-4">
+          <ChatInput onSendMessage={sendMessage} isLoading={isLoading} />
+        </div>
       </div>
     </div>
   );
