@@ -42,16 +42,34 @@ interface CommonAPISpec {
 }
 
 interface Endpoint {
-  path: string;
+  // REST fields
+  path?: string;
   method: string;
   summary: string;
   description: string;
-  parameters: Parameter[];
-  request_body: RequestBody;
-  responses: { [key: string]: Response };
-  tags: string[];
-  operation_id: string;
-  deprecated: boolean;
+  parameters?: Parameter[];
+  request_body?: RequestBody;
+  responses?: { [key: string]: Response };
+  tags?: string[];
+  operation_id?: string;
+  deprecated?: boolean;
+  
+  // SOAP fields
+  operation_name?: string;
+  soap_headers?: SoapHeader[];
+  input_message?: SoapMessage;
+  output_message?: SoapMessage;
+}
+
+interface SoapHeader {
+  name: string;
+  type: string;
+  description: string;
+  required: boolean;
+}
+
+interface SoapMessage {
+  all_attributes: any[];
 }
 
 interface Parameter {
