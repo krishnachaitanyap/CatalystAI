@@ -155,7 +155,7 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
       const mockCommonSpec: CommonAPISpec = {
         api_name: apiSpec.name,
         version: apiSpec.version,
-        description: apiSpec.description,
+        description: apiSpec.description || '',
         base_url: apiSpec.base_url || '',
         category: 'Enterprise',
         documentation_url: '',
@@ -657,16 +657,16 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
       // Simulate API call to save changes
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const updatedApiSpec: ApiSpec = {
+      const updatedApiSpec: APISpec = {
         ...apiSpec,
         name: commonSpec.api_name,
         version: commonSpec.version,
         description: commonSpec.description,
-        baseUrl: commonSpec.base_url,
-        updatedAt: new Date().toISOString()
+        base_url: commonSpec.base_url,
+        updated_at: new Date().toISOString()
       };
       
-      onApiSpecUpdated(updatedApiSpec);
+      onSave();
     } catch (error) {
       console.error('Save failed:', error);
       alert('Save failed. Please try again.');
@@ -696,12 +696,6 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
     return (
       <div className="text-center py-12">
         <p className="text-red-600">Failed to load API specification</p>
-        <button
-          onClick={onBack}
-          className="mt-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-        >
-          Go Back
-        </button>
       </div>
     );
   }
@@ -725,12 +719,6 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
             className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
             {isSaving ? 'Saving...' : 'Save Changes'}
-          </button>
-          <button
-            onClick={onBack}
-            className="px-4 py-2 bg-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          >
-            Cancel
           </button>
         </div>
       </div>
