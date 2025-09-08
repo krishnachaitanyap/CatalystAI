@@ -73,6 +73,8 @@ export interface APISpec {
   processing_status: string;
   processing_error?: string;
   chromadb_id?: string;
+  common_spec_data?: any;  // Add CommonAPISpec data
+  vectorization_metrics?: any;  // Add metrics data
   created_at: string;
   updated_at: string;
 }

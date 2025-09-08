@@ -86,6 +86,8 @@ class APISpecResponse(BaseModel):
     processing_status: str
     processing_error: Optional[str]
     chromadb_id: Optional[str]
+    common_spec_data: Optional[Dict[str, Any]]  # Add CommonAPISpec data
+    vectorization_metrics: Optional[Dict[str, Any]]  # Add metrics data
     created_at: datetime
     updated_at: datetime
 
