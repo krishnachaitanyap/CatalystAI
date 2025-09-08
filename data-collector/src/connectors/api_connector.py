@@ -2367,6 +2367,8 @@ class APIConnectorManager:
         self.wsdl_connector = WSDLConnector()
         self.chroma_client = None
         self.collection_name = "api_specifications"
+        self.last_converted_spec = None
+        self.last_metrics = None
         
     def load_environment(self):
         """Load environment variables"""
@@ -2421,9 +2423,13 @@ class APIConnectorManager:
             # Display metrics if requested
             if metrics:
                 if api_type == 'wsdl':
-                    self.wsdl_connector.display_vectorization_metrics(common_spec)
+                    metrics_data = self.wsdl_connector.display_vectorization_metrics(common_spec)
                 else:
-                    self.swagger_connector.display_vectorization_metrics(common_spec)
+                    metrics_data = self.swagger_connector.display_vectorization_metrics(common_spec)
+                self.last_metrics = metrics_data
+            
+            # Store the last converted spec for API access
+            self.last_converted_spec = common_spec
             
             # Store in ChromaDB
             return self._store_in_chromadb(common_spec)
@@ -2616,6 +2622,14 @@ Tags: {', '.join(common_spec.tags)}
                 
         except Exception as e:
             print(f"❌ Error listing APIs: {str(e)}")
+
+    def get_last_converted_spec(self):
+        """Get the last converted CommonAPISpec"""
+        return self.last_converted_spec
+    
+    def get_last_metrics(self):
+        """Get the last metrics data"""
+        return self.last_metrics
 
 def main():
     """Main command-line interface"""
