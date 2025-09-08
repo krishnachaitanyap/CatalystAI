@@ -883,7 +883,7 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
                     </div>
                     
                     <div className="text-xs text-gray-500">
-                      {endpoint.parameters.length} parameters • {Object.keys(endpoint.responses).length} responses
+                      {endpoint.parameters?.length || 0} parameters • {Object.keys(endpoint.responses || {}).length} responses
                     </div>
                   </div>
                 ))}
