@@ -54,20 +54,25 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // File type validation
+  // Enhanced file type validation
   const validateFileType = (file: File): { type: string; format: string; isValid: boolean; error?: string } => {
     const fileName = file.name.toLowerCase();
     const fileExtension = fileName.split('.').pop();
 
-    // REST APIs
-    if (fileExtension === 'json' && (fileName.includes('swagger') || fileName.includes('openapi'))) {
+    // REST APIs - Swagger/OpenAPI
+    if (fileExtension === 'json') {
+      if (fileName.includes('swagger') || fileName.includes('openapi')) {
+        return { type: 'REST', format: 'Swagger', isValid: true };
+      }
+      if (fileName.includes('postman')) {
+        return { type: 'Postman', format: 'Postman Collection', isValid: true };
+      }
+      // Generic JSON - could be Swagger/OpenAPI
       return { type: 'REST', format: 'Swagger', isValid: true };
     }
+    
     if (fileExtension === 'yaml' || fileExtension === 'yml') {
       return { type: 'REST', format: 'OpenAPI', isValid: true };
-    }
-    if (fileExtension === 'json' && fileName.includes('postman')) {
-      return { type: 'Postman', format: 'Postman Collection', isValid: true };
     }
 
     // SOAP APIs
@@ -86,7 +91,7 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
     };
   };
 
-  // Basic JSON validation
+  // Enhanced JSON validation for Swagger/OpenAPI
   const validateJsonFile = async (file: File): Promise<string[]> => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -97,7 +102,7 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
           
           const errors: string[] = [];
           
-          // Basic validation based on file type
+          // Enhanced validation for Swagger/OpenAPI
           if (file.name.toLowerCase().includes('swagger') || file.name.toLowerCase().includes('openapi')) {
             if (!json.swagger && !json.openapi) {
               errors.push('Missing required field: swagger or openapi');
@@ -108,12 +113,36 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
             if (!json.paths) {
               errors.push('Missing required field: paths');
             }
+            
+            // Check for OpenAPI 3.x specific fields
+            if (json.openapi && json.openapi.startsWith('3.')) {
+              if (!json.components) {
+                errors.push('OpenAPI 3.x should have components section');
+              }
+            }
+            
+            // Check for Swagger 2.x specific fields
+            if (json.swagger && json.swagger.startsWith('2.')) {
+              if (!json.definitions) {
+                errors.push('Swagger 2.x should have definitions section');
+              }
+            }
           } else if (file.name.toLowerCase().includes('postman')) {
             if (!json.info) {
               errors.push('Missing required field: info');
             }
             if (!json.item) {
               errors.push('Missing required field: item');
+            }
+          } else {
+            // Generic JSON validation - check if it looks like Swagger/OpenAPI
+            if (json.swagger || json.openapi) {
+              if (!json.info) {
+                errors.push('Missing required field: info');
+              }
+              if (!json.paths) {
+                errors.push('Missing required field: paths');
+              }
             }
           }
           
@@ -126,7 +155,7 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
     });
   };
 
-  // Basic XML validation
+  // Enhanced XML validation for WSDL/XSD
   const validateXmlFile = async (file: File): Promise<string[]> => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -145,15 +174,94 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
             if (!content.includes('<wsdl:definitions') && !content.includes('<definitions')) {
               errors.push('Invalid WSDL format: missing definitions element');
             }
+            
+            // Check for required WSDL elements
+            if (!content.includes('<wsdl:types') && !content.includes('<types')) {
+              errors.push('WSDL should have types section');
+            }
+            if (!content.includes('<wsdl:message') && !content.includes('<message')) {
+              errors.push('WSDL should have message definitions');
+            }
+            if (!content.includes('<wsdl:portType') && !content.includes('<portType')) {
+              errors.push('WSDL should have portType definitions');
+            }
+            if (!content.includes('<wsdl:binding') && !content.includes('<binding')) {
+              errors.push('WSDL should have binding definitions');
+            }
+            if (!content.includes('<wsdl:service') && !content.includes('<service')) {
+              errors.push('WSDL should have service definitions');
+            }
           } else if (file.name.toLowerCase().endsWith('.xsd')) {
             if (!content.includes('<xsd:schema') && !content.includes('<schema')) {
               errors.push('Invalid XSD format: missing schema element');
+            }
+            
+            // Check for XSD namespace
+            if (!content.includes('xmlns:xsd') && !content.includes('xmlns:xs')) {
+              errors.push('XSD should have proper namespace declarations');
             }
           }
           
           resolve(errors);
         } catch (error) {
           resolve(['Invalid XML format']);
+        }
+      };
+      reader.readAsText(file);
+    });
+  };
+
+  // Extract metadata from uploaded files
+  const extractMetadata = async (file: File, type: string, format: string): Promise<any> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const content = e.target?.result as string;
+          
+          if (type === 'REST' && (format === 'Swagger' || format === 'OpenAPI')) {
+            const json = JSON.parse(content);
+            resolve({
+              name: json.info?.title || file.name.replace(/\.[^/.]+$/, ""),
+              version: json.info?.version || json.swagger || json.openapi || '1.0.0',
+              description: json.info?.description || `${format} specification for ${application.name}`,
+              baseUrl: json.servers?.[0]?.url || json.host || 'https://api.example.com'
+            });
+          } else if (type === 'SOAP' && format === 'WSDL') {
+            // Extract WSDL metadata
+            const wsdlMatch = content.match(/<wsdl:definitions[^>]*name="([^"]*)"[^>]*>/i) || 
+                            content.match(/<definitions[^>]*name="([^"]*)"[^>]*>/i);
+            const targetNamespace = content.match(/targetNamespace="([^"]*)"/i)?.[1] || '';
+            
+            resolve({
+              name: wsdlMatch?.[1] || file.name.replace(/\.[^/.]+$/, ""),
+              version: '1.0.0',
+              description: `WSDL specification for ${application.name}`,
+              baseUrl: targetNamespace || 'https://api.example.com'
+            });
+          } else if (type === 'Postman') {
+            const json = JSON.parse(content);
+            resolve({
+              name: json.info?.name || file.name.replace(/\.[^/.]+$/, ""),
+              version: json.info?.schema || '2.1.0',
+              description: json.info?.description || `Postman collection for ${application.name}`,
+              baseUrl: 'https://api.example.com'
+            });
+          } else {
+            resolve({
+              name: file.name.replace(/\.[^/.]+$/, ""),
+              version: '1.0.0',
+              description: `${format} specification for ${application.name}`,
+              baseUrl: 'https://api.example.com'
+            });
+          }
+        } catch (error) {
+          resolve({
+            name: file.name.replace(/\.[^/.]+$/, ""),
+            version: '1.0.0',
+            description: `${format} specification for ${application.name}`,
+            baseUrl: 'https://api.example.com'
+          });
         }
       };
       reader.readAsText(file);
@@ -210,12 +318,8 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
 
         // Extract basic metadata for valid files
         if (errors.length === 0) {
-          uploadedFile.metadata = {
-            name: file.name.replace(/\.[^/.]+$/, ""),
-            version: '1.0.0',
-            description: `${validation.format} specification for ${application.name}`,
-            baseUrl: 'https://api.example.com'
-          };
+          const metadata = await extractMetadata(file, validation.type, validation.format);
+          uploadedFile.metadata = metadata;
         }
       } catch (error) {
         uploadedFile.status = 'invalid';
@@ -315,12 +419,17 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
               Drop files here or click to browse
             </h4>
             <p className="text-sm text-gray-600 mb-4">
-              Support for Swagger/OpenAPI (JSON/YAML), WSDL/XSD, and Postman Collections
+              Upload API specifications for automatic processing and validation
             </p>
-            <div className="text-xs text-gray-500">
-              <div>• REST APIs: .json, .yaml, .yml</div>
-              <div>• SOAP APIs: .wsdl, .xsd</div>
-              <div>• Postman Collections: .json</div>
+            <div className="text-xs text-gray-500 space-y-1">
+              <div className="font-medium text-gray-700 mb-2">Supported Formats:</div>
+              <div>• <span className="font-medium">Swagger/OpenAPI</span>: .json, .yaml, .yml</div>
+              <div>• <span className="font-medium">WSDL</span>: .wsdl (SOAP services)</div>
+              <div>• <span className="font-medium">XSD</span>: .xsd (XML schemas)</div>
+              <div>• <span className="font-medium">Postman</span>: .json (collections)</div>
+            </div>
+            <div className="mt-3 text-xs text-blue-600">
+              ✓ Automatic validation ✓ Metadata extraction ✓ Type detection
             </div>
           </div>
           
@@ -358,6 +467,13 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
                       <div className="text-sm text-gray-600">
                         {uploadedFile.type} • {uploadedFile.format} • {(uploadedFile.file.size / 1024).toFixed(1)} KB
                       </div>
+                      {uploadedFile.metadata && (
+                        <div className="text-xs text-gray-500 mt-1">
+                          <div>Name: {uploadedFile.metadata.name}</div>
+                          <div>Version: {uploadedFile.metadata.version}</div>
+                          <div>Base URL: {uploadedFile.metadata.baseUrl}</div>
+                        </div>
+                      )}
                       {uploadedFile.errors.length > 0 && (
                         <div className="text-sm text-red-600 mt-1">
                           {uploadedFile.errors.join(', ')}
