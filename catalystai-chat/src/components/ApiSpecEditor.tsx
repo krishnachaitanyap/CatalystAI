@@ -22,6 +22,7 @@ interface CommonAPISpec {
   base_url: string;
   category: string;
   documentation_url: string;
+  api_type: 'REST' | 'SOAP';
   endpoints: Endpoint[];
   authentication: Authentication;
   rate_limits: RateLimits;
@@ -155,7 +156,174 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
         base_url: apiSpec.baseUrl,
         category: 'Enterprise',
         documentation_url: '',
-        endpoints: [
+        api_type: apiSpec.type === 'SOAP' ? 'SOAP' : 'REST',
+        endpoints: apiSpec.type === 'SOAP' ? [
+          // SOAP Operations
+          {
+            operation_name: 'GetUserDetails',
+            method: 'POST', // SOAP always uses POST
+            summary: 'Get user details by ID',
+            description: 'Retrieve detailed user information by user ID',
+            soap_headers: [
+              {
+                name: 'SOAPAction',
+                type: 'string',
+                description: 'SOAP action header',
+                required: true
+              },
+              {
+                name: 'Content-Type',
+                type: 'string',
+                description: 'Content type for SOAP message',
+                required: true
+              }
+            ],
+            input_message: {
+              all_attributes: [
+                {
+                  name: 'userId',
+                  type: 'string',
+                  description: 'User ID to retrieve',
+                  required: true
+                },
+                {
+                  name: 'includeProfile',
+                  type: 'boolean',
+                  description: 'Include user profile information',
+                  required: false
+                }
+              ]
+            },
+            output_message: {
+              all_attributes: [
+                {
+                  name: 'user',
+                  type: 'object',
+                  description: 'User information',
+                  properties: [
+                    {
+                      name: 'id',
+                      type: 'string',
+                      description: 'User ID',
+                      required: true
+                    },
+                    {
+                      name: 'name',
+                      type: 'string',
+                      description: 'User full name',
+                      required: true
+                    },
+                    {
+                      name: 'email',
+                      type: 'string',
+                      description: 'User email address',
+                      required: true
+                    },
+                    {
+                      name: 'profile',
+                      type: 'object',
+                      description: 'User profile information',
+                      required: false,
+                      properties: [
+                        {
+                          name: 'department',
+                          type: 'string',
+                          description: 'User department',
+                          required: false
+                        },
+                        {
+                          name: 'manager',
+                          type: 'string',
+                          description: 'User manager',
+                          required: false
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            operation_name: 'CreateUser',
+            method: 'POST',
+            summary: 'Create a new user',
+            description: 'Create a new user in the system',
+            soap_headers: [
+              {
+                name: 'SOAPAction',
+                type: 'string',
+                description: 'SOAP action header',
+                required: true
+              },
+              {
+                name: 'Authorization',
+                type: 'string',
+                description: 'Authorization token',
+                required: true
+              }
+            ],
+            input_message: {
+              all_attributes: [
+                {
+                  name: 'userData',
+                  type: 'object',
+                  description: 'User data for creation',
+                  required: true,
+                  properties: [
+                    {
+                      name: 'name',
+                      type: 'string',
+                      description: 'User full name',
+                      required: true
+                    },
+                    {
+                      name: 'email',
+                      type: 'string',
+                      description: 'User email address',
+                      required: true
+                    },
+                    {
+                      name: 'department',
+                      type: 'string',
+                      description: 'User department',
+                      required: false
+                    }
+                  ]
+                }
+              ]
+            },
+            output_message: {
+              all_attributes: [
+                {
+                  name: 'result',
+                  type: 'object',
+                  description: 'Creation result',
+                  properties: [
+                    {
+                      name: 'success',
+                      type: 'boolean',
+                      description: 'Whether creation was successful',
+                      required: true
+                    },
+                    {
+                      name: 'userId',
+                      type: 'string',
+                      description: 'Created user ID',
+                      required: false
+                    },
+                    {
+                      name: 'message',
+                      type: 'string',
+                      description: 'Result message',
+                      required: false
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ] : [
           {
             path: '/api/v1/users',
             method: 'GET',
@@ -761,6 +929,7 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
                   title="Request Attributes" 
                   showRequest={true}
                   showResponse={false}
+                  apiType={commonSpec.api_type as 'REST' | 'SOAP' || 'REST'}
                 />
               </div>
 
@@ -771,6 +940,7 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
                   title="Response Attributes" 
                   showRequest={false}
                   showResponse={true}
+                  apiType={commonSpec.api_type as 'REST' | 'SOAP' || 'REST'}
                 />
               </div>
 

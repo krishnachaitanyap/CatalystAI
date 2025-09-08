@@ -16,13 +16,15 @@ interface AttributeHierarchyViewProps {
   title: string;
   showRequest?: boolean;
   showResponse?: boolean;
+  apiType?: 'REST' | 'SOAP';
 }
 
 const AttributeHierarchyView: React.FC<AttributeHierarchyViewProps> = ({ 
   endpoints, 
   title, 
   showRequest = true, 
-  showResponse = true 
+  showResponse = true,
+  apiType = 'REST'
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
@@ -64,79 +66,149 @@ const AttributeHierarchyView: React.FC<AttributeHierarchyViewProps> = ({
     });
   }, []);
 
-  // Build hierarchical structure from endpoints
+  // Build hierarchical structure from endpoints/operations
   const attributeTree = useMemo(() => {
     const tree: AttributeNode[] = [];
     
     endpoints.forEach((endpoint, endpointIndex) => {
-      const endpointNode: AttributeNode = {
-        name: `${endpoint.method} ${endpoint.path}`,
-        type: 'endpoint',
-        description: endpoint.description,
-        level: 0,
-        path: `endpoint-${endpointIndex}`,
-        children: []
-      };
+      let operationNode: AttributeNode;
+      
+      if (apiType === 'SOAP') {
+        // SOAP operations
+        operationNode = {
+          name: endpoint.operation_name || endpoint.name || `Operation ${endpointIndex + 1}`,
+          type: 'operation',
+          description: endpoint.description || endpoint.summary,
+          level: 0,
+          path: `operation-${endpointIndex}`,
+          children: []
+        };
+      } else {
+        // REST endpoints
+        operationNode = {
+          name: `${endpoint.method} ${endpoint.path}`,
+          type: 'endpoint',
+          description: endpoint.description,
+          level: 0,
+          path: `endpoint-${endpointIndex}`,
+          children: []
+        };
+      }
 
       // Add request attributes if showRequest is true
       if (showRequest) {
-        // Add request parameters
-        if (endpoint.parameters && endpoint.parameters.length > 0) {
-          const requestNode: AttributeNode = {
-            name: 'Request Parameters',
-            type: 'group',
-            level: 1,
-            path: `endpoint-${endpointIndex}-request`,
-            children: endpoint.parameters.map((param: any, paramIndex: number) => ({
-              name: param.name,
-              type: param.type || 'string',
-              description: param.description,
-              required: param.required,
-              level: 2,
-              path: `endpoint-${endpointIndex}-request-${paramIndex}`,
-              children: []
-            }))
-          };
-          endpointNode.children!.push(requestNode);
-        }
+        if (apiType === 'SOAP') {
+          // SOAP-specific request structure
+          
+          // SOAP Headers
+          if (endpoint.soap_headers && endpoint.soap_headers.length > 0) {
+            const headersNode: AttributeNode = {
+              name: 'SOAP Headers',
+              type: 'group',
+              level: 1,
+              path: `operation-${endpointIndex}-headers`,
+              children: endpoint.soap_headers.map((header: any, headerIndex: number) => ({
+                name: header.name,
+                type: header.type || 'string',
+                description: header.description,
+                required: header.required,
+                level: 2,
+                path: `operation-${endpointIndex}-headers-${headerIndex}`,
+                children: []
+              }))
+            };
+            operationNode.children!.push(headersNode);
+          }
 
-        // Add request body attributes
-        if (endpoint.request_body && endpoint.request_body.all_attributes && endpoint.request_body.all_attributes.length > 0) {
-          const requestBodyNode: AttributeNode = {
-            name: 'Request Body',
-            type: 'group',
-            level: 1,
-            path: `endpoint-${endpointIndex}-request-body`,
-            children: buildAttributeHierarchy(endpoint.request_body.all_attributes, `endpoint-${endpointIndex}-request-body`, 2)
-          };
-          endpointNode.children!.push(requestBodyNode);
+          // SOAP Body (input message)
+          if (endpoint.input_message && endpoint.input_message.all_attributes && endpoint.input_message.all_attributes.length > 0) {
+            const inputNode: AttributeNode = {
+              name: 'SOAP Body (Input)',
+              type: 'group',
+              level: 1,
+              path: `operation-${endpointIndex}-input`,
+              children: buildAttributeHierarchy(endpoint.input_message.all_attributes, `operation-${endpointIndex}-input`, 2)
+            };
+            operationNode.children!.push(inputNode);
+          }
+        } else {
+          // REST-specific request structure
+          
+          // Request parameters
+          if (endpoint.parameters && endpoint.parameters.length > 0) {
+            const requestNode: AttributeNode = {
+              name: 'Request Parameters',
+              type: 'group',
+              level: 1,
+              path: `endpoint-${endpointIndex}-request`,
+              children: endpoint.parameters.map((param: any, paramIndex: number) => ({
+                name: param.name,
+                type: param.type || 'string',
+                description: param.description,
+                required: param.required,
+                level: 2,
+                path: `endpoint-${endpointIndex}-request-${paramIndex}`,
+                children: []
+              }))
+            };
+            operationNode.children!.push(requestNode);
+          }
+
+          // Request body attributes
+          if (endpoint.request_body && endpoint.request_body.all_attributes && endpoint.request_body.all_attributes.length > 0) {
+            const requestBodyNode: AttributeNode = {
+              name: 'Request Body',
+              type: 'group',
+              level: 1,
+              path: `endpoint-${endpointIndex}-request-body`,
+              children: buildAttributeHierarchy(endpoint.request_body.all_attributes, `endpoint-${endpointIndex}-request-body`, 2)
+            };
+            operationNode.children!.push(requestBodyNode);
+          }
         }
       }
 
       // Add response attributes if showResponse is true
       if (showResponse) {
-        Object.entries(endpoint.responses || {}).forEach(([statusCode, response]: [string, any]) => {
-          if (response.all_attributes && response.all_attributes.length > 0) {
-            const responseNode: AttributeNode = {
-              name: `Response ${statusCode}`,
+        if (apiType === 'SOAP') {
+          // SOAP-specific response structure
+          
+          // SOAP Output Message
+          if (endpoint.output_message && endpoint.output_message.all_attributes && endpoint.output_message.all_attributes.length > 0) {
+            const outputNode: AttributeNode = {
+              name: 'SOAP Body (Output)',
               type: 'group',
               level: 1,
-              path: `endpoint-${endpointIndex}-response-${statusCode}`,
-              children: buildAttributeHierarchy(response.all_attributes, `endpoint-${endpointIndex}-response-${statusCode}`, 2)
+              path: `operation-${endpointIndex}-output`,
+              children: buildAttributeHierarchy(endpoint.output_message.all_attributes, `operation-${endpointIndex}-output`, 2)
             };
-            endpointNode.children!.push(responseNode);
+            operationNode.children!.push(outputNode);
           }
-        });
+        } else {
+          // REST-specific response structure
+          Object.entries(endpoint.responses || {}).forEach(([statusCode, response]: [string, any]) => {
+            if (response.all_attributes && response.all_attributes.length > 0) {
+              const responseNode: AttributeNode = {
+                name: `Response ${statusCode}`,
+                type: 'group',
+                level: 1,
+                path: `endpoint-${endpointIndex}-response-${statusCode}`,
+                children: buildAttributeHierarchy(response.all_attributes, `endpoint-${endpointIndex}-response-${statusCode}`, 2)
+              };
+              operationNode.children!.push(responseNode);
+            }
+          });
+        }
       }
 
-      // Only add endpoint if it has children
-      if (endpointNode.children!.length > 0) {
-        tree.push(endpointNode);
+      // Only add operation/endpoint if it has children
+      if (operationNode.children!.length > 0) {
+        tree.push(operationNode);
       }
     });
 
     return tree;
-  }, [endpoints, showRequest, showResponse, buildAttributeHierarchy]);
+  }, [endpoints, showRequest, showResponse, apiType, buildAttributeHierarchy]);
 
   // Filter tree based on search term
   const filteredTree = useMemo(() => {
@@ -221,6 +293,7 @@ const AttributeHierarchyView: React.FC<AttributeHierarchyViewProps> = ({
             <div className="flex items-center space-x-2">
               <span className={`font-medium text-sm ${
                 node.type === 'endpoint' ? 'text-blue-600' :
+                node.type === 'operation' ? 'text-purple-600' :
                 node.type === 'group' ? 'text-green-600' :
                 'text-gray-900'
               }`}>
