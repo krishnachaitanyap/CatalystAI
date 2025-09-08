@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks, Depends, status
+from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks, Depends, status, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -80,26 +80,6 @@ async def root():
 async def health_check():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
-@app.get("/files")
-async def list_files():
-    """List all uploaded files"""
-    files = []
-    for file_id, file_info in file_storage.items():
-        status_info = processing_status.get(file_id, {"status": "unknown", "progress": 0, "message": ""})
-        files.append({
-            "file_id": file_id,
-            "filename": file_info["filename"],
-            "file_type": file_info["file_type"],
-            "file_format": file_info["file_format"],
-            "file_size": file_info["file_size"],
-            "upload_time": file_info["upload_time"],
-            "status": status_info["status"],
-            "progress": status_info["progress"],
-            "message": status_info["message"],
-            "metadata": file_info["metadata"]
-        })
-    return {"files": files}
-
 @app.get("/files/{file_id}/status", response_model=ProcessingStatus)
 async def get_file_status(file_id: str):
     """Get processing status for a specific file"""
@@ -117,83 +97,97 @@ async def get_file_status(file_id: str):
     )
 
 @app.post("/convert", response_model=ConvertResponse)
-async def convert_file(request: ConvertRequest, background_tasks: BackgroundTasks):
+async def convert_file(request: ConvertRequest, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_user)):
     """Convert uploaded file to CommonAPISpec format"""
-    if request.file_id not in file_storage:
-        raise HTTPException(status_code=404, detail="File not found")
-    
-    file_info = file_storage[request.file_id]
-    
-    # Update status to processing
-    processing_status[request.file_id] = {
-        "status": "processing",
-        "progress": 10,
-        "message": "Starting conversion..."
-    }
-    
     try:
-        # Initialize connector manager
-        manager = APIConnectorManager()
-        
-        # Determine API type based on file format
-        api_type = "wsdl" if file_info["file_format"] in ["WSDL", "XSD"] else "swagger"
-        
-        # Convert file
-        success = manager.convert_and_store(
-            file_info["file_path"],
-            api_type,
-            metrics=request.show_metrics
-        )
-        
-        if success:
-            # Get the converted CommonAPISpec
-            common_spec = manager.get_last_converted_spec()
-            metrics = manager.get_last_metrics() if request.show_metrics else None
+        # Get file from database
+        with db_manager.get_session() as session:
+            file_upload = session.query(FileUpload).filter(
+                FileUpload.file_id == request.file_id,
+                FileUpload.user_id == current_user.id
+            ).first()
             
-            # Update status to completed
-            processing_status[request.file_id] = {
-                "status": "completed",
-                "progress": 100,
-                "message": "Conversion completed successfully",
-                "result": {
-                    "common_spec": common_spec.__dict__ if common_spec else None,
-                    "metrics": metrics
-                }
-            }
+            if not file_upload:
+                raise HTTPException(status_code=404, detail="File not found")
             
-            return ConvertResponse(
-                file_id=request.file_id,
-                success=True,
-                common_spec=common_spec.__dict__ if common_spec else None,
-                metrics=metrics
-            )
-        else:
-            processing_status[request.file_id] = {
-                "status": "failed",
-                "progress": 0,
-                "message": "Conversion failed",
-                "error": "Failed to convert file"
-            }
+            # Update status to processing
+            file_upload.processing_status = "processing"
+            session.commit()
             
-            return ConvertResponse(
-                file_id=request.file_id,
-                success=False,
-                error="Failed to convert file"
+            # Initialize connector manager
+            manager = APIConnectorManager()
+            
+            # Determine API type based on file format
+            api_type = "wsdl" if file_upload.file_format in ["WSDL", "XSD"] else "swagger"
+            
+            # Convert file
+            success = manager.convert_and_store(
+                file_upload.temp_file_path,
+                api_type,
+                metrics=request.show_metrics
             )
             
+            if success:
+                # Get the converted CommonAPISpec
+                common_spec = manager.get_last_converted_spec()
+                metrics = manager.get_last_metrics() if request.show_metrics else None
+                
+                # Create APISpec record if application_id is provided
+                api_spec_id = None
+                if file_upload.application_id and common_spec:
+                    api_spec = db_manager.create_api_spec(
+                        name=common_spec.api_name,
+                        version=common_spec.version,
+                        description=common_spec.description,
+                        api_type=common_spec.category.upper(),
+                        format=file_upload.file_format,
+                        base_url=common_spec.base_url,
+                        file_path=file_upload.temp_file_path,
+                        file_size=file_upload.file_size,
+                        status='active',
+                        application_id=file_upload.application_id,
+                        created_by_id=current_user.id,
+                        common_spec_data=common_spec.__dict__,
+                        vectorization_metrics=metrics
+                    )
+                    api_spec_id = api_spec.id
+                
+                # Update status to completed
+                file_upload.processing_status = "completed"
+                session.commit()
+                
+                return ConvertResponse(
+                    file_id=request.file_id,
+                    success=True,
+                    api_spec_id=api_spec_id,
+                    common_spec=common_spec.__dict__ if common_spec else None,
+                    metrics=metrics
+                )
+            else:
+                # Update status to failed
+                file_upload.processing_status = "failed"
+                file_upload.error_message = "Conversion failed"
+                session.commit()
+                
+                return ConvertResponse(
+                    file_id=request.file_id,
+                    success=False,
+                    error="Failed to convert file"
+                )
+                
     except Exception as e:
-        processing_status[request.file_id] = {
-            "status": "failed",
-            "progress": 0,
-            "message": f"Conversion error: {str(e)}",
-            "error": str(e)
-        }
+        # Update status to failed
+        with db_manager.get_session() as session:
+            file_upload = session.query(FileUpload).filter(
+                FileUpload.file_id == request.file_id,
+                FileUpload.user_id == current_user.id
+            ).first()
+            if file_upload:
+                file_upload.processing_status = "failed"
+                file_upload.error_message = str(e)
+                session.commit()
         
-        return ConvertResponse(
-            file_id=request.file_id,
-            success=False,
-            error=str(e)
-        )
+        raise HTTPException(status_code=500, detail=f"Conversion failed: {str(e)}")
 
 @app.delete("/files/{file_id}")
 async def delete_file(file_id: str):
@@ -496,7 +490,11 @@ async def update_api_spec(spec_id: int, spec_update: APISpecUpdate, current_user
 
 # Enhanced File Upload with Database Integration
 @app.post("/upload", response_model=FileUploadResponse)
-async def upload_file(file: UploadFile = File(...), current_user: User = Depends(get_current_user)):
+async def upload_file(
+    file: UploadFile = File(...), 
+    application_id: int = Form(...),
+    current_user: User = Depends(get_current_user)
+):
     """Upload and validate API specification files"""
     try:
         # Generate unique file ID
@@ -527,7 +525,8 @@ async def upload_file(file: UploadFile = File(...), current_user: User = Depends
             file_size=len(content),
             user_id=current_user.id,
             file_metadata=metadata,
-            temp_file_path=tmp_file_path
+            temp_file_path=tmp_file_path,
+            application_id=application_id
         )
         
         # Store in memory for backward compatibility

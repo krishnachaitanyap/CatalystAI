@@ -1,0 +1,328 @@
+
+> catalystai-chat@0.1.0 start
+> react-scripts start
+
+(node:19142) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:19142) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled successfully!
+
+You can now view catalystai-chat in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://192.168.1.6:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/contexts/AuthContext.tsx
+  Line 1:76:  'useCallback' is defined but never used                                                                         @typescript-eslint/no-unused-vars
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/contexts/AuthContext.tsx
+  Line 1:76:  'useCallback' is defined but never used                                                                         @typescript-eslint/no-unused-vars
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:   'ProcessingStatus' is defined but never used          @typescript-eslint/no-unused-vars
+  Line 312:9:  'handleDragOver' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 317:9:  'handleDragEnter' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 322:9:  'handleDragLeave' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 327:9:  'handleDrop' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:   'ProcessingStatus' is defined but never used          @typescript-eslint/no-unused-vars
+  Line 312:9:  'handleDragOver' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  Line 317:9:  'handleDragEnter' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 322:9:  'handleDragLeave' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  Line 327:9:  'handleDrop' is assigned a value but never used       @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:   'ProcessingStatus' is defined but never used        @typescript-eslint/no-unused-vars
+  Line 30:10:  'isDragOver' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 30:22:  'setIsDragOver' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:   'ProcessingStatus' is defined but never used        @typescript-eslint/no-unused-vars
+  Line 30:10:  'isDragOver' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  Line 30:22:  'setIsDragOver' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:   'ProcessingStatus' is defined but never used     @typescript-eslint/no-unused-vars
+  Line 30:10:  'isDragOver' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:   'ProcessingStatus' is defined but never used     @typescript-eslint/no-unused-vars
+  Line 30:10:  'isDragOver' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+ERROR in src/components/ApiUploader.tsx:357:77
+TS2554: Expected 2 arguments, but got 1.
+    355 |         try {
+    356 |           // Upload file to backend
+  > 357 |           const uploadResponse: FileUploadResponse = await dataCollectorAPI.uploadFile(uploadedFile.file);
+        |                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    358 |           
+    359 |           // Convert file to CommonAPISpec
+    360 |           const convertResponse: ConvertResponse = await dataCollectorAPI.convertFile(uploadResponse.file_id, true);
+
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/components/ApiUploader.tsx
+  Line 2:48:  'ProcessingStatus' is defined but never used  @typescript-eslint/no-unused-vars
+
+src/contexts/AuthContext.tsx
+  Line 93:6:  React Hook useEffect has a missing dependency: 'refreshUser'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+webpack compiled with 1 warning
+No issues found.

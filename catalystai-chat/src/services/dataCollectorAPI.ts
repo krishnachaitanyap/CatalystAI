@@ -332,9 +332,10 @@ class DataCollectorAPI {
   }
 
   // File Upload Management
-  async uploadFile(file: File): Promise<FileUploadResponse> {
+  async uploadFile(file: File, applicationId: number): Promise<FileUploadResponse> {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('application_id', applicationId.toString());
 
     const response = await fetch(`${this.baseUrl}/upload`, {
       method: 'POST',

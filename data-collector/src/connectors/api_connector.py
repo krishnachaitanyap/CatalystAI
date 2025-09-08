@@ -2403,6 +2403,10 @@ class APIConnectorManager:
         """Convert API spec to common structure and store in ChromaDB"""
         
         try:
+            # Initialize ChromaDB if not already done
+            if self.chroma_client is None:
+                self.initialize_chromadb()
+            
             # Determine API type if auto
             if api_type == 'auto':
                 api_type = self._detect_api_type(file_path)

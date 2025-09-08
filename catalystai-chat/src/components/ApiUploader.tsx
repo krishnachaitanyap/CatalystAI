@@ -354,7 +354,7 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
       for (const uploadedFile of validFiles) {
         try {
           // Upload file to backend
-          const uploadResponse: FileUploadResponse = await dataCollectorAPI.uploadFile(uploadedFile.file);
+          const uploadResponse: FileUploadResponse = await dataCollectorAPI.uploadFile(uploadedFile.file, application.id);
           
           // Convert file to CommonAPISpec
           const convertResponse: ConvertResponse = await dataCollectorAPI.convertFile(uploadResponse.file_id, true);

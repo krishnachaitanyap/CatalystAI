@@ -100,6 +100,7 @@ class FileUpload(Base):
     error_message = Column(Text)
     file_metadata = Column(JSON)  # Extracted metadata
     temp_file_path = Column(String(500))  # Temporary file path
+    application_id = Column(Integer, ForeignKey('applications.id'), nullable=True)  # Link to application
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -204,7 +205,8 @@ class DatabaseManager:
     # API Spec management methods
     def create_api_spec(self, name: str, version: str, description: str, api_type: str, 
                        format: str, base_url: str, file_path: str, file_size: int,
-                       application_id: int, created_by_id: int, common_spec_data: Dict = None):
+                       application_id: int, created_by_id: int, common_spec_data: Dict = None,
+                       status: str = 'active', vectorization_metrics: Dict = None):
         """Create a new API specification"""
         with self.get_session() as session:
             api_spec = APISpec(
@@ -216,9 +218,11 @@ class DatabaseManager:
                 base_url=base_url,
                 file_path=file_path,
                 file_size=file_size,
+                status=status,
                 application_id=application_id,
                 created_by_id=created_by_id,
-                common_spec_data=common_spec_data or {}
+                common_spec_data=common_spec_data or {},
+                vectorization_metrics=vectorization_metrics or {}
             )
             session.add(api_spec)
             session.commit()
@@ -251,7 +255,7 @@ class DatabaseManager:
     
     # File upload management methods
     def create_file_upload(self, file_id: str, filename: str, file_type: str, file_format: str,
-                          file_size: int, user_id: int, file_metadata: Dict = None, temp_file_path: str = None):
+                          file_size: int, user_id: int, file_metadata: Dict = None, temp_file_path: str = None, application_id: int = None):
         """Create a new file upload record"""
         with self.get_session() as session:
             file_upload = FileUpload(
@@ -262,7 +266,8 @@ class DatabaseManager:
                 file_size=file_size,
                 user_id=user_id,
                 file_metadata=file_metadata or {},
-                temp_file_path=temp_file_path
+                temp_file_path=temp_file_path,
+                application_id=application_id
             )
             session.add(file_upload)
             session.commit()
