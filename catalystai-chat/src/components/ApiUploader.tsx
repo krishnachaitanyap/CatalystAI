@@ -1,28 +1,5 @@
 import React, { useState, useRef } from 'react';
-
-interface Application {
-  id: string;
-  name: string;
-  description: string;
-  sealId: string;
-  createdAt: string;
-  updatedAt: string;
-  apiCount: number;
-}
-
-interface ApiSpec {
-  id: string;
-  applicationId: string;
-  name: string;
-  type: 'REST' | 'SOAP' | 'Postman';
-  format: 'Swagger' | 'OpenAPI' | 'WSDL' | 'XSD' | 'Postman Collection';
-  version: string;
-  description: string;
-  baseUrl: string;
-  status: 'Active' | 'Draft' | 'Archived';
-  createdAt: string;
-  updatedAt: string;
-}
+import { dataCollectorAPI, FileUploadResponse, ProcessingStatus, ConvertResponse, Application, APISpec } from '../services/dataCollectorAPI';
 
 interface UploadedFile {
   id: string;
@@ -41,14 +18,12 @@ interface UploadedFile {
 
 interface ApiUploaderProps {
   application: Application;
-  onApiUploaded: (apiSpec: ApiSpec) => void;
-  onBack: () => void;
+  onApiUploaded: (apiSpec: APISpec) => void;
 }
 
 const ApiUploader: React.FC<ApiUploaderProps> = ({
   application,
-  onApiUploaded,
-  onBack
+  onApiUploaded
 }) => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -345,30 +320,48 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
     setIsUploading(true);
 
     try {
-      // Simulate upload process
+      // Upload files to data-collector API
       for (const uploadedFile of validFiles) {
-        const apiSpec: ApiSpec = {
-          id: `api-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          applicationId: application.id,
-          name: uploadedFile.metadata?.name || uploadedFile.file.name,
-          type: uploadedFile.type,
-          format: uploadedFile.format,
-          version: uploadedFile.metadata?.version || '1.0.0',
-          description: uploadedFile.metadata?.description || '',
-          baseUrl: uploadedFile.metadata?.baseUrl || '',
-          status: 'Draft',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        onApiUploaded(apiSpec);
+        try {
+          // Upload file to backend
+          const uploadResponse: FileUploadResponse = await dataCollectorAPI.uploadFile(uploadedFile.file);
+          
+          // Convert file to CommonAPISpec
+          const convertResponse: ConvertResponse = await dataCollectorAPI.convertFile(uploadResponse.file_id, true);
+          
+          if (convertResponse.success) {
+            // Create API spec from converted data
+                            const apiSpec: APISpec = {
+                              id: convertResponse.api_spec_id || 0,
+                              name: convertResponse.common_spec?.api_name || uploadedFile.metadata?.name || uploadedFile.file.name,
+                              version: convertResponse.common_spec?.version || uploadedFile.metadata?.version || '1.0.0',
+                              description: convertResponse.common_spec?.description || uploadedFile.metadata?.description || '',
+                              api_type: uploadedFile.type,
+                              format: uploadedFile.format,
+                              base_url: convertResponse.common_spec?.base_url || uploadedFile.metadata?.baseUrl || '',
+                              status: 'draft',
+                              application_id: application.id,
+                              created_by_id: 1, // This would come from auth context
+                              processing_status: 'completed',
+                              file_path: '',
+                              file_size: uploadedFile.file.size,
+                              created_at: new Date().toISOString(),
+                              updated_at: new Date().toISOString()
+                            };
+            
+            onApiUploaded(apiSpec);
+          } else {
+            console.error('Conversion failed:', convertResponse.error);
+            alert(`Failed to convert ${uploadedFile.file.name}: ${convertResponse.error}`);
+          }
+        } catch (error) {
+          console.error('Upload/conversion failed for', uploadedFile.file.name, ':', error);
+          alert(`Failed to process ${uploadedFile.file.name}: ${error}`);
+        }
       }
 
       setUploadedFiles([]);
-      alert(`Successfully uploaded ${validFiles.length} API specification(s)`);
+      alert(`Successfully processed ${validFiles.length} API specification(s)`);
     } catch (error) {
       console.error('Upload failed:', error);
       alert('Upload failed. Please try again.');

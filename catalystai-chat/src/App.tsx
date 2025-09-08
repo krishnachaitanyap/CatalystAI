@@ -1,11 +1,29 @@
 import React, { useState } from 'react';
 import { ChatProvider } from './contexts/ChatContext';
+import { CombinedProvider, useAuth } from './contexts/AuthContext';
 import { ChatInterface } from './components/ChatInterface';
 import ApiSpecManagement from './components/ApiSpecManagement';
+import LoginForm from './components/LoginForm';
 import './App.css';
 
-function App() {
+const AppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'chat' | 'api-spec'>('chat');
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <LoginForm />;
+  }
 
   return (
     <div className="App">
@@ -62,6 +80,14 @@ function App() {
         </div>
       </ChatProvider>
     </div>
+  );
+};
+
+function App() {
+  return (
+    <CombinedProvider>
+      <AppContent />
+    </CombinedProvider>
   );
 }
 

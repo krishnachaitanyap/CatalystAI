@@ -1,91 +1,94 @@
-import React, { useState } from 'react';
-
-interface Application {
-  id: string;
-  name: string;
-  description: string;
-  sealId: string;
-  createdAt: string;
-  updatedAt: string;
-  apiCount: number;
-}
-
-interface ApiSpec {
-  id: string;
-  applicationId: string;
-  name: string;
-  type: 'REST' | 'SOAP' | 'Postman';
-  format: 'Swagger' | 'OpenAPI' | 'WSDL' | 'XSD' | 'Postman Collection';
-  version: string;
-  description: string;
-  baseUrl: string;
-  status: 'Active' | 'Draft' | 'Archived';
-  createdAt: string;
-  updatedAt: string;
-}
+import React, { useState, useEffect } from 'react';
+import { useApp } from '../contexts/AuthContext';
+import { Application, APISpec } from '../services/dataCollectorAPI';
 
 interface ApplicationManagerProps {
-  applications: Application[];
-  apiSpecs: ApiSpec[];
   onApplicationSelect: (application: Application) => void;
-  onApiSpecSelect: (apiSpec: ApiSpec) => void;
+  onApiSpecSelect: (apiSpec: APISpec) => void;
 }
 
 const ApplicationManager: React.FC<ApplicationManagerProps> = ({
-  applications,
-  apiSpecs,
   onApplicationSelect,
   onApiSpecSelect
 }) => {
+  const { applications, apiSpecs, isLoading, error, loadApplications, selectApplication, createApplication } = useApp();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newApplication, setNewApplication] = useState({
     name: '',
     description: '',
-    sealId: '105961' // Default SEALID
+    sealid: '105961' // Default SEALID
   });
 
-  const handleCreateApplication = (e: React.FormEvent) => {
+  useEffect(() => {
+    loadApplications();
+  }, [loadApplications]);
+
+  const handleCreateApplication = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newApplication.name.trim()) {
-      const application: Application = {
-        id: `app-${Date.now()}`,
-        name: newApplication.name,
-        description: newApplication.description,
-        sealId: newApplication.sealId,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        apiCount: 0
-      };
-      
-      // In a real app, this would make an API call
-      console.log('Creating application:', application);
-      
-      setNewApplication({ name: '', description: '', sealId: '105961' });
-      setShowCreateForm(false);
+      try {
+        await createApplication({
+          name: newApplication.name,
+          description: newApplication.description,
+          sealid: newApplication.sealid
+        });
+        
+        setNewApplication({ name: '', description: '', sealid: '105961' });
+        setShowCreateForm(false);
+      } catch (error) {
+        console.error('Failed to create application:', error);
+      }
     }
   };
 
-  const getApiSpecsForApplication = (applicationId: string) => {
-    return apiSpecs.filter(api => api.applicationId === applicationId);
+  const getApiSpecsForApplication = (applicationId: number) => {
+    return apiSpecs.filter(api => api.application_id === applicationId);
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'Active': return 'bg-green-100 text-green-800';
-      case 'Draft': return 'bg-yellow-100 text-yellow-800';
-      case 'Archived': return 'bg-gray-100 text-gray-800';
+    switch (status.toLowerCase()) {
+      case 'active': return 'bg-green-100 text-green-800';
+      case 'draft': return 'bg-yellow-100 text-yellow-800';
+      case 'archived': return 'bg-gray-100 text-gray-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'REST': return '🌐';
-      case 'SOAP': return '🔧';
-      case 'Postman': return '📮';
+    switch (type.toLowerCase()) {
+      case 'rest': return '🌐';
+      case 'soap': return '🔧';
+      case 'postman': return '📮';
       default: return '📄';
     }
   };
+
+  if (isLoading && applications.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading applications...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-md p-4">
+        <div className="text-red-700">
+          <strong>Error:</strong> {error}
+        </div>
+        <button
+          onClick={() => loadApplications()}
+          className="mt-2 px-4 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -145,8 +148,8 @@ const ApplicationManager: React.FC<ApplicationManagerProps> = ({
               </label>
               <input
                 type="text"
-                value={newApplication.sealId}
-                onChange={(e) => setNewApplication(prev => ({ ...prev, sealId: e.target.value }))}
+                value={newApplication.sealid}
+                onChange={(e) => setNewApplication(prev => ({ ...prev, sealid: e.target.value }))}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter SEALID"
               />
@@ -191,13 +194,13 @@ const ApplicationManager: React.FC<ApplicationManagerProps> = ({
                     </p>
                     <div className="mt-2 flex items-center text-xs text-gray-500">
                       <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                        SEALID: {application.sealId}
+                        SEALID: {application.sealid}
                       </span>
                     </div>
                   </div>
                   <div className="ml-4 text-right">
                     <div className="text-2xl font-bold text-blue-600">
-                      {application.apiCount}
+                      {getApiSpecsForApplication(application.id).length}
                     </div>
                     <div className="text-xs text-gray-500">APIs</div>
                   </div>
@@ -205,10 +208,13 @@ const ApplicationManager: React.FC<ApplicationManagerProps> = ({
                 
                 <div className="mt-4 flex items-center justify-between">
                   <div className="text-xs text-gray-500">
-                    Updated {new Date(application.updatedAt).toLocaleDateString()}
+                    Updated {new Date(application.updated_at).toLocaleDateString()}
                   </div>
                   <button
-                    onClick={() => onApplicationSelect(application)}
+                    onClick={() => {
+                      selectApplication(application);
+                      onApplicationSelect(application);
+                    }}
                     className="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     Manage APIs
@@ -230,7 +236,7 @@ const ApplicationManager: React.FC<ApplicationManagerProps> = ({
                         onClick={() => onApiSpecSelect(apiSpec)}
                       >
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm">{getTypeIcon(apiSpec.type)}</span>
+                          <span className="text-sm">{getTypeIcon(apiSpec.api_type)}</span>
                           <div>
                             <div className="text-sm font-medium text-gray-900">
                               {apiSpec.name}
