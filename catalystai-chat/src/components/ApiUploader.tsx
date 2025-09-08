@@ -396,7 +396,7 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
           Upload API Specifications
         </h3>
         <p className="text-sm text-gray-600">
-          Upload API specifications for <strong>{application.name}</strong> (SEALID: {application.sealId})
+          Upload API specifications for <strong>{application.name}</strong> (SEALID: {application.sealid})
         </p>
       </div>
 
@@ -500,12 +500,6 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
             {uploadedFiles.filter(f => f.status === 'valid').length} valid file(s) ready for upload
           </div>
           <div className="flex space-x-3">
-            <button
-              onClick={onBack}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Cancel
-            </button>
             <button
               onClick={handleUpload}
               disabled={isUploading || uploadedFiles.filter(f => f.status === 'valid').length === 0}

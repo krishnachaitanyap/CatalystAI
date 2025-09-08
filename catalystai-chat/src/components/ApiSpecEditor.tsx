@@ -1,19 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AttributeHierarchyView from './AttributeHierarchyView';
-
-interface ApiSpec {
-  id: string;
-  applicationId: string;
-  name: string;
-  type: 'REST' | 'SOAP' | 'Postman';
-  format: 'Swagger' | 'OpenAPI' | 'WSDL' | 'XSD' | 'Postman Collection';
-  version: string;
-  description: string;
-  baseUrl: string;
-  status: 'Active' | 'Draft' | 'Archived';
-  createdAt: string;
-  updatedAt: string;
-}
+import { APISpec } from '../services/dataCollectorAPI';
 
 interface CommonAPISpec {
   api_name: string;
@@ -143,15 +130,13 @@ interface LicenseInfo {
 }
 
 interface ApiSpecEditorProps {
-  apiSpec: ApiSpec;
-  onApiSpecUpdated: (apiSpec: ApiSpec) => void;
-  onBack: () => void;
+  apiSpec: APISpec;
+  onSave: () => void;
 }
 
 const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
   apiSpec,
-  onApiSpecUpdated,
-  onBack
+  onSave
 }) => {
   const [commonSpec, setCommonSpec] = useState<CommonAPISpec | null>(null);
   const [activeTab, setActiveTab] = useState<'basic' | 'endpoints' | 'auth' | 'advanced'>('basic');
@@ -171,11 +156,11 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
         api_name: apiSpec.name,
         version: apiSpec.version,
         description: apiSpec.description,
-        base_url: apiSpec.baseUrl,
+        base_url: apiSpec.base_url || '',
         category: 'Enterprise',
         documentation_url: '',
-        api_type: apiSpec.type === 'SOAP' ? 'SOAP' : 'REST',
-        endpoints: apiSpec.type === 'SOAP' ? [
+        api_type: apiSpec.api_type === 'SOAP' ? 'SOAP' : 'REST',
+        endpoints: apiSpec.api_type === 'SOAP' ? [
           // SOAP Operations
           {
             operation_name: 'GetUserDetails',
@@ -652,8 +637,8 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
         external_docs: [],
         examples: [],
         schema_version: '1.0',
-        created_at: apiSpec.createdAt,
-        updated_at: apiSpec.updatedAt
+        created_at: apiSpec.created_at,
+        updated_at: apiSpec.updated_at
       };
       
       setCommonSpec(mockCommonSpec);
@@ -730,7 +715,7 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
             Edit API Specification
           </h3>
           <p className="text-sm text-gray-600">
-            {apiSpec.name} • {apiSpec.type} • {apiSpec.format}
+            {apiSpec.name} • {apiSpec.api_type} • {apiSpec.format}
           </p>
         </div>
         <div className="flex space-x-3">

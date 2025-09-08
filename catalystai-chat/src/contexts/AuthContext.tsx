@@ -19,7 +19,7 @@ interface AppContextType {
   loadApplications: () => Promise<void>;
   selectApplication: (application: Application) => void;
   loadAPISpecs: (appId: number) => Promise<void>;
-  createApplication: (app: { name: string; description?: string; sealid: string }) => Promise<void>;
+  createApplication: (app: { name: string; description?: string; sealid: string }) => Promise<Application>;
   refreshData: () => Promise<void>;
 }
 
@@ -148,7 +148,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   };
 
-  const createApplication = async (appData: { name: string; description?: string; sealid: string }) => {
+  const createApplication = async (appData: { name: string; description?: string; sealid: string }): Promise<Application> => {
     try {
       setIsLoading(true);
       setError(null);
