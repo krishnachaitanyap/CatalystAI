@@ -24,7 +24,6 @@ import os
 import json
 import yaml
 import xml.etree.ElementTree as ET
-import argparse
 import sys
 from typing import Dict, List, Any, Optional, Union
 from dataclasses import dataclass, asdict
@@ -2384,7 +2383,7 @@ class APIConnectorManager:
             print("✅ ChromaDB initialized successfully")
         except Exception as e:
             print(f"❌ Error initializing ChromaDB: {str(e)}")
-            sys.exit(1)
+            raise e
     
     def get_or_create_collection(self):
         """Get existing collection or create new one"""
@@ -2400,7 +2399,7 @@ class APIConnectorManager:
             print(f"✅ Created new collection: {self.collection_name}")
             return collection
     
-    def convert_and_store(self, file_path: str, api_type: str = 'auto', verbose: bool = False, metrics: bool = False) -> bool:
+    def convert_and_store(self, file_path: str, api_type: str = 'auto', metrics: bool = False) -> bool:
         """Convert API spec to common structure and store in ChromaDB"""
         
         try:
@@ -2415,10 +2414,6 @@ class APIConnectorManager:
                 common_spec = self.wsdl_connector.parse_wsdl_file(file_path)
             else:
                 raise ValueError(f"Unsupported API type: {api_type}")
-            
-            # Print converted data if verbose mode
-            if verbose:
-                self._print_converted_data(common_spec)
             
             # Display metrics if requested
             if metrics:
@@ -2438,7 +2433,7 @@ class APIConnectorManager:
             print(f"❌ Error converting and storing {file_path}: {str(e)}")
             return False
     
-    def convert_from_url(self, url: str, api_type: str = 'auto', verbose: bool = False) -> bool:
+    def convert_from_url(self, url: str, api_type: str = 'auto') -> bool:
         """Convert API spec from URL to common structure and store in ChromaDB"""
         
         try:
@@ -2454,56 +2449,12 @@ class APIConnectorManager:
             else:
                 raise ValueError(f"Unsupported API type: {api_type}")
             
-            # Print converted data if verbose mode
-            if verbose:
-                self._print_converted_data(common_spec)
-            
             # Store in ChromaDB
             return self._store_in_chromadb(common_spec)
             
         except Exception as e:
             print(f"❌ Error converting and storing from URL {url}: {str(e)}")
             return False
-    
-    def _print_converted_data(self, common_spec: CommonAPISpec):
-        """Print the converted API specification data in JSON format"""
-        
-        print("\n" + "=" * 80)
-        print("📋 **CONVERTED API SPECIFICATION (JSON FORMAT)**")
-        print("=" * 80)
-        
-        # Convert to dictionary for JSON output
-        spec_dict = {
-            "api_name": common_spec.api_name,
-            "version": common_spec.version,
-            "description": common_spec.description,
-            "base_url": common_spec.base_url,
-            "category": common_spec.category,
-            "documentation_url": common_spec.documentation_url,
-            "endpoints": common_spec.endpoints,
-            "authentication": common_spec.authentication,
-            "rate_limits": common_spec.rate_limits,
-            "pricing": common_spec.pricing,
-            "sdk_languages": common_spec.sdk_languages,
-            "integration_steps": common_spec.integration_steps,
-            "best_practices": common_spec.best_practices,
-            "common_use_cases": common_spec.common_use_cases,
-            "tags": common_spec.tags,
-            "contact_info": common_spec.contact_info,
-            "license_info": common_spec.license_info,
-            "external_docs": common_spec.external_docs,
-            "examples": common_spec.examples,
-            "schema_version": common_spec.schema_version,
-            "created_at": common_spec.created_at,
-            "updated_at": common_spec.updated_at
-        }
-        
-        # Print formatted JSON
-        print(json.dumps(spec_dict, indent=2, ensure_ascii=False))
-        
-        print("\n" + "=" * 80)
-        print("✅ **CONVERSION COMPLETE**")
-        print("=" * 80)
     
     def _detect_api_type(self, file_path: str) -> str:
         """Detect API type from file extension and content"""
@@ -2592,37 +2543,6 @@ Tags: {', '.join(common_spec.tags)}
             print(f"❌ Error storing in ChromaDB: {str(e)}")
             return False
     
-    def list_stored_apis(self):
-        """List all stored API specifications"""
-        
-        try:
-            collection = self.chroma_client.get_collection(name=self.collection_name)
-            count = collection.count()
-            
-            if count == 0:
-                print("📭 No API specifications found in ChromaDB")
-                return
-            
-            print(f"📚 Found {count} API specifications in ChromaDB:")
-            print("=" * 80)
-            
-            # Get all documents
-            results = collection.get()
-            
-            for i, (id, metadata) in enumerate(zip(results['ids'], results['metadatas'])):
-                api_name = metadata.get('api_name', 'Unknown')
-                category = metadata.get('category', 'Unknown')
-                version = metadata.get('version', 'Unknown')
-                description = metadata.get('description', 'No description')
-                
-                print(f"{i+1:2d}. {api_name} (v{version})")
-                print(f"     Category: {category}")
-                print(f"     Description: {description[:100]}...")
-                print()
-                
-        except Exception as e:
-            print(f"❌ Error listing APIs: {str(e)}")
-
     def get_last_converted_spec(self):
         """Get the last converted CommonAPISpec"""
         return self.last_converted_spec
@@ -2630,81 +2550,3 @@ Tags: {', '.join(common_spec.tags)}
     def get_last_metrics(self):
         """Get the last metrics data"""
         return self.last_metrics
-
-def main():
-    """Main command-line interface"""
-    parser = argparse.ArgumentParser(
-        description="🔗 CatalystAI API Connector - Convert Swagger/WSDL to common structure",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python api_connector.py convert swagger.json                    # Convert Swagger file
-  python api_connector.py convert service.wsdl --type wsdl      # Convert WSDL file
-  python api_connector.py convert-url https://api.example.com/swagger.json  # Convert from URL
-  python api_connector.py list                                  # List stored APIs
-        """
-    )
-    
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
-    
-    # Convert command
-    convert_parser = subparsers.add_parser('convert', help='Convert API specification file')
-    convert_parser.add_argument('file_path', help='Path to API specification file')
-    convert_parser.add_argument('--type', choices=['swagger', 'wsdl', 'auto'], default='auto',
-                               help='API specification type (default: auto-detect)')
-    convert_parser.add_argument('--verbose', '-v', action='store_true',
-                               help='Print detailed converted data to console')
-    
-    # Convert URL command
-    convert_url_parser = subparsers.add_parser('convert-url', help='Convert API specification from URL')
-    convert_url_parser.add_argument('url', help='URL to API specification')
-    convert_url_parser.add_argument('--type', choices=['swagger', 'wsdl', 'auto'], default='auto',
-                                   help='API specification type (default: auto-detect)')
-    convert_url_parser.add_argument('--verbose', '-v', action='store_true',
-                                   help='Print detailed converted data to console')
-    
-    # List command
-    subparsers.add_parser('list', help='List all stored API specifications')
-    
-    args = parser.parse_args()
-    
-    if not args.command:
-        parser.print_help()
-        sys.exit(1)
-    
-    # Initialize the connector manager
-    manager = APIConnectorManager()
-    manager.load_environment()
-    manager.initialize_chromadb()
-    
-    try:
-        if args.command == 'convert':
-            print(f"🔄 Converting API specification: {args.file_path}")
-            success = manager.convert_and_store(args.file_path, args.type, args.verbose)
-            if success:
-                if not args.verbose:
-                    print("✅ API specification successfully converted and stored")
-            else:
-                print("❌ Failed to convert API specification")
-                
-        elif args.command == 'convert-url':
-            print(f"🔄 Converting API specification from URL: {args.url}")
-            success = manager.convert_from_url(args.url, args.type, args.verbose)
-            if success:
-                if not args.verbose:
-                    print("✅ API specification successfully converted and stored")
-            else:
-                print("❌ Failed to convert API specification")
-                
-        elif args.command == 'list':
-            manager.list_stored_apis()
-            
-    except KeyboardInterrupt:
-        print("\n\n👋 Operation cancelled by user")
-        sys.exit(0)
-    except Exception as e:
-        print(f"\n❌ Error: {str(e)}")
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main()

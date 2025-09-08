@@ -12,9 +12,9 @@ from datetime import datetime
 
 # Import our existing connectors
 import sys
+import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
-from connectors.api_connector import APIConnectorManager, WSDLConnector, SwaggerConnector
-from connectors.common_spec import CommonAPISpec
+from connectors.api_connector import APIConnectorManager, WSDLConnector, SwaggerConnector, CommonAPISpec
 
 app = FastAPI(
     title="CatalystAI Data Collector API",
@@ -187,7 +187,6 @@ async def convert_file(request: ConvertRequest, background_tasks: BackgroundTask
         success = manager.convert_and_store(
             file_info["file_path"],
             api_type,
-            verbose=False,
             metrics=request.show_metrics
         )
         
