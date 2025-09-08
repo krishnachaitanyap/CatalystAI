@@ -1,6 +1,7 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks
+from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 import os
@@ -9,12 +10,23 @@ import json
 from pathlib import Path
 import asyncio
 from datetime import datetime
+import hashlib
+import secrets
 
 # Import our existing connectors
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from connectors.api_connector import APIConnectorManager, WSDLConnector, SwaggerConnector, CommonAPISpec
+from models.database import DatabaseManager, User, Application, APISpec, FileUpload
+from models.schemas import (
+    UserCreate, UserResponse, UserLogin,
+    ApplicationCreate, ApplicationResponse, ApplicationUpdate,
+    APISpecCreate, APISpecResponse, APISpecUpdate,
+    FileUploadResponse, FileUploadStatus, ProcessingStatus,
+    ConvertRequest, ConvertResponse, SuccessResponse, ErrorResponse,
+    UserListResponse, ApplicationListResponse, APISpecListResponse, FileUploadListResponse
+)
 
 app = FastAPI(
     title="CatalystAI Data Collector API",
@@ -31,38 +43,34 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Pydantic models
-class FileUploadResponse(BaseModel):
-    file_id: str
-    filename: str
-    file_type: str
-    file_format: str
-    status: str
-    message: str
-    metadata: Optional[Dict[str, Any]] = None
+# Initialize database manager
+db_manager = DatabaseManager()
 
-class ProcessingStatus(BaseModel):
-    file_id: str
-    status: str
-    progress: int
-    message: str
-    result: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
-
-class ConvertRequest(BaseModel):
-    file_id: str
-    show_metrics: bool = False
-
-class ConvertResponse(BaseModel):
-    file_id: str
-    success: bool
-    common_spec: Optional[Dict[str, Any]] = None
-    metrics: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
+# Security
+security = HTTPBearer()
 
 # In-memory storage for demo (in production, use a database)
 file_storage = {}
 processing_status = {}
+
+# Authentication helpers
+def hash_password(password: str) -> str:
+    """Hash password using SHA-256"""
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def verify_password(password: str, hashed_password: str) -> bool:
+    """Verify password against hash"""
+    return hash_password(password) == hashed_password
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Get current user from token (simplified for demo)"""
+    # In production, implement proper JWT token validation
+    # For now, we'll use a simple approach
+    token = credentials.credentials
+    # This is a simplified implementation - in production use proper JWT
+    if token == "demo-token":
+        return db_manager.get_user_by_username("demo_user")
+    raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
 @app.get("/")
 async def root():
@@ -341,6 +349,275 @@ async def extract_file_metadata(filename: str, content: bytes, file_type: str, f
             "description": f"{file_format} specification",
             "base_url": "https://api.example.com"
         }
+
+# User Management Endpoints
+@app.post("/users/", response_model=UserResponse)
+async def create_user(user: UserCreate):
+    """Create a new user"""
+    try:
+        # Check if user already exists
+        existing_user = db_manager.get_user_by_username(user.username)
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Username already exists")
+        
+        existing_email = db_manager.get_user_by_username(user.email)
+        if existing_email:
+            raise HTTPException(status_code=400, detail="Email already exists")
+        
+        # Create user
+        hashed_password = hash_password(user.password)
+        new_user = db_manager.create_user(
+            username=user.username,
+            email=user.email,
+            full_name=user.full_name,
+            password_hash=hashed_password,
+            is_admin=user.is_admin
+        )
+        
+        return UserResponse.from_orm(new_user)
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating user: {str(e)}")
+
+@app.get("/users/me", response_model=UserResponse)
+async def get_current_user_info(current_user: User = Depends(get_current_user)):
+    """Get current user information"""
+    return UserResponse.from_orm(current_user)
+
+@app.get("/users/", response_model=UserListResponse)
+async def list_users(page: int = 1, size: int = 10, current_user: User = Depends(get_current_user)):
+    """List all users (admin only)"""
+    if not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # This is a simplified implementation - in production, implement proper pagination
+    with db_manager.get_session() as session:
+        users = session.query(User).offset((page - 1) * size).limit(size).all()
+        total = session.query(User).count()
+        
+        return UserListResponse(
+            users=[UserResponse.from_orm(user) for user in users],
+            total=total,
+            page=page,
+            size=size
+        )
+
+# Application Management Endpoints
+@app.post("/applications/", response_model=ApplicationResponse)
+async def create_application(application: ApplicationCreate, current_user: User = Depends(get_current_user)):
+    """Create a new application"""
+    try:
+        new_app = db_manager.create_application(
+            name=application.name,
+            description=application.description,
+            sealid=application.sealid,
+            owner_id=current_user.id,
+            metadata=application.metadata
+        )
+        
+        return ApplicationResponse.from_orm(new_app)
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating application: {str(e)}")
+
+@app.get("/applications/", response_model=ApplicationListResponse)
+async def list_applications(page: int = 1, size: int = 10, current_user: User = Depends(get_current_user)):
+    """List user's applications"""
+    applications = db_manager.get_applications_by_user(current_user.id)
+    
+    # Simple pagination
+    start = (page - 1) * size
+    end = start + size
+    paginated_apps = applications[start:end]
+    
+    return ApplicationListResponse(
+        applications=[ApplicationResponse.from_orm(app) for app in paginated_apps],
+        total=len(applications),
+        page=page,
+        size=size
+    )
+
+@app.get("/applications/{app_id}", response_model=ApplicationResponse)
+async def get_application(app_id: int, current_user: User = Depends(get_current_user)):
+    """Get application by ID"""
+    application = db_manager.get_application_by_id(app_id)
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user owns the application
+    if application.owner_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    return ApplicationResponse.from_orm(application)
+
+@app.put("/applications/{app_id}", response_model=ApplicationResponse)
+async def update_application(app_id: int, application_update: ApplicationUpdate, current_user: User = Depends(get_current_user)):
+    """Update application"""
+    application = db_manager.get_application_by_id(app_id)
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    # Check if user owns the application
+    if application.owner_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Update application
+    with db_manager.get_session() as session:
+        if application_update.name:
+            application.name = application_update.name
+        if application_update.description:
+            application.description = application_update.description
+        if application_update.status:
+            application.status = application_update.status
+        if application_update.metadata:
+            application.metadata = application_update.metadata
+        
+        session.commit()
+        session.refresh(application)
+        
+        return ApplicationResponse.from_orm(application)
+
+# API Spec Management Endpoints
+@app.get("/applications/{app_id}/api-specs", response_model=APISpecListResponse)
+async def list_api_specs(app_id: int, page: int = 1, size: int = 10, current_user: User = Depends(get_current_user)):
+    """List API specs for an application"""
+    # Check if user has access to the application
+    application = db_manager.get_application_by_id(app_id)
+    if not application:
+        raise HTTPException(status_code=404, detail="Application not found")
+    
+    if application.owner_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    api_specs = db_manager.get_api_specs_by_application(app_id)
+    
+    # Simple pagination
+    start = (page - 1) * size
+    end = start + size
+    paginated_specs = api_specs[start:end]
+    
+    return APISpecListResponse(
+        api_specs=[APISpecResponse.from_orm(spec) for spec in paginated_specs],
+        total=len(api_specs),
+        page=page,
+        size=size
+    )
+
+@app.get("/api-specs/{spec_id}", response_model=APISpecResponse)
+async def get_api_spec(spec_id: int, current_user: User = Depends(get_current_user)):
+    """Get API spec by ID"""
+    api_spec = db_manager.get_api_spec_by_id(spec_id)
+    if not api_spec:
+        raise HTTPException(status_code=404, detail="API spec not found")
+    
+    # Check if user has access to the application
+    application = db_manager.get_application_by_id(api_spec.application_id)
+    if application.owner_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    return APISpecResponse.from_orm(api_spec)
+
+@app.put("/api-specs/{spec_id}", response_model=APISpecResponse)
+async def update_api_spec(spec_id: int, spec_update: APISpecUpdate, current_user: User = Depends(get_current_user)):
+    """Update API spec"""
+    api_spec = db_manager.get_api_spec_by_id(spec_id)
+    if not api_spec:
+        raise HTTPException(status_code=404, detail="API spec not found")
+    
+    # Check if user has access to the application
+    application = db_manager.get_application_by_id(api_spec.application_id)
+    if application.owner_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Update API spec
+    with db_manager.get_session() as session:
+        if spec_update.name:
+            api_spec.name = spec_update.name
+        if spec_update.version:
+            api_spec.version = spec_update.version
+        if spec_update.description:
+            api_spec.description = spec_update.description
+        if spec_update.status:
+            api_spec.status = spec_update.status
+        if spec_update.base_url:
+            api_spec.base_url = spec_update.base_url
+        
+        session.commit()
+        session.refresh(api_spec)
+        
+        return APISpecResponse.from_orm(api_spec)
+
+# Enhanced File Upload with Database Integration
+@app.post("/upload", response_model=FileUploadResponse)
+async def upload_file(file: UploadFile = File(...), current_user: User = Depends(get_current_user)):
+    """Upload and validate API specification files"""
+    try:
+        # Generate unique file ID
+        file_id = f"file_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}"
+        
+        # Save uploaded file to temporary location
+        with tempfile.NamedTemporaryFile(delete=False, suffix=f"_{file.filename}") as tmp_file:
+            content = await file.read()
+            tmp_file.write(content)
+            tmp_file_path = tmp_file.name
+        
+        # Determine file type and format
+        file_type, file_format, is_valid, error = determine_file_type(file.filename, content)
+        
+        if not is_valid:
+            os.unlink(tmp_file_path)
+            raise HTTPException(status_code=400, detail=error)
+        
+        # Extract metadata
+        metadata = await extract_file_metadata(file.filename, content, file_type, file_format)
+        
+        # Store file information in database
+        file_upload = db_manager.create_file_upload(
+            file_id=file_id,
+            filename=file.filename,
+            file_type=file_type,
+            file_format=file_format,
+            file_size=len(content),
+            user_id=current_user.id,
+            metadata=metadata,
+            temp_file_path=tmp_file_path
+        )
+        
+        # Store in memory for backward compatibility
+        file_storage[file_id] = {
+            "filename": file.filename,
+            "file_path": tmp_file_path,
+            "file_type": file_type,
+            "file_format": file_format,
+            "file_size": len(content),
+            "upload_time": datetime.now().isoformat(),
+            "metadata": metadata
+        }
+        
+        processing_status[file_id] = {
+            "status": "uploaded",
+            "progress": 0,
+            "message": "File uploaded successfully"
+        }
+        
+        return FileUploadResponse.from_orm(file_upload)
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+@app.get("/files", response_model=FileUploadListResponse)
+async def list_files(page: int = 1, size: int = 10, current_user: User = Depends(get_current_user)):
+    """List all uploaded files for current user"""
+    with db_manager.get_session() as session:
+        file_uploads = session.query(FileUpload).filter(FileUpload.user_id == current_user.id).offset((page - 1) * size).limit(size).all()
+        total = session.query(FileUpload).filter(FileUpload.user_id == current_user.id).count()
+        
+        return FileUploadListResponse(
+            file_uploads=[FileUploadResponse.from_orm(fu) for fu in file_uploads],
+            total=total,
+            page=page,
+            size=size
+        )
 
 if __name__ == "__main__":
     import uvicorn

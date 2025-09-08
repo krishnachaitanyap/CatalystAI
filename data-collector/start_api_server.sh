@@ -36,6 +36,10 @@ if [ -f "requirements.txt" ]; then
     pip install -r requirements.txt
 fi
 
+# Initialize database
+echo "🗄️  Initializing database..."
+python init_database.py
+
 # Set environment variables
 export PYTHONPATH="${PYTHONPATH}:$(pwd)/src"
 
