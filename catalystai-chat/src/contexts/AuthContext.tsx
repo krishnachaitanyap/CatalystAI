@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { dataCollectorAPI, User, Application, APISpec } from '../services/dataCollectorAPI';
 
 interface AuthContextType {
@@ -115,7 +115,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadApplications = async () => {
+  const loadApplications = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -127,14 +127,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const selectApplication = (application: Application) => {
     setSelectedApplication(application);
     loadAPISpecs(application.id);
   };
 
-  const loadAPISpecs = async (appId: number) => {
+  const loadAPISpecs = useCallback(async (appId: number) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -146,9 +146,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const createApplication = async (appData: { name: string; description?: string; sealid: string }): Promise<Application> => {
+  const createApplication = useCallback(async (appData: { name: string; description?: string; sealid: string }): Promise<Application> => {
     try {
       setIsLoading(true);
       setError(null);
@@ -162,7 +162,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const refreshData = async () => {
     await loadApplications();

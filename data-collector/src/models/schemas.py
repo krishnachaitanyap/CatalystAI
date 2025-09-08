@@ -38,7 +38,7 @@ class ApplicationCreate(BaseModel):
     name: str
     description: Optional[str] = None
     sealid: str
-    metadata: Optional[Dict[str, Any]] = None
+    app_metadata: Optional[Dict[str, Any]] = None
 
 class ApplicationResponse(BaseModel):
     id: int
@@ -47,7 +47,7 @@ class ApplicationResponse(BaseModel):
     sealid: str
     owner_id: int
     status: str
-    metadata: Optional[Dict[str, Any]]
+    app_metadata: Optional[Dict[str, Any]]
     created_at: datetime
     updated_at: datetime
 
@@ -58,7 +58,7 @@ class ApplicationUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     status: Optional[str] = None
-    metadata: Optional[Dict[str, Any]] = None
+    app_metadata: Optional[Dict[str, Any]] = None
 
 # API Spec models
 class APISpecCreate(BaseModel):
@@ -109,7 +109,7 @@ class FileUploadResponse(BaseModel):
     upload_status: str
     processing_status: str
     error_message: Optional[str]
-    metadata: Optional[Dict[str, Any]]
+    file_metadata: Optional[Dict[str, Any]]
     created_at: datetime
 
     class Config:

@@ -80,59 +80,6 @@ async def root():
 async def health_check():
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
-@app.post("/upload", response_model=FileUploadResponse)
-async def upload_file(file: UploadFile = File(...)):
-    """Upload and validate API specification files"""
-    try:
-        # Generate unique file ID
-        file_id = f"file_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}"
-        
-        # Save uploaded file to temporary location
-        with tempfile.NamedTemporaryFile(delete=False, suffix=f"_{file.filename}") as tmp_file:
-            content = await file.read()
-            tmp_file.write(content)
-            tmp_file_path = tmp_file.name
-        
-        # Determine file type and format
-        file_type, file_format, is_valid, error = determine_file_type(file.filename, content)
-        
-        if not is_valid:
-            os.unlink(tmp_file_path)
-            raise HTTPException(status_code=400, detail=error)
-        
-        # Extract metadata
-        metadata = await extract_file_metadata(file.filename, content, file_type, file_format)
-        
-        # Store file information
-        file_storage[file_id] = {
-            "filename": file.filename,
-            "file_path": tmp_file_path,
-            "file_type": file_type,
-            "file_format": file_format,
-            "file_size": len(content),
-            "upload_time": datetime.now().isoformat(),
-            "metadata": metadata
-        }
-        
-        processing_status[file_id] = {
-            "status": "uploaded",
-            "progress": 0,
-            "message": "File uploaded successfully"
-        }
-        
-        return FileUploadResponse(
-            file_id=file_id,
-            filename=file.filename,
-            file_type=file_type,
-            file_format=file_format,
-            status="uploaded",
-            message="File uploaded and validated successfully",
-            metadata=metadata
-        )
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
-
 @app.get("/files")
 async def list_files():
     """List all uploaded files"""
@@ -294,10 +241,10 @@ def determine_file_type(filename: str, content: bytes) -> tuple[str, str, bool, 
     elif filename_lower.endswith(('.yaml', '.yml')):
         return 'REST', 'OpenAPI', True, ''
     
-    elif filename_lower.endswith('.wsdl'):
+    elif filename_lower.endswith('.wsdl') or (filename_lower.endswith('.xml') and 'wsdl' in filename_lower):
         return 'SOAP', 'WSDL', True, ''
     
-    elif filename_lower.endswith('.xsd'):
+    elif filename_lower.endswith('.xsd') or (filename_lower.endswith('.xml') and 'xsd' in filename_lower):
         return 'SOAP', 'XSD', True, ''
     
     else:
@@ -412,7 +359,7 @@ async def create_application(application: ApplicationCreate, current_user: User 
             description=application.description,
             sealid=application.sealid,
             owner_id=current_user.id,
-            metadata=application.metadata
+            app_metadata=application.app_metadata
         )
         
         return ApplicationResponse.from_orm(new_app)
@@ -579,7 +526,7 @@ async def upload_file(file: UploadFile = File(...), current_user: User = Depends
             file_format=file_format,
             file_size=len(content),
             user_id=current_user.id,
-            metadata=metadata,
+            file_metadata=metadata,
             temp_file_path=tmp_file_path
         )
         

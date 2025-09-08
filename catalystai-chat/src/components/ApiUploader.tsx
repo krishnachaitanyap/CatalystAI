@@ -27,6 +27,7 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
 }) => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Enhanced file type validation
@@ -309,6 +310,35 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
     setUploadedFiles(prev => prev.filter(file => file.id !== fileId));
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+    
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      handleFileSelect(files);
+    }
+  };
+
   const handleUpload = async () => {
     const validFiles = uploadedFiles.filter(file => file.status === 'valid');
     
@@ -404,15 +434,26 @@ const ApiUploader: React.FC<ApiUploaderProps> = ({
       <div className="bg-white rounded-lg shadow-sm border">
         <div className="p-6">
           <div
-            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors cursor-pointer"
+            className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
+              isDragOver 
+                ? 'border-blue-400 bg-blue-50' 
+                : 'border-gray-300 hover:border-gray-400'
+            }`}
             onClick={() => fileInputRef.current?.click()}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
           >
             <div className="text-4xl text-gray-400 mb-4">📁</div>
             <h4 className="text-lg font-medium text-gray-900 mb-2">
-              Drop files here or click to browse
+              {isDragOver ? 'Drop files here!' : 'Drop files here or click to browse'}
             </h4>
             <p className="text-sm text-gray-600 mb-4">
-              Upload API specifications for automatic processing and validation
+              {isDragOver 
+                ? 'Release to upload your API specifications' 
+                : 'Upload API specifications for automatic processing and validation'
+              }
             </p>
             <div className="text-xs text-gray-500 space-y-1">
               <div className="font-medium text-gray-700 mb-2">Supported Formats:</div>

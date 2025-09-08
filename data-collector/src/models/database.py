@@ -44,7 +44,7 @@ class Application(Base):
     sealid = Column(String(50), nullable=False)  # SEALID identifier
     owner_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     status = Column(String(20), default='active')  # active, inactive, archived
-    metadata = Column(JSON)  # Additional application metadata
+    app_metadata = Column(JSON)  # Additional application metadata
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -98,7 +98,7 @@ class FileUpload(Base):
     upload_status = Column(String(20), default='uploaded')  # uploaded, processing, completed, failed
     processing_status = Column(String(20), default='pending')  # pending, processing, completed, failed
     error_message = Column(Text)
-    metadata = Column(JSON)  # Extracted metadata
+    file_metadata = Column(JSON)  # Extracted metadata
     temp_file_path = Column(String(500))  # Temporary file path
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -176,7 +176,7 @@ class DatabaseManager:
             return session.query(User).filter(User.id == user_id).first()
     
     # Application management methods
-    def create_application(self, name: str, description: str, sealid: str, owner_id: int, metadata: Dict = None):
+    def create_application(self, name: str, description: str, sealid: str, owner_id: int, app_metadata: Dict = None):
         """Create a new application"""
         with self.get_session() as session:
             application = Application(
@@ -184,7 +184,7 @@ class DatabaseManager:
                 description=description,
                 sealid=sealid,
                 owner_id=owner_id,
-                metadata=metadata or {}
+                app_metadata=app_metadata or {}
             )
             session.add(application)
             session.commit()
@@ -251,7 +251,7 @@ class DatabaseManager:
     
     # File upload management methods
     def create_file_upload(self, file_id: str, filename: str, file_type: str, file_format: str,
-                          file_size: int, user_id: int, metadata: Dict = None, temp_file_path: str = None):
+                          file_size: int, user_id: int, file_metadata: Dict = None, temp_file_path: str = None):
         """Create a new file upload record"""
         with self.get_session() as session:
             file_upload = FileUpload(
@@ -261,7 +261,7 @@ class DatabaseManager:
                 file_format=file_format,
                 file_size=file_size,
                 user_id=user_id,
-                metadata=metadata or {},
+                file_metadata=file_metadata or {},
                 temp_file_path=temp_file_path
             )
             session.add(file_upload)

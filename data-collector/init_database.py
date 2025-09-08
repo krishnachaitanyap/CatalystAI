@@ -49,7 +49,7 @@ def initialize_database():
             description="Demo application for testing API specifications",
             sealid="105961",
             owner_id=demo_user.id,
-            metadata={"environment": "demo", "team": "catalystai"}
+            app_metadata={"environment": "demo", "team": "catalystai"}
         )
         print("✅ Demo application created")
     else:
