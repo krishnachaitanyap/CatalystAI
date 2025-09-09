@@ -19,13 +19,15 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from connectors.api_connector import APIConnectorManager, WSDLConnector, SwaggerConnector, CommonAPISpec
 from models.database import DatabaseManager, User, Application, APISpec, FileUpload
+from services.llm_service import LLMQueryService
 from models.schemas import (
     UserCreate, UserResponse, UserLogin,
     ApplicationCreate, ApplicationResponse, ApplicationUpdate,
     APISpecCreate, APISpecResponse, APISpecUpdate,
     FileUploadResponse, FileUploadStatus, ProcessingStatus,
     ConvertRequest, ConvertResponse, SuccessResponse, ErrorResponse,
-    UserListResponse, ApplicationListResponse, APISpecListResponse, FileUploadListResponse
+    UserListResponse, ApplicationListResponse, APISpecListResponse, FileUploadListResponse,
+    AskRequest, AskResponse
 )
 
 app = FastAPI(
@@ -45,6 +47,9 @@ app.add_middleware(
 
 # Initialize database manager
 db_manager = DatabaseManager()
+
+# Initialize LLM service
+llm_service = LLMQueryService()
 
 # Security
 security = HTTPBearer()
@@ -188,6 +193,46 @@ async def convert_file(request: ConvertRequest, background_tasks: BackgroundTask
                 session.commit()
         
         raise HTTPException(status_code=500, detail=f"Conversion failed: {str(e)}")
+
+@app.post("/ask", response_model=AskResponse)
+async def ask_question(request: AskRequest, current_user: User = Depends(get_current_user)):
+    """Ask questions about API specifications using LLM"""
+    try:
+        # Get relevant API specs based on filters
+        relevant_api_specs = []
+        
+        with db_manager.get_session() as session:
+            query = session.query(APISpec).filter(APISpec.created_by_id == current_user.id)
+            
+            # Filter by application if specified
+            if request.application_id:
+                query = query.filter(APISpec.application_id == request.application_id)
+                
+            # Filter by specific API spec if specified
+            if request.api_spec_id:
+                query = query.filter(APISpec.id == request.api_spec_id)
+                
+            api_specs = query.all()
+            
+            # Convert to response format
+            for spec in api_specs:
+                relevant_api_specs.append(APISpecResponse.from_orm(spec))
+        
+        # Use LLM service to generate answer
+        result = llm_service.ask_question(
+            question=request.question,
+            application_id=request.application_id,
+            api_spec_id=request.api_spec_id,
+            max_results=request.max_results
+        )
+        
+        # Add relevant API specs to result
+        result['relevant_api_specs'] = relevant_api_specs
+        
+        return AskResponse(**result)
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to process question: {str(e)}")
 
 @app.delete("/files/{file_id}")
 async def delete_file(file_id: str):

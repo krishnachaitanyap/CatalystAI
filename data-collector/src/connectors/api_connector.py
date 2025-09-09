@@ -1285,8 +1285,28 @@ class WSDLConnector:
         
         return schema_details
     
-    def _extract_complex_type_details(self, complex_type: ET.Element, root: ET.Element = None) -> Dict[str, Any]:
+    def _extract_complex_type_details(self, complex_type: ET.Element, root: ET.Element = None, visited_types: set = None) -> Dict[str, Any]:
         """Extract details from a complex type definition with recursive nested element collection and inheritance support"""
+        if visited_types is None:
+            visited_types = set()
+            
+        # Get the type name to track circular references
+        type_name = complex_type.get('name', '')
+        if type_name in visited_types:
+            print(f"⚠️ Circular reference detected for type: {type_name}")
+            return {
+                'type': 'complex',
+                'attributes': [],
+                'elements': [],
+                'sequences': [],
+                'nested_attributes': [],
+                'inherited_attributes': [],
+                'circular_reference': True
+            }
+        
+        # Add current type to visited set
+        visited_types.add(type_name)
+        
         details = {
             'type': 'complex',
             'attributes': [],
@@ -1309,7 +1329,7 @@ class WSDLConnector:
                     prefix, type_name = base_type.split(':', 1)
                     base_complex_type = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
                     if base_complex_type is not None:
-                        base_details = self._extract_complex_type_details(base_complex_type, root)
+                        base_details = self._extract_complex_type_details(base_complex_type, root, visited_types.copy())
                         details['inherited_attributes'] = base_details.get('attributes', [])
                         details['attributes'].extend(base_details.get('attributes', []))
                 
@@ -1341,7 +1361,7 @@ class WSDLConnector:
                         
                         # Check if this element has nested complex type (recursive extraction)
                         if root is not None:
-                            nested_attributes = self._extract_nested_attributes(element, root)
+                            nested_attributes = self._extract_nested_attributes(element, root, "", visited_types.copy())
                             details['nested_attributes'].extend(nested_attributes)
                     
                     details['sequences'].append(sequence_details)
@@ -1374,7 +1394,7 @@ class WSDLConnector:
                 
                 # Check if this element has nested complex type (recursive extraction)
                 if root is not None:
-                    nested_attributes = self._extract_nested_attributes(element, root)
+                    nested_attributes = self._extract_nested_attributes(element, root, "", visited_types.copy())
                     details['nested_attributes'].extend(nested_attributes)
             
             details['sequences'].append(sequence_details)
@@ -1402,13 +1422,16 @@ class WSDLConnector:
                 
                 # Check if this element has nested complex type (recursive extraction)
                 if root is not None:
-                    nested_attributes = self._extract_nested_attributes(element, root)
+                    nested_attributes = self._extract_nested_attributes(element, root, "", visited_types.copy())
                     details['nested_attributes'].extend(nested_attributes)
         
         return details
     
-    def _extract_nested_attributes(self, element: ET.Element, root: ET.Element, parent_path: str = "") -> List[Dict[str, Any]]:
+    def _extract_nested_attributes(self, element: ET.Element, root: ET.Element, parent_path: str = "", visited_types: set = None) -> List[Dict[str, Any]]:
         """Recursively extract all nested attributes until leaf nodes"""
+        if visited_types is None:
+            visited_types = set()
+            
         nested_attributes = []
         element_name = element.get('name', '')
         element_type = element.get('type', '')
@@ -1420,11 +1443,20 @@ class WSDLConnector:
         if element_type and ':' in element_type:
             # Handle qualified type names (e.g., "tns:DailyForecast")
             prefix, type_name = element_type.split(':', 1)
+            
+            # Check for circular reference
+            if type_name in visited_types:
+                print(f"⚠️ Circular reference detected in nested attributes for type: {type_name}")
+                return []
+                
             complex_type_elem = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
             
             if complex_type_elem is not None:
+                # Add to visited types before recursive call
+                visited_types.add(type_name)
+                
                 # Recursively extract nested complex type details
-                nested_details = self._extract_complex_type_details(complex_type_elem, root)
+                nested_details = self._extract_complex_type_details(complex_type_elem, root, visited_types.copy())
                 
                 # Process nested sequences
                 for sequence in nested_details.get('sequences', []):
@@ -1448,14 +1480,15 @@ class WSDLConnector:
                                 self._extract_nested_attributes(
                                     actual_element, 
                                     root, 
-                                    current_path
+                                    current_path,
+                                    visited_types.copy()
                                 )
                             )
         
         # Also check for inline complex type definition
         inline_complex_type = element.find('xsd:complexType', self.namespaces)
         if inline_complex_type is not None:
-            nested_details = self._extract_complex_type_details(inline_complex_type, root)
+            nested_details = self._extract_complex_type_details(inline_complex_type, root, visited_types.copy())
             
             # Process nested sequences
             for sequence in nested_details.get('sequences', []):
@@ -1479,7 +1512,8 @@ class WSDLConnector:
                             self._extract_nested_attributes(
                                 actual_element, 
                                 root, 
-                                current_path
+                                current_path,
+                                visited_types.copy()
                             )
                         )
         

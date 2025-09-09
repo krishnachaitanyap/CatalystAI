@@ -155,6 +155,23 @@ class ErrorResponse(BaseModel):
     error: str
     details: Optional[Dict[str, Any]] = None
 
+# Ask/Query Interfaces
+class AskRequest(BaseModel):
+    question: str
+    application_id: Optional[int] = None
+    api_spec_id: Optional[int] = None
+    context: Optional[str] = None
+    max_results: Optional[int] = 5
+
+class AskResponse(BaseModel):
+    question: str
+    answer: str
+    relevant_api_specs: List[APISpecResponse]
+    sources: List[Dict[str, Any]]
+    confidence_score: Optional[float] = None
+    processing_time: Optional[float] = None
+    timestamp: datetime
+
 # List response models
 class UserListResponse(BaseModel):
     users: List[UserResponse]
