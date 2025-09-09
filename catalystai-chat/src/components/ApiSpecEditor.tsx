@@ -228,7 +228,7 @@ const ApiSpecEditor: React.FC<ApiSpecEditorProps> = ({
             {commonSpec.api_name} v{commonSpec.version}
           </h3>
           <p className="text-sm text-gray-500">
-            {commonSpec.api_type} • {commonSpec.format}
+            {commonSpec.api_type} • {apiSpec.format}
           </p>
         </div>
         <button
