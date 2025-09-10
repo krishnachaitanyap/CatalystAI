@@ -4,9 +4,11 @@ Utility Functions Module
 This module contains utility functions for data processing and chunking.
 """
 
-from .chunking_demo import DocumentChunker, Chunk
+from .chunking import APISpecChunker, ChunkingConfig, ChunkingStrategy, Chunk
 
 __all__ = [
-    "DocumentChunker",
+    "APISpecChunker",
+    "ChunkingConfig", 
+    "ChunkingStrategy",
     "Chunk",
 ]

@@ -12,12 +12,15 @@ __description__ = "API Specification Processing and Conversion Tool"
 
 from .connectors import SwaggerConnector, WSDLConnector, APIConnectorManager
 from .models import CommonAPISpec
-from .utils import DocumentChunker
+from .utils import APISpecChunker, ChunkingConfig, ChunkingStrategy, Chunk
 
 __all__ = [
     "SwaggerConnector",
     "WSDLConnector", 
     "APIConnectorManager",
     "CommonAPISpec",
-    "DocumentChunker",
+    "APISpecChunker",
+    "ChunkingConfig",
+    "ChunkingStrategy",
+    "Chunk",
 ]

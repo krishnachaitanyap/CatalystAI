@@ -37,6 +37,7 @@ from chromadb.config import Settings
 
 # Utilities
 from dotenv import load_dotenv
+from utils.chunking import APISpecChunker, ChunkingConfig, ChunkingStrategy
 
 @dataclass
 class CommonAPISpec:
@@ -2395,13 +2396,14 @@ class WSDLConnector:
 class APIConnectorManager:
     """Main manager for API connectors"""
     
-    def __init__(self):
+    def __init__(self, chunking_config: ChunkingConfig = None):
         self.swagger_connector = SwaggerConnector()
         self.wsdl_connector = WSDLConnector()
         self.chroma_client = None
         self.collection_name = "api_specifications"
         self.last_converted_spec = None
         self.last_metrics = None
+        self.chunker = APISpecChunker(chunking_config)
         
     def load_environment(self):
         """Load environment variables"""
@@ -2527,54 +2529,80 @@ class APIConnectorManager:
             return 'swagger'  # Default to swagger
     
     def _store_in_chromadb(self, common_spec: CommonAPISpec) -> bool:
-        """Store common API spec in ChromaDB"""
+        """Store common API spec in ChromaDB with configurable chunking"""
         
         try:
             collection = self.get_or_create_collection()
             
-            # Create comprehensive text representation for searchability
-            doc_text = f"""
-API: {common_spec.api_name}
-Version: {common_spec.version}
-Description: {common_spec.description}
-Base URL: {common_spec.base_url}
-Category: {common_spec.category}
-Endpoints: {len(common_spec.endpoints)} endpoints
-Authentication: {common_spec.authentication.get('type', 'none')}
-Rate Limits: {common_spec.rate_limits.get('description', 'Not specified')}
-SDK Languages: {', '.join(common_spec.sdk_languages)}
-Integration Steps: {' '.join(common_spec.integration_steps)}
-Best Practices: {' '.join(common_spec.best_practices)}
-Use Cases: {' '.join(common_spec.common_use_cases)}
-Tags: {', '.join(common_spec.tags)}
-            """.strip()
-            
-            # Create JSON representation for detailed attribute searching
-            doc_json = json.dumps(asdict(common_spec), indent=2)
-            
-            # Convert to dict for ChromaDB metadata
-            metadata = asdict(common_spec)
-            
-            # Convert complex data structures to strings for ChromaDB
-            for key, value in metadata.items():
-                if value is None:
-                    metadata[key] = ''
-                elif isinstance(value, (list, dict)):
-                    metadata[key] = json.dumps(value) if value else '[]'
-                elif not isinstance(value, (str, int, float, bool)):
-                    metadata[key] = str(value)
-            
-            # Generate unique ID
+            # Generate unique ID for the API spec
             api_id = f"api_{common_spec.api_name.lower().replace(' ', '_').replace('-', '_')}_{int(datetime.now().timestamp())}"
             
-            # Add to ChromaDB
+            # Chunk the API specification
+            chunks = self.chunker.chunk_api_spec(common_spec, api_id)
+            
+            if not chunks:
+                print(f"⚠️ No chunks generated for {common_spec.api_name}")
+                return False
+            
+            # Prepare documents, metadatas, and ids for ChromaDB
+            documents = []
+            metadatas = []
+            ids = []
+            
+            for chunk in chunks:
+                # Create document content
+                doc_content = f"""
+API: {common_spec.api_name}
+Chunk Type: {chunk.chunk_type}
+Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
+
+{chunk.content}
+                """.strip()
+                
+                # Create metadata
+                metadata = {
+                    "api_name": common_spec.api_name,
+                    "api_version": common_spec.version,
+                    "api_category": common_spec.category,
+                    "base_url": common_spec.base_url,
+                    "chunk_type": chunk.chunk_type,
+                    "chunk_index": chunk.chunk_index,
+                    "total_chunks": chunk.total_chunks,
+                    "parent_spec_id": chunk.parent_spec_id,
+                    "created_at": datetime.now().isoformat()
+                }
+                
+                # Add chunk-specific metadata
+                metadata.update(chunk.metadata)
+                
+                # Convert complex data structures to strings for ChromaDB
+                for key, value in metadata.items():
+                    if value is None:
+                        metadata[key] = ''
+                    elif isinstance(value, (list, dict)):
+                        metadata[key] = json.dumps(value) if value else '[]'
+                    elif not isinstance(value, (str, int, float, bool)):
+                        metadata[key] = str(value)
+                
+                documents.append(doc_content)
+                metadatas.append(metadata)
+                ids.append(f"{api_id}_chunk_{chunk.chunk_index}")
+            
+            # Add all chunks to ChromaDB
             collection.add(
-                documents=[doc_json],
-                metadatas=[metadata],
-                ids=[api_id]
+                documents=documents,
+                metadatas=metadatas,
+                ids=ids
             )
             
+            # Get chunking metrics
+            chunking_metrics = self.chunker.get_chunking_metrics(chunks)
+            
             print(f"✅ Successfully converted and stored {common_spec.api_name}")
+            print(f"📊 Stored {len(chunks)} chunks using {self.chunker.config.strategy.value} strategy")
+            print(f"📏 Average chunk size: {chunking_metrics.get('average_chunk_size', 0):.0f} characters")
+            print(f"🎯 Chunk types: {', '.join(chunking_metrics.get('chunk_types', []))}")
+            
             return True
             
         except Exception as e:
