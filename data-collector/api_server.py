@@ -196,19 +196,18 @@ async def convert_file(request: ConvertRequest, background_tasks: BackgroundTask
 
 @app.post("/ask", response_model=AskResponse)
 async def ask_question(request: AskRequest, current_user: User = Depends(get_current_user)):
-    """Ask questions about API specifications using LLM"""
+    """Ask questions about all available API documentation using LLM"""
     try:
-        # Get relevant API specs based on filters
+        # Get all API specs from the database (global search)
         relevant_api_specs = []
         
         with db_manager.get_session() as session:
-            query = session.query(APISpec).filter(APISpec.created_by_id == current_user.id)
+            query = session.query(APISpec)
             
-            # Filter by application if specified
+            # Only apply filters if specifically requested
             if request.application_id:
                 query = query.filter(APISpec.application_id == request.application_id)
                 
-            # Filter by specific API spec if specified
             if request.api_spec_id:
                 query = query.filter(APISpec.id == request.api_spec_id)
                 
@@ -218,7 +217,7 @@ async def ask_question(request: AskRequest, current_user: User = Depends(get_cur
             for spec in api_specs:
                 relevant_api_specs.append(APISpecResponse.from_orm(spec))
         
-        # Use LLM service to generate answer
+        # Use LLM service to generate answer (searches all available docs)
         result = llm_service.ask_question(
             question=request.question,
             application_id=request.application_id,

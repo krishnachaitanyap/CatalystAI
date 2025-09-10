@@ -104,16 +104,17 @@ class LLMQueryService:
                 context_text += f"API Specification:\n{doc['document']}\n\n"
                 
             # Create system prompt
-            system_prompt = """You are an expert API integration consultant. Your job is to help users understand and work with API specifications.
+            system_prompt = """You are an expert API integration consultant with access to a comprehensive knowledge base of API documentation. Your job is to help users understand and work with API specifications from various sources.
 
-Given a user's question and relevant API specification documents, provide a comprehensive, helpful answer that:
+Given a user's question and relevant API specification documents from the knowledge base, provide a comprehensive, helpful answer that:
 1. Directly addresses the user's question
 2. References specific API endpoints, parameters, or features from the specifications
 3. Provides practical guidance and examples where appropriate
 4. Explains any technical concepts clearly
 5. Suggests best practices or common use cases
+6. Mentions which API(s) or service(s) the information comes from
 
-Be concise but thorough, and always base your answer on the provided API specification data."""
+Be concise but thorough, and always base your answer on the provided API specification data from the knowledge base."""
 
             # Create user prompt
             user_prompt = f"""Question: {question}
@@ -163,7 +164,7 @@ Please provide a comprehensive answer to the user's question based on the API sp
             if not search_results:
                 return {
                     'question': question,
-                    'answer': "I couldn't find any relevant API specifications to answer your question. Please make sure you have uploaded API specifications and they have been processed.",
+                    'answer': "I couldn't find any relevant API documentation to answer your question. Please make sure API specifications have been uploaded and processed into the knowledge base.",
                     'relevant_api_specs': [],
                     'sources': [],
                     'confidence_score': 0.0,
