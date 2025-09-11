@@ -1021,28 +1021,28 @@ class WSDLConnector:
         
         for port_type in port_types:
             operations = port_type.findall('wsdl:operation', self.namespaces)
-            
-            for operation in operations:
-                operation_name = operation.get('name', '')
-                if operation_name:
-                    # Extract detailed input/output messages
-                    input_msg = self._extract_operation_input_message(operation, root)
-                    output_msg = self._extract_operation_output_message(operation, root)
-                    
-                    endpoint = {
-                        'path': f"/{operation_name}",
-                        'method': 'POST',  # SOAP typically uses POST
-                        'summary': operation_name,
-                        'description': self._extract_operation_description(operation),
-                        'parameters': self._extract_soap_parameters(input_msg, root),
-                        'request_body': self._extract_soap_request_body(input_msg, root),
-                        'responses': self._extract_soap_responses(output_msg, root),
-                        'tags': ['soap'],
-                        'operation_id': operation_name,
-                        'deprecated': False,
-                        'soap_action': self._extract_soap_action_from_binding(operation_name, root)
-                    }
-                    endpoints.append(endpoint)
+        
+        for operation in operations:
+            operation_name = operation.get('name', '')
+            if operation_name:
+                # Extract detailed input/output messages
+                input_msg = self._extract_operation_input_message(operation, root)
+                output_msg = self._extract_operation_output_message(operation, root)
+                
+                endpoint = {
+                    'path': f"/{operation_name}",
+                    'method': 'POST',  # SOAP typically uses POST
+                    'summary': operation_name,
+                    'description': self._extract_operation_description(operation),
+                    'parameters': self._extract_soap_parameters(input_msg, root),
+                    'request_body': self._extract_soap_request_body(input_msg, root),
+                    'responses': self._extract_soap_responses(output_msg, root),
+                    'tags': ['soap'],
+                    'operation_id': operation_name,
+                    'deprecated': False,
+                    'soap_action': self._extract_soap_action_from_binding(operation_name, root)
+                }
+                endpoints.append(endpoint)
         
         return endpoints
     
@@ -1293,6 +1293,9 @@ class WSDLConnector:
             
         # Get the type name to track circular references
         type_name = complex_type.get('name', '')
+        
+        # For complex type details, we use a simpler check since we're not tracking paths here
+        # This method is called from _extract_nested_attributes which handles path-based detection
         if type_name in visited_types:
             print(f"⚠️ Circular reference detected for type: {type_name}")
             return {
@@ -1362,7 +1365,8 @@ class WSDLConnector:
                         
                         # Check if this element has nested complex type (recursive extraction)
                         if root is not None:
-                            nested_attributes = self._extract_nested_attributes(element, root, "", visited_types.copy())
+                            element_path = f"{type_name}.{element.get('name', '')}"
+                            nested_attributes = self._extract_nested_attributes(element, root, element_path, visited_types.copy())
                             details['nested_attributes'].extend(nested_attributes)
                     
                     details['sequences'].append(sequence_details)
@@ -1423,7 +1427,8 @@ class WSDLConnector:
                 
                 # Check if this element has nested complex type (recursive extraction)
                 if root is not None:
-                    nested_attributes = self._extract_nested_attributes(element, root, "", visited_types.copy())
+                    element_path = f"{type_name}.{element.get('name', '')}"
+                    nested_attributes = self._extract_nested_attributes(element, root, element_path, visited_types.copy())
                     details['nested_attributes'].extend(nested_attributes)
         
         return details
@@ -1445,16 +1450,19 @@ class WSDLConnector:
             # Handle qualified type names (e.g., "tns:DailyForecast")
             prefix, type_name = element_type.split(':', 1)
             
-            # Check for circular reference
-            if type_name in visited_types:
-                print(f"⚠️ Circular reference detected in nested attributes for type: {type_name}")
+            # Check for circular reference using improved path-based detection
+            # Create a path-based identifier that includes the current context
+            path_key = f"{current_path}:{type_name}"
+            
+            if path_key in visited_types:
+                print(f"⚠️ Circular reference detected in path: {path_key}")
                 return []
                 
             complex_type_elem = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
             
             if complex_type_elem is not None:
-                # Add to visited types before recursive call
-                visited_types.add(type_name)
+                # Add current path to visited types before recursive call
+                visited_types.add(path_key)
                 
                 # Recursively extract nested complex type details
                 nested_details = self._extract_complex_type_details(complex_type_elem, root, visited_types.copy())
@@ -2392,7 +2400,7 @@ class WSDLConnector:
         print("\n" + "=" * 100)
         print("✅ **VECTORIZATION METRICS ANALYSIS COMPLETE**")
         print("=" * 100)
-        
+
 class APIConnectorManager:
     """Main manager for API connectors"""
     
@@ -2557,8 +2565,8 @@ Chunk Type: {chunk.chunk_type}
 Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
 
 {chunk.content}
-                """.strip()
-                
+            """.strip()
+            
                 # Create metadata
                 metadata = {
                     "api_name": common_spec.api_name,
@@ -2574,16 +2582,16 @@ Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
                 
                 # Add chunk-specific metadata
                 metadata.update(chunk.metadata)
-                
-                # Convert complex data structures to strings for ChromaDB
-                for key, value in metadata.items():
-                    if value is None:
-                        metadata[key] = ''
-                    elif isinstance(value, (list, dict)):
-                        metadata[key] = json.dumps(value) if value else '[]'
-                    elif not isinstance(value, (str, int, float, bool)):
-                        metadata[key] = str(value)
-                
+            
+            # Convert complex data structures to strings for ChromaDB
+            for key, value in metadata.items():
+                if value is None:
+                    metadata[key] = ''
+                elif isinstance(value, (list, dict)):
+                    metadata[key] = json.dumps(value) if value else '[]'
+                elif not isinstance(value, (str, int, float, bool)):
+                    metadata[key] = str(value)
+            
                 documents.append(doc_content)
                 metadatas.append(metadata)
                 ids.append(f"{api_id}_chunk_{chunk.chunk_index}")
@@ -2616,3 +2624,116 @@ Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
     def get_last_metrics(self):
         """Get the last metrics data"""
         return self.last_metrics
+    
+    def load_json_files_from_output(self, output_dir: str = "output") -> int:
+        """
+        Load all JSON files from the output directory into ChromaDB
+        
+        Args:
+            output_dir: Directory path to scan for JSON files (default: "output")
+            
+        Returns:
+            Number of JSON files successfully loaded
+        """
+        import os
+        import json
+        from dataclasses import asdict
+        
+        loaded_count = 0
+        
+        try:
+            # Create output directory if it doesn't exist
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+                print(f"📁 Created output directory: {output_dir}")
+                return 0
+            
+            # Initialize ChromaDB if not already done
+            if self.chroma_client is None:
+                self.initialize_chromadb()
+            
+            # Get collection
+            collection = self.get_or_create_collection()
+            
+            # Scan for JSON files
+            json_files = []
+            for filename in os.listdir(output_dir):
+                if filename.endswith('.json'):
+                    json_files.append(os.path.join(output_dir, filename))
+            
+            if not json_files:
+                print(f"📂 No JSON files found in {output_dir}")
+                return 0
+            
+            print(f"📂 Found {len(json_files)} JSON files in {output_dir}")
+            
+            # Load each JSON file
+            for json_file in json_files:
+                try:
+                    print(f"📄 Loading {json_file}...")
+                    
+                    # Read JSON file
+                    with open(json_file, 'r', encoding='utf-8') as f:
+                        json_data = json.load(f)
+                    
+                    # Convert JSON back to CommonAPISpec
+                    common_spec = CommonAPISpec(**json_data)
+                    
+                    # Generate unique spec ID from filename
+                    spec_id = os.path.splitext(os.path.basename(json_file))[0]
+                    
+                    # Chunk the API spec
+                    chunks = self.chunker.chunk_api_spec(common_spec, spec_id)
+                    
+                    if not chunks:
+                        print(f"⚠️ No chunks generated for {json_file}")
+                        raise ValueError(f"No chunks generated for {json_file}")
+                    
+                    # Store chunks in ChromaDB
+                    documents = []
+                    metadatas = []
+                    ids = []
+                    
+                    for i, chunk in enumerate(chunks):
+                        chunk_id = f"{spec_id}_chunk_{i}"
+                        documents.append(chunk.content)
+                        
+                        # Convert metadata values to ChromaDB-compatible types
+                        metadata = {}
+                        for key, value in chunk.metadata.items():
+                            if isinstance(value, list):
+                                metadata[key] = ', '.join(str(v) for v in value)
+                            else:
+                                metadata[key] = str(value)
+                        
+                        metadatas.append({
+                            **metadata,
+                            'chunk_type': chunk.chunk_type,
+                            'chunk_index': str(chunk.chunk_index),
+                            'total_chunks': str(chunk.total_chunks),
+                            'parent_spec_id': chunk.parent_spec_id,
+                            'source_file': json_file,
+                            'loaded_from_json': 'true'
+                        })
+                        ids.append(chunk_id)
+                    
+                    # Add to collection
+                    collection.add(
+                        documents=documents,
+                        metadatas=metadatas,
+                        ids=ids
+                    )
+                    
+                    loaded_count += 1
+                    print(f"✅ Loaded {len(chunks)} chunks from {json_file}")
+                    
+                except Exception as e:
+                    print(f"❌ Error loading {json_file}: {str(e)}")
+                    continue
+            
+            print(f"🎉 Successfully loaded {loaded_count} JSON files into ChromaDB")
+            return loaded_count
+            
+        except Exception as e:
+            print(f"❌ Error in load_json_files_from_output: {str(e)}")
+            return loaded_count

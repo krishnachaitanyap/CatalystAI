@@ -45,6 +45,49 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Initialize API connector manager for startup loading
+api_connector_manager = None
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize the application on startup"""
+    global api_connector_manager
+    
+    print("🚀 Starting CatalystAI Data Collector API...")
+    
+    # Initialize database
+    print("📊 Initializing database...")
+    from models.database import create_database
+    create_database()
+    
+    # Initialize API connector manager
+    print("🔧 Initializing API connector manager...")
+    from utils.chunking import ChunkingConfig, ChunkingStrategy
+    
+    # Use ENDPOINT_BASED chunking for better organization
+    chunking_config = ChunkingConfig(
+        strategy=ChunkingStrategy.ENDPOINT_BASED,
+        chunk_size=512,
+        chunk_overlap=50,
+        max_chunks_per_spec=20,
+        min_chunk_size=100,
+        max_chunk_size=2048
+    )
+    
+    api_connector_manager = APIConnectorManager(chunking_config)
+    api_connector_manager.load_environment()
+    
+    # Load JSON files from output directory into vector database
+    print("📂 Loading JSON files from output directory...")
+    loaded_count = api_connector_manager.load_json_files_from_output("output")
+    
+    if loaded_count > 0:
+        print(f"✅ Loaded {loaded_count} JSON files into vector database")
+    else:
+        print("ℹ️ No JSON files found in output directory")
+    
+    print("🎉 Startup completed successfully!")
+
 # Initialize database manager
 db_manager = DatabaseManager()
 

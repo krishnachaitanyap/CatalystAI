@@ -58,15 +58,18 @@ class APISpecChunker:
         self.config.min_chunk_size = int(os.getenv('MIN_CHUNK_SIZE', self.config.min_chunk_size))
         self.config.max_chunk_size = int(os.getenv('MAX_CHUNK_SIZE', self.config.max_chunk_size))
         
-        strategy_str = os.getenv('CHUNKING_STRATEGY', 'semantic').lower()
-        if strategy_str == 'fixed_size':
-            self.config.strategy = ChunkingStrategy.FIXED_SIZE
-        elif strategy_str == 'hybrid':
-            self.config.strategy = ChunkingStrategy.HYBRID
-        elif strategy_str == 'endpoint_based':
-            self.config.strategy = ChunkingStrategy.ENDPOINT_BASED
-        else:
-            self.config.strategy = ChunkingStrategy.SEMANTIC
+        # Only override strategy if environment variable is explicitly set
+        strategy_str = os.getenv('CHUNKING_STRATEGY')
+        if strategy_str:
+            strategy_str = strategy_str.lower()
+            if strategy_str == 'fixed_size':
+                self.config.strategy = ChunkingStrategy.FIXED_SIZE
+            elif strategy_str == 'hybrid':
+                self.config.strategy = ChunkingStrategy.HYBRID
+            elif strategy_str == 'endpoint_based':
+                self.config.strategy = ChunkingStrategy.ENDPOINT_BASED
+            else:
+                self.config.strategy = ChunkingStrategy.SEMANTIC
     
     def chunk_api_spec(self, common_spec: Any, spec_id: str) -> List[Chunk]:
         """Main method to chunk an API specification"""
