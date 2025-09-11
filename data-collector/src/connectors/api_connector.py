@@ -50,8 +50,6 @@ class CommonAPISpec:
     endpoints: List[Dict[str, Any]]
     authentication: Dict[str, Any]
     rate_limits: Dict[str, Any]
-    pricing: Optional[str]
-    sdk_languages: List[str]
     documentation_url: str
     integration_steps: List[str]
     best_practices: List[str]
@@ -61,6 +59,8 @@ class CommonAPISpec:
     license_info: Dict[str, str]
     external_docs: List[Dict[str, str]]
     examples: List[Dict[str, Any]]
+    sealId: str = "105961"
+    application: str = "PROFILE"
     namespaces: Dict[str, str] = None
     schema_version: str = "1.0"
     created_at: str = ""
@@ -166,8 +166,8 @@ class SwaggerConnector:
             endpoints=endpoints,
             authentication=auth_info,
             rate_limits=rate_limits,
-            pricing=None,  # Not typically in OpenAPI spec
-            sdk_languages=self._extract_sdk_languages(spec_data),
+            sealId="105961",  # Default seal ID
+            application="PROFILE",  # Default application
             documentation_url=source if source.startswith('http') else '',
             integration_steps=self._generate_integration_steps(endpoints, auth_info),
             best_practices=self._generate_best_practices(endpoints, auth_info),
@@ -227,8 +227,8 @@ class SwaggerConnector:
             endpoints=endpoints,
             authentication=auth_info,
             rate_limits=rate_limits,
-            pricing=None,
-            sdk_languages=self._extract_sdk_languages(spec_data),
+            sealId="105961",  # Default seal ID
+            application="PROFILE",  # Default application
             documentation_url=source if source.startswith('http') else '',
             integration_steps=self._generate_integration_steps(endpoints, auth_info),
             best_practices=self._generate_best_practices(endpoints, auth_info),
@@ -349,13 +349,6 @@ class SwaggerConnector:
                 return category
         
         return 'general'
-    
-    def _extract_sdk_languages(self, spec_data: Dict[str, Any]) -> List[str]:
-        """Extract supported SDK languages from spec"""
-        
-        # Common SDK languages - this would typically come from external sources
-        # or be inferred from the API's documentation
-        return ['Python', 'JavaScript', 'Java', 'C#', 'Go', 'Ruby', 'PHP', 'Swift', 'Kotlin']
     
     def _generate_integration_steps(self, endpoints: List[Dict[str, Any]], auth_info: Dict[str, Any]) -> List[str]:
         """Generate integration steps based on endpoints and auth"""
@@ -962,8 +955,8 @@ class WSDLConnector:
             endpoints=endpoints,
             authentication=self._extract_wsdl_auth(root),
             rate_limits={'description': 'Not specified in WSDL'},
-            pricing=None,
-            sdk_languages=['Java', 'C#', 'Python', 'PHP', 'Ruby'],
+            sealId="105961",  # Default seal ID
+            application="PROFILE",  # Default application
             documentation_url=source if source.startswith('http') else '',
             integration_steps=self._generate_soap_integration_steps(),
             best_practices=self._generate_soap_best_practices(),

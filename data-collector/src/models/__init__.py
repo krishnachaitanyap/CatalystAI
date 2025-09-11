@@ -19,8 +19,6 @@ class CommonAPISpec:
     endpoints: List[Dict[str, Any]]
     authentication: Dict[str, Any]
     rate_limits: Dict[str, Any]
-    pricing: Optional[str]
-    sdk_languages: List[str]
     documentation_url: str
     integration_steps: List[str]
     best_practices: List[str]
@@ -30,6 +28,8 @@ class CommonAPISpec:
     license_info: Dict[str, str]
     external_docs: List[Dict[str, str]]
     examples: List[Dict[str, Any]]
+    sealId: str = "105961"
+    application: str = "PROFILE"
     schema_version: str = "1.0"
     created_at: str = ""
     updated_at: str = ""

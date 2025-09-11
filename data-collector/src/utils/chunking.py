@@ -166,7 +166,8 @@ class APISpecChunker:
                 chunk_type="integration",
                 metadata={
                     "api_name": common_spec.api_name,
-                    "sdk_languages": common_spec.sdk_languages,
+                    "sealId": common_spec.sealId,
+                    "application": common_spec.application,
                     "use_cases": len(common_spec.common_use_cases)
                 },
                 chunk_index=chunk_index,
@@ -304,7 +305,8 @@ Description: {common_spec.description}
 Base URL: {common_spec.base_url}
 Category: {common_spec.category}
 Total Endpoints: {len(common_spec.endpoints)}
-SDK Languages: {', '.join(common_spec.sdk_languages)}
+Seal ID: {common_spec.sealId}
+Application: {common_spec.application}
 Tags: {', '.join(common_spec.tags)}
 Documentation URL: {common_spec.documentation_url}"""
     
@@ -354,7 +356,8 @@ Common Use Cases:
 {chr(10).join(f'• {use_case}' for use_case in common_spec.common_use_cases)}
 
 Rate Limits: {common_spec.rate_limits.get('description', 'Not specified')}
-Pricing: {common_spec.pricing or 'Not specified'}"""
+Seal ID: {common_spec.sealId}
+Application: {common_spec.application}"""
     
     def _create_full_content(self, common_spec: Any) -> str:
         """Create full content representation"""

@@ -178,8 +178,8 @@ class CommonAPISpec:
     endpoints: List[Dict[str, Any]]  # All API endpoints
     authentication: Dict[str, Any]    # Auth methods and schemes
     rate_limits: Dict[str, Any]      # Rate limiting information
-    pricing: Optional[str]           # Pricing information
-    sdk_languages: List[str]         # Supported SDK languages
+    sealId: str = "105961"          # Seal ID for the API specification (default: 105961)
+    application: str = "PROFILE"     # Application name (default: PROFILE)
     documentation_url: str           # Documentation URL
     integration_steps: List[str]     # Step-by-step integration guide
     best_practices: List[str]        # Security and implementation practices
