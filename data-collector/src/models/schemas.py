@@ -133,11 +133,11 @@ class ProcessingStatus(BaseModel):
     error: Optional[str] = None
 
 class ConvertRequest(BaseModel):
-    file_id: str
+    file_ids: List[str]  # Changed to support multiple files
     show_metrics: bool = False
 
 class ConvertResponse(BaseModel):
-    file_id: str
+    file_ids: List[str]  # Changed to support multiple files
     success: bool
     api_spec_id: Optional[int] = None
     common_spec: Optional[Dict[str, Any]] = None

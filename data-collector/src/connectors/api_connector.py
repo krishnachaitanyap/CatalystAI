@@ -905,6 +905,7 @@ class WSDLConnector:
             'xsd': 'http://www.w3.org/2001/XMLSchema',
             'tns': 'http://tempuri.org/'  # Default namespace
         }
+        self.xsd_dependencies = {}  # Store XSD dependencies for external schema resolution
     
     def parse_wsdl_file(self, file_path: str) -> CommonAPISpec:
         """Parse WSDL file and convert to common structure"""
@@ -918,8 +919,163 @@ class WSDLConnector:
         except Exception as e:
             raise ValueError(f"Error parsing WSDL file {file_path}: {str(e)}")
     
+    def parse_wsdl_files_with_dependencies(self, file_paths: List[str]) -> CommonAPISpec:
+        """Parse multiple WSDL/XSD files and convert to common structure, handling external dependencies"""
+        
+        try:
+            # Find the main WSDL file (usually the one with .wsdl extension)
+            main_wsdl_file = None
+            xsd_files = []
+            
+            for file_path in file_paths:
+                if file_path.lower().endswith('.wsdl'):
+                    main_wsdl_file = file_path
+                elif file_path.lower().endswith('.xsd'):
+                    xsd_files.append(file_path)
+            
+            if not main_wsdl_file:
+                # If no .wsdl file found, use the first file
+                main_wsdl_file = file_paths[0]
+            
+            print(f"📄 Main WSDL file: {main_wsdl_file}")
+            print(f"📄 XSD dependencies: {xsd_files}")
+            
+            # Parse the main WSDL file
+            tree = ET.parse(main_wsdl_file)
+            root = tree.getroot()
+            
+            # Store XSD files for dependency resolution
+            self.xsd_dependencies = {}
+            for xsd_file in xsd_files:
+                try:
+                    xsd_tree = ET.parse(xsd_file)
+                    xsd_root = xsd_tree.getroot()
+                    
+                    # Extract schema information
+                    schema_info = self._extract_schema_info(xsd_root, xsd_file)
+                    self.xsd_dependencies[xsd_file] = schema_info
+                    
+                    print(f"✅ Loaded XSD dependency: {xsd_file}")
+                except Exception as e:
+                    print(f"⚠️ Warning: Could not load XSD dependency {xsd_file}: {str(e)}")
+            
+            # Convert WSDL to common structure with dependencies
+            return self._convert_wsdl_to_common(root, main_wsdl_file)
+            
+        except Exception as e:
+            raise ValueError(f"Error parsing WSDL files with dependencies: {str(e)}")
+    
+    def _extract_schema_info(self, xsd_root: ET.Element, file_path: str) -> Dict[str, Any]:
+        """Extract schema information from XSD file with import resolution"""
+        schema_info = {
+            'file_path': file_path,
+            'elements': {},
+            'complex_types': {},
+            'simple_types': {},
+            'imports': [],
+            'resolved_imports': {}
+        }
+        
+        # Extract elements
+        for element in xsd_root.findall('.//xsd:element', self.namespaces):
+            name = element.get('name')
+            if name:
+                schema_info['elements'][name] = {
+                    'type': element.get('type'),
+                    'minOccurs': element.get('minOccurs'),
+                    'maxOccurs': element.get('maxOccurs')
+                }
+        
+        # Extract complex types
+        for complex_type in xsd_root.findall('.//xsd:complexType', self.namespaces):
+            name = complex_type.get('name')
+            if name:
+                schema_info['complex_types'][name] = self._extract_complex_type_details(complex_type)
+        
+        # Extract simple types
+        for simple_type in xsd_root.findall('.//xsd:simpleType', self.namespaces):
+            name = simple_type.get('name')
+            if name:
+                schema_info['simple_types'][name] = {
+                    'restriction': simple_type.find('.//xsd:restriction', self.namespaces) is not None
+                }
+        
+        # Extract imports and resolve them
+        for import_elem in xsd_root.findall('.//xsd:import', self.namespaces):
+            schema_location = import_elem.get('schemaLocation')
+            namespace = import_elem.get('namespace', '')
+            if schema_location:
+                schema_info['imports'].append({
+                    'namespace': namespace,
+                    'schemaLocation': schema_location
+                })
+                
+                # Try to resolve the import
+                resolved_import = self._resolve_xsd_import(file_path, schema_location, namespace)
+                if resolved_import:
+                    schema_info['resolved_imports'][schema_location] = resolved_import
+        
+        return schema_info
+    
+    def _resolve_xsd_import(self, base_file: str, import_location: str, namespace: str) -> Optional[Dict[str, Any]]:
+        """Resolve an XSD import by loading the referenced file"""
+        try:
+            import os
+            
+            # Handle relative paths
+            if not os.path.isabs(import_location):
+                base_dir = os.path.dirname(base_file)
+                import_path = os.path.join(base_dir, import_location)
+            else:
+                import_path = import_location
+            
+            # Check if the file exists
+            if os.path.exists(import_path):
+                print(f"📄 Resolving XSD import: {import_location} -> {import_path}")
+                
+                # Parse the imported XSD file
+                import_tree = ET.parse(import_path)
+                import_root = import_tree.getroot()
+                
+                # Extract schema information from the imported file
+                import_schema = self._extract_schema_info(import_root, import_path)
+                import_schema['namespace'] = namespace
+                
+                return import_schema
+            else:
+                print(f"⚠️ XSD import file not found: {import_path}")
+                return None
+                
+        except Exception as e:
+            print(f"⚠️ Error resolving XSD import {import_location}: {str(e)}")
+            return None
+    
+    def _resolve_type_reference(self, type_name: str, root: ET.Element) -> Optional[ET.Element]:
+        """Resolve a type reference across all loaded XSD dependencies"""
+        # First check in the main WSDL/XSD
+        complex_type_elem = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+        if complex_type_elem is not None:
+            return complex_type_elem
+        
+        # Then check in XSD dependencies
+        for xsd_file, schema_info in self.xsd_dependencies.items():
+            # Check in main schema
+            if type_name in schema_info.get('complex_types', {}):
+                # Return a mock element with the type information
+                mock_element = ET.Element('complexType', name=type_name)
+                mock_element.text = f"Referenced from {xsd_file}"
+                return mock_element
+            
+            # Check in resolved imports
+            for import_location, import_schema in schema_info.get('resolved_imports', {}).items():
+                if type_name in import_schema.get('complex_types', {}):
+                    mock_element = ET.Element('complexType', name=type_name)
+                    mock_element.text = f"Referenced from {import_location}"
+                    return mock_element
+        
+        return None
+    
     def parse_wsdl_url(self, url: str) -> CommonAPISpec:
-        """Parse WSDL from URL"""
         
         try:
             response = requests.get(url, timeout=30)
@@ -1360,7 +1516,7 @@ class WSDLConnector:
                         # Check if this element has nested complex type (recursive extraction)
                         if root is not None:
                             element_path = f"{type_name}.{element.get('name', '')}"
-                            nested_attributes = self._extract_nested_attributes(element, root, element_path, visited_types.copy())
+                            nested_attributes = self._extract_nested_attributes(element, root, element_path, visited_types.copy(), 0, 0)
                             details['nested_attributes'].extend(nested_attributes)
                     
                     details['sequences'].append(sequence_details)
@@ -1422,15 +1578,25 @@ class WSDLConnector:
                 # Check if this element has nested complex type (recursive extraction)
                 if root is not None:
                     element_path = f"{type_name}.{element.get('name', '')}"
-                    nested_attributes = self._extract_nested_attributes(element, root, element_path, visited_types.copy())
+                    nested_attributes = self._extract_nested_attributes(element, root, element_path, visited_types.copy(), 0, 0)
                     details['nested_attributes'].extend(nested_attributes)
         
         return details
     
-    def _extract_nested_attributes(self, element: ET.Element, root: ET.Element, parent_path: str = "", visited_types: set = None) -> List[Dict[str, Any]]:
-        """Recursively extract all nested attributes until leaf nodes"""
+    def _extract_nested_attributes(self, element: ET.Element, root: ET.Element, parent_path: str = "", visited_types: set = None, depth: int = 0, circular_count: int = 0) -> List[Dict[str, Any]]:
+        """Recursively extract all nested attributes until leaf nodes with depth limiting"""
         if visited_types is None:
             visited_types = set()
+            
+        # Add depth limit to prevent infinite recursion
+        if depth > 8:  # Reduced from 15 to 8 for better performance
+            print(f"⚠️ Maximum recursion depth reached for path: {parent_path}")
+            return []
+            
+        # Limit circular references to prevent excessive processing
+        if circular_count > 5:  # Maximum circular references allowed
+            print(f"⚠️ Too many circular references detected ({circular_count}), stopping recursion")
+            return []
             
         nested_attributes = []
         element_name = element.get('name', '')
@@ -1450,9 +1616,15 @@ class WSDLConnector:
             
             if path_key in visited_types:
                 print(f"⚠️ Circular reference detected in path: {path_key}")
+                # Increment circular count and check limit
+                new_circular_count = circular_count + 1
+                if new_circular_count > 5:
+                    print(f"⚠️ Too many circular references detected ({new_circular_count}), stopping recursion")
+                    return []
                 return []
                 
-            complex_type_elem = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+            # Use enhanced type resolution that checks XSD dependencies
+            complex_type_elem = self._resolve_type_reference(type_name, root)
             
             if complex_type_elem is not None:
                 # Add current path to visited types before recursive call
@@ -1484,7 +1656,9 @@ class WSDLConnector:
                                     actual_element, 
                                     root, 
                                     current_path,
-                                    visited_types.copy()
+                                    visited_types.copy(),
+                                    depth + 1,
+                                    circular_count
                                 )
                             )
         
@@ -1516,7 +1690,9 @@ class WSDLConnector:
                                 actual_element, 
                                 root, 
                                 current_path,
-                                visited_types.copy()
+                                visited_types.copy(),
+                                depth + 1,
+                                circular_count
                             )
                         )
         
@@ -2475,6 +2651,45 @@ class APIConnectorManager:
             print(f"❌ Error converting and storing {file_path}: {str(e)}")
             return False
     
+    def convert_and_store_multiple(self, file_paths: List[str], api_type: str = 'auto', metrics: bool = False) -> bool:
+        """Convert multiple API spec files to common structure and store in ChromaDB (for WSDL dependencies)"""
+        
+        try:
+            # Initialize ChromaDB if not already done
+            if self.chroma_client is None:
+                self.initialize_chromadb()
+            
+            # Determine API type if auto
+            if api_type == 'auto':
+                api_type = self._detect_api_type(file_paths[0])
+            
+            # Convert to common structure
+            if api_type == 'wsdl':
+                common_spec = self.wsdl_connector.parse_wsdl_files_with_dependencies(file_paths)
+            elif api_type == 'swagger':
+                # For Swagger files, process the first one (they typically don't have dependencies)
+                common_spec = self.swagger_connector.parse_swagger_file(file_paths[0])
+            else:
+                raise ValueError(f"Unsupported API type: {api_type}")
+            
+            # Display metrics if requested
+            if metrics:
+                if api_type == 'wsdl':
+                    metrics_data = self.wsdl_connector.display_vectorization_metrics(common_spec)
+                else:
+                    metrics_data = self.swagger_connector.display_vectorization_metrics(common_spec)
+                self.last_metrics = metrics_data
+            
+            # Store the last converted spec for API access
+            self.last_converted_spec = common_spec
+            
+            # Store in ChromaDB
+            return self._store_in_chromadb(common_spec)
+            
+        except Exception as e:
+            print(f"❌ Error converting and storing multiple files {file_paths}: {str(e)}")
+            return False
+    
     def convert_from_url(self, url: str, api_type: str = 'auto') -> bool:
         """Convert API spec from URL to common structure and store in ChromaDB"""
         
@@ -2698,7 +2913,7 @@ Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
             
             print(f"✅ Written CommonAPISpec to: {file_path}")
             return file_path
-            
+                
         except Exception as e:
             print(f"❌ Error writing CommonAPISpec to JSON: {str(e)}")
             raise e

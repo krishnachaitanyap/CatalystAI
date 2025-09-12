@@ -1,0 +1,1868 @@
+{
+  "api_name": "UserService",
+  "version": "1.0.0",
+  "description": "SOAP Web Service",
+  "base_url": "http://example.com/UserService",
+  "category": "soap",
+  "endpoints": [
+    {
+      "path": "/GetUser",
+      "method": "POST",
+      "summary": "GetUser",
+      "description": "",
+      "parameters": [
+        {
+          "name": "parameters",
+          "in": "body",
+          "description": "SOAP part: parameters",
+          "required": true,
+          "type": "object",
+          "element": "tns:UserRequest",
+          "type_name": "",
+          "soap_part": true,
+          "schema_details": {
+            "element_name": "UserRequest",
+            "qualified_name": "tns:UserRequest",
+            "attributes": [
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              }
+            ],
+            "complex_type": {
+              "type": "complex",
+              "attributes": [
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                }
+              ],
+              "elements": [],
+              "sequences": [
+                {
+                  "elements": [
+                    {
+                      "name": "user",
+                      "type": "tns:User",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    }
+                  ]
+                }
+              ],
+              "nested_attributes": [
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user",
+                  "is_nested": true
+                },
+                {
+                  "name": "userId",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "userId",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "userId",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "userId",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                }
+              ],
+              "inherited_attributes": []
+            },
+            "description": "",
+            "type": "",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nested_attributes": [
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user",
+                "is_nested": true
+              },
+              {
+                "name": "userId",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "userId",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "userId",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "userId",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              }
+            ]
+          },
+          "attributes": [
+            {
+              "name": "user",
+              "type": "tns:User",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            }
+          ],
+          "nested_attributes": [
+            {
+              "name": "id",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user",
+              "is_nested": true
+            },
+            {
+              "name": "name",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user",
+              "is_nested": true
+            },
+            {
+              "name": "profile",
+              "type": "tns:Profile",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user",
+              "is_nested": true
+            },
+            {
+              "name": "userId",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "user",
+              "type": "tns:User",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "id",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "name",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "profile",
+              "type": "tns:Profile",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "userId",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "user",
+              "type": "tns:User",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "id",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "name",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "profile",
+              "type": "tns:Profile",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "userId",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "user",
+              "type": "tns:User",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "id",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "name",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "profile",
+              "type": "tns:Profile",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "userId",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile.user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "user",
+              "type": "tns:User",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile.user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "id",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "name",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+              "is_nested": true
+            },
+            {
+              "name": "profile",
+              "type": "tns:Profile",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+              "is_nested": true
+            }
+          ],
+          "searchable_content": "element UserRequest attribute user type tns:User field user data type tns:User"
+        }
+      ],
+      "request_body": {
+        "description": "SOAP request body",
+        "required": true,
+        "content_type": "text/xml",
+        "soap_envelope": true,
+        "parts": [
+          {
+            "name": "parameters",
+            "element": "tns:UserRequest",
+            "type": "",
+            "schema_details": {
+              "element_name": "UserRequest",
+              "qualified_name": "tns:UserRequest",
+              "attributes": [
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                }
+              ],
+              "complex_type": {
+                "type": "complex",
+                "attributes": [
+                  {
+                    "name": "user",
+                    "type": "tns:User",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  }
+                ],
+                "elements": [],
+                "sequences": [
+                  {
+                    "elements": [
+                      {
+                        "name": "user",
+                        "type": "tns:User",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": "false",
+                        "description": ""
+                      }
+                    ]
+                  }
+                ],
+                "nested_attributes": [
+                  {
+                    "name": "id",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "name",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "profile",
+                    "type": "tns:Profile",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "userId",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "user",
+                    "type": "tns:User",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "id",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "name",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "profile",
+                    "type": "tns:Profile",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "userId",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "user",
+                    "type": "tns:User",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "id",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "name",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "profile",
+                    "type": "tns:Profile",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "userId",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "user",
+                    "type": "tns:User",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "id",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "name",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "profile",
+                    "type": "tns:Profile",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "userId",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "user",
+                    "type": "tns:User",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "id",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "name",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "profile",
+                    "type": "tns:Profile",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                    "is_nested": true
+                  }
+                ],
+                "inherited_attributes": []
+              },
+              "description": "",
+              "type": "",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nested_attributes": [
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user",
+                  "is_nested": true
+                },
+                {
+                  "name": "userId",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "userId",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "userId",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "userId",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "user",
+                  "type": "tns:User",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                  "is_nested": true
+                },
+                {
+                  "name": "id",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "name",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                },
+                {
+                  "name": "profile",
+                  "type": "tns:Profile",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                  "is_nested": true
+                }
+              ]
+            },
+            "attributes": [
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              }
+            ],
+            "nested_attributes": [
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user",
+                "is_nested": true
+              },
+              {
+                "name": "userId",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "userId",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "userId",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "userId",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "user",
+                "type": "tns:User",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile",
+                "is_nested": true
+              },
+              {
+                "name": "id",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "name",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              },
+              {
+                "name": "profile",
+                "type": "tns:Profile",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": "",
+                "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+                "is_nested": true
+              }
+            ],
+            "searchable_content": "element UserRequest attribute user type tns:User field user data type tns:User"
+          }
+        ],
+        "all_attributes": [
+          {
+            "name": "user",
+            "type": "tns:User",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": ""
+          },
+          {
+            "name": "id",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user",
+            "is_nested": true
+          },
+          {
+            "name": "name",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user",
+            "is_nested": true
+          },
+          {
+            "name": "profile",
+            "type": "tns:Profile",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user",
+            "is_nested": true
+          },
+          {
+            "name": "userId",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "user",
+            "type": "tns:User",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "id",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "name",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "profile",
+            "type": "tns:Profile",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "userId",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "user",
+            "type": "tns:User",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "id",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "name",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "profile",
+            "type": "tns:Profile",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "userId",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "user",
+            "type": "tns:User",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "id",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "name",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "profile",
+            "type": "tns:Profile",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "userId",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile.user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "user",
+            "type": "tns:User",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile.user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "id",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "name",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+            "is_nested": true
+          },
+          {
+            "name": "profile",
+            "type": "tns:Profile",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": "",
+            "parent_path": "user.profile.user.profile.user.profile.user.profile.user",
+            "is_nested": true
+          }
+        ],
+        "searchable_content": "element UserRequest attribute user type tns:User field user data type tns:User"
+      },
+      "responses": {},
+      "tags": [
+        "soap"
+      ],
+      "operation_id": "GetUser",
+      "deprecated": false,
+      "soap_action": "http://example.com/GetUser"
+    }
+  ],
+  "authentication": {
+    "type": "soap",
+    "schemes": [
+      {
+        "name": "SOAP Authentication",
+        "type": "soap",
+        "description": "SOAP-specific authentication mechanisms",
+        "ws_security": true,
+        "basic_auth": true,
+        "certificate_auth": true
+      }
+    ],
+    "description": "SOAP services typically use WS-Security, Basic Auth, or Certificate-based authentication"
+  },
+  "rate_limits": {
+    "description": "Not specified in WSDL"
+  },
+  "documentation_url": "",
+  "integration_steps": [
+    "Obtain WSDL file or URL",
+    "Generate client stubs using WSDL",
+    "Configure SOAP client",
+    "Implement authentication (WS-Security, Basic Auth, etc.)",
+    "Handle SOAP faults and errors",
+    "Implement request/response logging",
+    "Test with SOAP client tools",
+    "Deploy with proper error handling"
+  ],
+  "best_practices": [
+    "Always use HTTPS for SOAP endpoints",
+    "Implement proper SOAP fault handling",
+    "Use WS-Security for authentication",
+    "Validate SOAP messages against schema",
+    "Implement request/response logging",
+    "Use connection pooling for SOAP clients",
+    "Handle timeouts appropriately",
+    "Implement retry logic for transient failures",
+    "Monitor SOAP service performance",
+    "Use appropriate SOAP version (1.1 or 1.2)"
+  ],
+  "common_use_cases": [
+    "SOAP Service Integration",
+    "Enterprise Integration",
+    "Legacy System Integration"
+  ],
+  "tags": [
+    "soap",
+    "wsdl",
+    "enterprise"
+  ],
+  "contact_info": {},
+  "license_info": {},
+  "external_docs": [],
+  "examples": [
+    {
+      "endpoint": "SOAP GetUser",
+      "soap_action": "http://example.com/GetUser",
+      "request_example": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Header>\n        <!-- Authentication headers -->\n    </soap:Header>\n    <soap:Body>\n        <GetUser>\n            <!-- Request parameters -->\n        </GetUser>\n    </soap:Body>\n</soap:Envelope>",
+      "response_example": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <GetUserResponse>\n            <!-- Response data -->\n        </GetUserResponse>\n    </soap:Body>\n</soap:Envelope>"
+    }
+  ],
+  "sealId": "105961",
+  "application": "PROFILE",
+  "namespaces": {
+    "ns2": "http://schemas.xmlsoap.org/wsdl/soap/",
+    "wsdl": "http://schemas.xmlsoap.org/wsdl/",
+    "xs": "http://www.w3.org/2001/XMLSchema",
+    "targetNamespace": "http://example.com/"
+  },
+  "schema_version": "1.0",
+  "created_at": "2025-09-12T11:59:37.591324",
+  "updated_at": "2025-09-12T11:59:37.591331"
+}
