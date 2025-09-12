@@ -77,6 +77,12 @@ async def startup_event():
     api_connector_manager = APIConnectorManager(chunking_config)
     api_connector_manager.load_environment()
     
+    # Reset ChromaDB for clean start
+    print("🧹 Resetting ChromaDB for clean start...")
+    reset_success = api_connector_manager.reset_chromadb()
+    if not reset_success:
+        print("⚠️ Warning: ChromaDB reset failed, continuing with existing data...")
+    
     # Load JSON files from output directory into vector database
     print("📂 Loading JSON files from output directory...")
     loaded_count = api_connector_manager.load_json_files_from_output("output")

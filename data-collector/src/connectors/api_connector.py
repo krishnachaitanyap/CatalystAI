@@ -2626,6 +2626,45 @@ Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
         """Get the last metrics data"""
         return self.last_metrics
     
+    def reset_chromadb(self) -> bool:
+        """
+        Reset ChromaDB by deleting the entire collection and recreating it
+        
+        Returns:
+            bool: True if reset was successful, False otherwise
+        """
+        try:
+            print("🧹 Resetting ChromaDB...")
+            
+            # Initialize ChromaDB if not already done
+            if self.chroma_client is None:
+                self.initialize_chromadb()
+            
+            # Delete the existing collection if it exists
+            try:
+                self.chroma_client.delete_collection('api_specifications')
+                print("✅ Deleted existing ChromaDB collection")
+            except Exception as e:
+                print(f"ℹ️ Collection may not exist: {str(e)}")
+            
+            # Create a new collection
+            collection = self.chroma_client.create_collection(
+                name='api_specifications',
+                metadata={'description': 'API specifications and their chunks'}
+            )
+            print("✅ Created new ChromaDB collection")
+            
+            # Verify the collection is empty
+            count = collection.count()
+            print(f"📊 New collection count: {count}")
+            
+            print("🎉 ChromaDB reset completed successfully!")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Error resetting ChromaDB: {str(e)}")
+            return False
+    
     def write_common_spec_to_json(self, common_spec: CommonAPISpec, output_dir: str = "output") -> str:
         """
         Write CommonAPISpec as JSON to the output directory

@@ -27,6 +27,26 @@ def initialize_database():
     # Initialize database manager
     db_manager = DatabaseManager()
     
+    # Reset ChromaDB for clean start
+    print("🧹 Resetting ChromaDB for clean start...")
+    from connectors.api_connector import APIConnectorManager
+    from utils.chunking import ChunkingConfig, ChunkingStrategy
+    
+    chunking_config = ChunkingConfig(
+        strategy=ChunkingStrategy.ENDPOINT_BASED,
+        chunk_size=512,
+        chunk_overlap=50
+    )
+    
+    api_connector_manager = APIConnectorManager(chunking_config)
+    api_connector_manager.load_environment()
+    
+    reset_success = api_connector_manager.reset_chromadb()
+    if reset_success:
+        print("✅ ChromaDB reset completed")
+    else:
+        print("⚠️ Warning: ChromaDB reset failed")
+    
     # Create demo user
     demo_user = db_manager.get_user_by_username("demo_user")
     if not demo_user:
