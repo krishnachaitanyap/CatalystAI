@@ -1,0 +1,763 @@
+{
+  "api_name": "AccountService",
+  "version": "1.0.0",
+  "description": "SOAP service: AccountService",
+  "base_url": "http://example.com/AccountService",
+  "category": "SOAP",
+  "documentation_url": "",
+  "api_type": "SOAP",
+  "format": "WSDL",
+  "endpoints": [
+    {
+      "path": "/GetAccountDetail",
+      "method": "POST",
+      "summary": "SOAP operation: GetAccountDetail",
+      "description": "SOAP operation GetAccountDetail",
+      "operation_name": "GetAccountDetail",
+      "soap_headers": [],
+      "request": {
+        "message_name": "tns:AccountDetailReqMessage",
+        "all_attributes": [
+          {
+            "name": "tns:AccountDetailReq",
+            "type": "",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: tns:AccountDetailReq",
+            "is_nested": false,
+            "complex_type": {
+              "name": "",
+              "attributes": [
+                {
+                  "name": "accountId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountId"
+                },
+                {
+                  "name": "accountId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountId"
+                }
+              ],
+              "sequences": [
+                {
+                  "elements": [
+                    {
+                      "name": "accountId",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: accountId"
+                    }
+                  ]
+                }
+              ],
+              "nested_attributes": []
+            },
+            "nested_attributes": []
+          }
+        ]
+      },
+      "response": {
+        "message_name": "tns:AccountDetailResMessage",
+        "all_attributes": [
+          {
+            "name": "tns:AccountDetailRes",
+            "type": "",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: tns:AccountDetailRes",
+            "is_nested": false,
+            "complex_type": {
+              "name": "",
+              "attributes": [
+                {
+                  "name": "accountDetail",
+                  "type": "tns:AccountDetail",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountDetail"
+                },
+                {
+                  "name": "status",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: status"
+                },
+                {
+                  "name": "accountDetail",
+                  "type": "tns:AccountDetail",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountDetail"
+                },
+                {
+                  "name": "status",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: status"
+                }
+              ],
+              "sequences": [
+                {
+                  "elements": [
+                    {
+                      "name": "accountDetail",
+                      "type": "tns:AccountDetail",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: accountDetail"
+                    },
+                    {
+                      "name": "status",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: status"
+                    }
+                  ]
+                }
+              ],
+              "nested_attributes": [
+                {
+                  "name": "abeAccountDetail",
+                  "type": "tns:ABEAccountDetail",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: abeAccountDetail",
+                  "parent_path": ".accountDetail.accountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "accountId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountId",
+                  "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "accountName",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountName",
+                  "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "accountNumber",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountNumber",
+                  "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "balance",
+                  "type": "xsd:decimal",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: balance",
+                  "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "currency",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: currency",
+                  "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "accountType",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountType",
+                  "parent_path": ".accountDetail.accountDetail",
+                  "is_nested": true
+                }
+              ]
+            },
+            "nested_attributes": []
+          },
+          {
+            "name": "abeAccountDetail",
+            "type": "tns:ABEAccountDetail",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: abeAccountDetail",
+            "parent_path": ".accountDetail.accountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "accountId",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: accountId",
+            "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "accountName",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: accountName",
+            "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "accountNumber",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: accountNumber",
+            "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "balance",
+            "type": "xsd:decimal",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: balance",
+            "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "currency",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: currency",
+            "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "accountType",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: accountType",
+            "parent_path": ".accountDetail.accountDetail",
+            "is_nested": true
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "tns:AccountDetailReq",
+          "type": "",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: tns:AccountDetailReq",
+          "is_nested": false,
+          "complex_type": {
+            "name": "",
+            "attributes": [
+              {
+                "name": "accountId",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: accountId"
+              },
+              {
+                "name": "accountId",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: accountId"
+              }
+            ],
+            "sequences": [
+              {
+                "elements": [
+                  {
+                    "name": "accountId",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountId"
+                  }
+                ]
+              }
+            ],
+            "nested_attributes": []
+          },
+          "nested_attributes": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful response",
+          "content": [
+            {
+              "name": "tns:AccountDetailRes",
+              "type": "",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: tns:AccountDetailRes",
+              "is_nested": false,
+              "complex_type": {
+                "name": "",
+                "attributes": [
+                  {
+                    "name": "accountDetail",
+                    "type": "tns:AccountDetail",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountDetail"
+                  },
+                  {
+                    "name": "status",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: status"
+                  },
+                  {
+                    "name": "accountDetail",
+                    "type": "tns:AccountDetail",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountDetail"
+                  },
+                  {
+                    "name": "status",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: status"
+                  }
+                ],
+                "sequences": [
+                  {
+                    "elements": [
+                      {
+                        "name": "accountDetail",
+                        "type": "tns:AccountDetail",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: accountDetail"
+                      },
+                      {
+                        "name": "status",
+                        "type": "xsd:string",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: status"
+                      }
+                    ]
+                  }
+                ],
+                "nested_attributes": [
+                  {
+                    "name": "abeAccountDetail",
+                    "type": "tns:ABEAccountDetail",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: abeAccountDetail",
+                    "parent_path": ".accountDetail.accountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "accountId",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountId",
+                    "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "accountName",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountName",
+                    "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "accountNumber",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountNumber",
+                    "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "balance",
+                    "type": "xsd:decimal",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: balance",
+                    "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "currency",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: currency",
+                    "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "accountType",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountType",
+                    "parent_path": ".accountDetail.accountDetail",
+                    "is_nested": true
+                  }
+                ]
+              },
+              "nested_attributes": []
+            },
+            {
+              "name": "abeAccountDetail",
+              "type": "tns:ABEAccountDetail",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: abeAccountDetail",
+              "parent_path": ".accountDetail.accountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "accountId",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: accountId",
+              "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "accountName",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: accountName",
+              "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "accountNumber",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: accountNumber",
+              "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "balance",
+              "type": "xsd:decimal",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: balance",
+              "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "currency",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: currency",
+              "parent_path": ".accountDetail.accountDetail.abeAccountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "accountType",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: accountType",
+              "parent_path": ".accountDetail.accountDetail",
+              "is_nested": true
+            }
+          ]
+        }
+      },
+      "tags": [
+        "AccountServicePortType"
+      ]
+    }
+  ],
+  "data_types": [
+    {
+      "name": "AccountDetail",
+      "type": "complex",
+      "description": "Complex type: AccountDetail",
+      "properties": [
+        {
+          "name": "abeAccountDetail",
+          "type": "tns:ABEAccountDetail",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: abeAccountDetail"
+        },
+        {
+          "name": "accountType",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountType"
+        },
+        {
+          "name": "abeAccountDetail",
+          "type": "tns:ABEAccountDetail",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: abeAccountDetail"
+        },
+        {
+          "name": "accountType",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountType"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "accountId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountId",
+          "parent_path": "AccountDetail.abeAccountDetail.abeAccountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "accountName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountName",
+          "parent_path": "AccountDetail.abeAccountDetail.abeAccountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "accountNumber",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountNumber",
+          "parent_path": "AccountDetail.abeAccountDetail.abeAccountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "balance",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: balance",
+          "parent_path": "AccountDetail.abeAccountDetail.abeAccountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "currency",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: currency",
+          "parent_path": "AccountDetail.abeAccountDetail.abeAccountDetail",
+          "is_nested": true
+        }
+      ]
+    },
+    {
+      "name": "ABEAccountDetail",
+      "type": "complex",
+      "description": "Complex type: ABEAccountDetail",
+      "properties": [
+        {
+          "name": "accountId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountId"
+        },
+        {
+          "name": "accountName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountName"
+        },
+        {
+          "name": "accountNumber",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountNumber"
+        },
+        {
+          "name": "balance",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: balance"
+        },
+        {
+          "name": "currency",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: currency"
+        },
+        {
+          "name": "accountId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountId"
+        },
+        {
+          "name": "accountName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountName"
+        },
+        {
+          "name": "accountNumber",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountNumber"
+        },
+        {
+          "name": "balance",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: balance"
+        },
+        {
+          "name": "currency",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: currency"
+        }
+      ],
+      "nested_attributes": []
+    }
+  ],
+  "authentication": [
+    {
+      "type": "SOAP",
+      "description": "SOAP-based authentication",
+      "scheme": "bearer"
+    }
+  ],
+  "rate_limits": [],
+  "error_codes": [],
+  "examples": [],
+  "tags": [
+    "SOAP",
+    "WSDL"
+  ],
+  "contact_info": {},
+  "license_info": {},
+  "external_docs": [],
+  "servers": [
+    {
+      "url": "http://example.com/AccountService",
+      "description": "SOAP endpoint: AccountService/AccountServicePort"
+    }
+  ],
+  "security_schemes": [],
+  "sealId": "105961",
+  "application": "PROFILE"
+}

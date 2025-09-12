@@ -1,0 +1,1638 @@
+{
+  "api_name": "DeepNestedService",
+  "version": "1.0.0",
+  "description": "SOAP service: DeepNestedService",
+  "base_url": "http://example.com/DeepNestedService",
+  "category": "SOAP",
+  "documentation_url": "",
+  "api_type": "SOAP",
+  "format": "WSDL",
+  "endpoints": [
+    {
+      "path": "/GetDeepNestedData",
+      "method": "POST",
+      "summary": "SOAP operation: GetDeepNestedData",
+      "description": "SOAP operation GetDeepNestedData",
+      "operation_name": "GetDeepNestedData",
+      "soap_headers": [],
+      "request": {
+        "message_name": "tns:DeepNestedRequestMessage",
+        "all_attributes": [
+          {
+            "name": "tns:DeepNestedRequest",
+            "type": "",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: tns:DeepNestedRequest",
+            "is_nested": false,
+            "complex_type": {
+              "name": "",
+              "attributes": [
+                {
+                  "name": "requestId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: requestId"
+                },
+                {
+                  "name": "requestId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: requestId"
+                }
+              ],
+              "sequences": [
+                {
+                  "elements": [
+                    {
+                      "name": "requestId",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: requestId"
+                    }
+                  ]
+                }
+              ],
+              "nested_attributes": []
+            },
+            "nested_attributes": []
+          }
+        ]
+      },
+      "response": {
+        "message_name": "tns:DeepNestedResponseMessage",
+        "all_attributes": [
+          {
+            "name": "tns:DeepNestedResponse",
+            "type": "",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: tns:DeepNestedResponse",
+            "is_nested": false,
+            "complex_type": {
+              "name": "",
+              "attributes": [
+                {
+                  "name": "level1",
+                  "type": "tns:Level1Type",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level1"
+                },
+                {
+                  "name": "level1",
+                  "type": "tns:Level1Type",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level1"
+                }
+              ],
+              "sequences": [
+                {
+                  "elements": [
+                    {
+                      "name": "level1",
+                      "type": "tns:Level1Type",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: level1"
+                    }
+                  ]
+                }
+              ],
+              "nested_attributes": [
+                {
+                  "name": "level2",
+                  "type": "tns:Level2Type",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level2",
+                  "parent_path": ".level1.level1",
+                  "is_nested": true
+                },
+                {
+                  "name": "level3",
+                  "type": "tns:Level3Type",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level3",
+                  "parent_path": ".level1.level1.level2",
+                  "is_nested": true
+                },
+                {
+                  "name": "level4",
+                  "type": "tns:Level4Type",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level4",
+                  "parent_path": ".level1.level1.level2.level3",
+                  "is_nested": true
+                },
+                {
+                  "name": "level5",
+                  "type": "tns:Level5Type",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level5",
+                  "parent_path": ".level1.level1.level2.level3.level4",
+                  "is_nested": true
+                },
+                {
+                  "name": "level6",
+                  "type": "tns:Level6Type",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level6",
+                  "parent_path": ".level1.level1.level2.level3.level4.level5",
+                  "is_nested": true
+                },
+                {
+                  "name": "level7",
+                  "type": "tns:Level7Type",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level7",
+                  "parent_path": ".level1.level1.level2.level3.level4.level5.level6",
+                  "is_nested": true
+                },
+                {
+                  "name": "level7Field1",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level7Field1",
+                  "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+                  "is_nested": true
+                },
+                {
+                  "name": "level7Field2",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level7Field2",
+                  "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+                  "is_nested": true
+                },
+                {
+                  "name": "level7Field3",
+                  "type": "xsd:boolean",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level7Field3",
+                  "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+                  "is_nested": true
+                },
+                {
+                  "name": "level6Field",
+                  "type": "xsd:float",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level6Field",
+                  "parent_path": ".level1.level1.level2.level3.level4.level5.level6",
+                  "is_nested": true
+                },
+                {
+                  "name": "level5Field",
+                  "type": "xsd:decimal",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level5Field",
+                  "parent_path": ".level1.level1.level2.level3.level4.level5",
+                  "is_nested": true
+                },
+                {
+                  "name": "level4Field",
+                  "type": "xsd:dateTime",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level4Field",
+                  "parent_path": ".level1.level1.level2.level3.level4",
+                  "is_nested": true
+                },
+                {
+                  "name": "level3Field",
+                  "type": "xsd:boolean",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level3Field",
+                  "parent_path": ".level1.level1.level2.level3",
+                  "is_nested": true
+                },
+                {
+                  "name": "level2Field",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level2Field",
+                  "parent_path": ".level1.level1.level2",
+                  "is_nested": true
+                },
+                {
+                  "name": "level1Field",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: level1Field",
+                  "parent_path": ".level1.level1",
+                  "is_nested": true
+                }
+              ]
+            },
+            "nested_attributes": []
+          },
+          {
+            "name": "level2",
+            "type": "tns:Level2Type",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level2",
+            "parent_path": ".level1.level1",
+            "is_nested": true
+          },
+          {
+            "name": "level3",
+            "type": "tns:Level3Type",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level3",
+            "parent_path": ".level1.level1.level2",
+            "is_nested": true
+          },
+          {
+            "name": "level4",
+            "type": "tns:Level4Type",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level4",
+            "parent_path": ".level1.level1.level2.level3",
+            "is_nested": true
+          },
+          {
+            "name": "level5",
+            "type": "tns:Level5Type",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level5",
+            "parent_path": ".level1.level1.level2.level3.level4",
+            "is_nested": true
+          },
+          {
+            "name": "level6",
+            "type": "tns:Level6Type",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level6",
+            "parent_path": ".level1.level1.level2.level3.level4.level5",
+            "is_nested": true
+          },
+          {
+            "name": "level7",
+            "type": "tns:Level7Type",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level7",
+            "parent_path": ".level1.level1.level2.level3.level4.level5.level6",
+            "is_nested": true
+          },
+          {
+            "name": "level7Field1",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level7Field1",
+            "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+            "is_nested": true
+          },
+          {
+            "name": "level7Field2",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level7Field2",
+            "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+            "is_nested": true
+          },
+          {
+            "name": "level7Field3",
+            "type": "xsd:boolean",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level7Field3",
+            "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+            "is_nested": true
+          },
+          {
+            "name": "level6Field",
+            "type": "xsd:float",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level6Field",
+            "parent_path": ".level1.level1.level2.level3.level4.level5.level6",
+            "is_nested": true
+          },
+          {
+            "name": "level5Field",
+            "type": "xsd:decimal",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level5Field",
+            "parent_path": ".level1.level1.level2.level3.level4.level5",
+            "is_nested": true
+          },
+          {
+            "name": "level4Field",
+            "type": "xsd:dateTime",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level4Field",
+            "parent_path": ".level1.level1.level2.level3.level4",
+            "is_nested": true
+          },
+          {
+            "name": "level3Field",
+            "type": "xsd:boolean",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level3Field",
+            "parent_path": ".level1.level1.level2.level3",
+            "is_nested": true
+          },
+          {
+            "name": "level2Field",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level2Field",
+            "parent_path": ".level1.level1.level2",
+            "is_nested": true
+          },
+          {
+            "name": "level1Field",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: level1Field",
+            "parent_path": ".level1.level1",
+            "is_nested": true
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "tns:DeepNestedRequest",
+          "type": "",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: tns:DeepNestedRequest",
+          "is_nested": false,
+          "complex_type": {
+            "name": "",
+            "attributes": [
+              {
+                "name": "requestId",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: requestId"
+              },
+              {
+                "name": "requestId",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: requestId"
+              }
+            ],
+            "sequences": [
+              {
+                "elements": [
+                  {
+                    "name": "requestId",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: requestId"
+                  }
+                ]
+              }
+            ],
+            "nested_attributes": []
+          },
+          "nested_attributes": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful response",
+          "content": [
+            {
+              "name": "tns:DeepNestedResponse",
+              "type": "",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: tns:DeepNestedResponse",
+              "is_nested": false,
+              "complex_type": {
+                "name": "",
+                "attributes": [
+                  {
+                    "name": "level1",
+                    "type": "tns:Level1Type",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level1"
+                  },
+                  {
+                    "name": "level1",
+                    "type": "tns:Level1Type",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level1"
+                  }
+                ],
+                "sequences": [
+                  {
+                    "elements": [
+                      {
+                        "name": "level1",
+                        "type": "tns:Level1Type",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: level1"
+                      }
+                    ]
+                  }
+                ],
+                "nested_attributes": [
+                  {
+                    "name": "level2",
+                    "type": "tns:Level2Type",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level2",
+                    "parent_path": ".level1.level1",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level3",
+                    "type": "tns:Level3Type",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level3",
+                    "parent_path": ".level1.level1.level2",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level4",
+                    "type": "tns:Level4Type",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level4",
+                    "parent_path": ".level1.level1.level2.level3",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level5",
+                    "type": "tns:Level5Type",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level5",
+                    "parent_path": ".level1.level1.level2.level3.level4",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level6",
+                    "type": "tns:Level6Type",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level6",
+                    "parent_path": ".level1.level1.level2.level3.level4.level5",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level7",
+                    "type": "tns:Level7Type",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level7",
+                    "parent_path": ".level1.level1.level2.level3.level4.level5.level6",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level7Field1",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level7Field1",
+                    "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level7Field2",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level7Field2",
+                    "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level7Field3",
+                    "type": "xsd:boolean",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level7Field3",
+                    "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level6Field",
+                    "type": "xsd:float",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level6Field",
+                    "parent_path": ".level1.level1.level2.level3.level4.level5.level6",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level5Field",
+                    "type": "xsd:decimal",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level5Field",
+                    "parent_path": ".level1.level1.level2.level3.level4.level5",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level4Field",
+                    "type": "xsd:dateTime",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level4Field",
+                    "parent_path": ".level1.level1.level2.level3.level4",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level3Field",
+                    "type": "xsd:boolean",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level3Field",
+                    "parent_path": ".level1.level1.level2.level3",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level2Field",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level2Field",
+                    "parent_path": ".level1.level1.level2",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "level1Field",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: level1Field",
+                    "parent_path": ".level1.level1",
+                    "is_nested": true
+                  }
+                ]
+              },
+              "nested_attributes": []
+            },
+            {
+              "name": "level2",
+              "type": "tns:Level2Type",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level2",
+              "parent_path": ".level1.level1",
+              "is_nested": true
+            },
+            {
+              "name": "level3",
+              "type": "tns:Level3Type",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level3",
+              "parent_path": ".level1.level1.level2",
+              "is_nested": true
+            },
+            {
+              "name": "level4",
+              "type": "tns:Level4Type",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level4",
+              "parent_path": ".level1.level1.level2.level3",
+              "is_nested": true
+            },
+            {
+              "name": "level5",
+              "type": "tns:Level5Type",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level5",
+              "parent_path": ".level1.level1.level2.level3.level4",
+              "is_nested": true
+            },
+            {
+              "name": "level6",
+              "type": "tns:Level6Type",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level6",
+              "parent_path": ".level1.level1.level2.level3.level4.level5",
+              "is_nested": true
+            },
+            {
+              "name": "level7",
+              "type": "tns:Level7Type",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level7",
+              "parent_path": ".level1.level1.level2.level3.level4.level5.level6",
+              "is_nested": true
+            },
+            {
+              "name": "level7Field1",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level7Field1",
+              "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+              "is_nested": true
+            },
+            {
+              "name": "level7Field2",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level7Field2",
+              "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+              "is_nested": true
+            },
+            {
+              "name": "level7Field3",
+              "type": "xsd:boolean",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level7Field3",
+              "parent_path": ".level1.level1.level2.level3.level4.level5.level6.level7",
+              "is_nested": true
+            },
+            {
+              "name": "level6Field",
+              "type": "xsd:float",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level6Field",
+              "parent_path": ".level1.level1.level2.level3.level4.level5.level6",
+              "is_nested": true
+            },
+            {
+              "name": "level5Field",
+              "type": "xsd:decimal",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level5Field",
+              "parent_path": ".level1.level1.level2.level3.level4.level5",
+              "is_nested": true
+            },
+            {
+              "name": "level4Field",
+              "type": "xsd:dateTime",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level4Field",
+              "parent_path": ".level1.level1.level2.level3.level4",
+              "is_nested": true
+            },
+            {
+              "name": "level3Field",
+              "type": "xsd:boolean",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level3Field",
+              "parent_path": ".level1.level1.level2.level3",
+              "is_nested": true
+            },
+            {
+              "name": "level2Field",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level2Field",
+              "parent_path": ".level1.level1.level2",
+              "is_nested": true
+            },
+            {
+              "name": "level1Field",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: level1Field",
+              "parent_path": ".level1.level1",
+              "is_nested": true
+            }
+          ]
+        }
+      },
+      "tags": [
+        "DeepNestedServicePortType"
+      ]
+    }
+  ],
+  "data_types": [
+    {
+      "name": "Level1Type",
+      "type": "complex",
+      "description": "Complex type: Level1Type",
+      "properties": [
+        {
+          "name": "level2",
+          "type": "tns:Level2Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level2"
+        },
+        {
+          "name": "level1Field",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level1Field"
+        },
+        {
+          "name": "level2",
+          "type": "tns:Level2Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level2"
+        },
+        {
+          "name": "level1Field",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level1Field"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "level3",
+          "type": "tns:Level3Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level3",
+          "parent_path": "Level1Type.level2.level2",
+          "is_nested": true
+        },
+        {
+          "name": "level4",
+          "type": "tns:Level4Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level4",
+          "parent_path": "Level1Type.level2.level2.level3",
+          "is_nested": true
+        },
+        {
+          "name": "level5",
+          "type": "tns:Level5Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5",
+          "parent_path": "Level1Type.level2.level2.level3.level4",
+          "is_nested": true
+        },
+        {
+          "name": "level6",
+          "type": "tns:Level6Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6",
+          "parent_path": "Level1Type.level2.level2.level3.level4.level5",
+          "is_nested": true
+        },
+        {
+          "name": "level7",
+          "type": "tns:Level7Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7",
+          "parent_path": "Level1Type.level2.level2.level3.level4.level5.level6",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field1",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field1",
+          "parent_path": "Level1Type.level2.level2.level3.level4.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field2",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field2",
+          "parent_path": "Level1Type.level2.level2.level3.level4.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field3",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field3",
+          "parent_path": "Level1Type.level2.level2.level3.level4.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level6Field",
+          "type": "xsd:float",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6Field",
+          "parent_path": "Level1Type.level2.level2.level3.level4.level5.level6",
+          "is_nested": true
+        },
+        {
+          "name": "level5Field",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5Field",
+          "parent_path": "Level1Type.level2.level2.level3.level4.level5",
+          "is_nested": true
+        },
+        {
+          "name": "level4Field",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level4Field",
+          "parent_path": "Level1Type.level2.level2.level3.level4",
+          "is_nested": true
+        },
+        {
+          "name": "level3Field",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level3Field",
+          "parent_path": "Level1Type.level2.level2.level3",
+          "is_nested": true
+        },
+        {
+          "name": "level2Field",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level2Field",
+          "parent_path": "Level1Type.level2.level2",
+          "is_nested": true
+        }
+      ]
+    },
+    {
+      "name": "Level2Type",
+      "type": "complex",
+      "description": "Complex type: Level2Type",
+      "properties": [
+        {
+          "name": "level3",
+          "type": "tns:Level3Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level3"
+        },
+        {
+          "name": "level2Field",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level2Field"
+        },
+        {
+          "name": "level3",
+          "type": "tns:Level3Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level3"
+        },
+        {
+          "name": "level2Field",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level2Field"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "level4",
+          "type": "tns:Level4Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level4",
+          "parent_path": "Level2Type.level3.level3",
+          "is_nested": true
+        },
+        {
+          "name": "level5",
+          "type": "tns:Level5Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5",
+          "parent_path": "Level2Type.level3.level3.level4",
+          "is_nested": true
+        },
+        {
+          "name": "level6",
+          "type": "tns:Level6Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6",
+          "parent_path": "Level2Type.level3.level3.level4.level5",
+          "is_nested": true
+        },
+        {
+          "name": "level7",
+          "type": "tns:Level7Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7",
+          "parent_path": "Level2Type.level3.level3.level4.level5.level6",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field1",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field1",
+          "parent_path": "Level2Type.level3.level3.level4.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field2",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field2",
+          "parent_path": "Level2Type.level3.level3.level4.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field3",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field3",
+          "parent_path": "Level2Type.level3.level3.level4.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level6Field",
+          "type": "xsd:float",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6Field",
+          "parent_path": "Level2Type.level3.level3.level4.level5.level6",
+          "is_nested": true
+        },
+        {
+          "name": "level5Field",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5Field",
+          "parent_path": "Level2Type.level3.level3.level4.level5",
+          "is_nested": true
+        },
+        {
+          "name": "level4Field",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level4Field",
+          "parent_path": "Level2Type.level3.level3.level4",
+          "is_nested": true
+        },
+        {
+          "name": "level3Field",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level3Field",
+          "parent_path": "Level2Type.level3.level3",
+          "is_nested": true
+        }
+      ]
+    },
+    {
+      "name": "Level3Type",
+      "type": "complex",
+      "description": "Complex type: Level3Type",
+      "properties": [
+        {
+          "name": "level4",
+          "type": "tns:Level4Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level4"
+        },
+        {
+          "name": "level3Field",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level3Field"
+        },
+        {
+          "name": "level4",
+          "type": "tns:Level4Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level4"
+        },
+        {
+          "name": "level3Field",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level3Field"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "level5",
+          "type": "tns:Level5Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5",
+          "parent_path": "Level3Type.level4.level4",
+          "is_nested": true
+        },
+        {
+          "name": "level6",
+          "type": "tns:Level6Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6",
+          "parent_path": "Level3Type.level4.level4.level5",
+          "is_nested": true
+        },
+        {
+          "name": "level7",
+          "type": "tns:Level7Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7",
+          "parent_path": "Level3Type.level4.level4.level5.level6",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field1",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field1",
+          "parent_path": "Level3Type.level4.level4.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field2",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field2",
+          "parent_path": "Level3Type.level4.level4.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field3",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field3",
+          "parent_path": "Level3Type.level4.level4.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level6Field",
+          "type": "xsd:float",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6Field",
+          "parent_path": "Level3Type.level4.level4.level5.level6",
+          "is_nested": true
+        },
+        {
+          "name": "level5Field",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5Field",
+          "parent_path": "Level3Type.level4.level4.level5",
+          "is_nested": true
+        },
+        {
+          "name": "level4Field",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level4Field",
+          "parent_path": "Level3Type.level4.level4",
+          "is_nested": true
+        }
+      ]
+    },
+    {
+      "name": "Level4Type",
+      "type": "complex",
+      "description": "Complex type: Level4Type",
+      "properties": [
+        {
+          "name": "level5",
+          "type": "tns:Level5Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5"
+        },
+        {
+          "name": "level4Field",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level4Field"
+        },
+        {
+          "name": "level5",
+          "type": "tns:Level5Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5"
+        },
+        {
+          "name": "level4Field",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level4Field"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "level6",
+          "type": "tns:Level6Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6",
+          "parent_path": "Level4Type.level5.level5",
+          "is_nested": true
+        },
+        {
+          "name": "level7",
+          "type": "tns:Level7Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7",
+          "parent_path": "Level4Type.level5.level5.level6",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field1",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field1",
+          "parent_path": "Level4Type.level5.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field2",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field2",
+          "parent_path": "Level4Type.level5.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field3",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field3",
+          "parent_path": "Level4Type.level5.level5.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level6Field",
+          "type": "xsd:float",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6Field",
+          "parent_path": "Level4Type.level5.level5.level6",
+          "is_nested": true
+        },
+        {
+          "name": "level5Field",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5Field",
+          "parent_path": "Level4Type.level5.level5",
+          "is_nested": true
+        }
+      ]
+    },
+    {
+      "name": "Level5Type",
+      "type": "complex",
+      "description": "Complex type: Level5Type",
+      "properties": [
+        {
+          "name": "level6",
+          "type": "tns:Level6Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6"
+        },
+        {
+          "name": "level5Field",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5Field"
+        },
+        {
+          "name": "level6",
+          "type": "tns:Level6Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6"
+        },
+        {
+          "name": "level5Field",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level5Field"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "level7",
+          "type": "tns:Level7Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7",
+          "parent_path": "Level5Type.level6.level6",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field1",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field1",
+          "parent_path": "Level5Type.level6.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field2",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field2",
+          "parent_path": "Level5Type.level6.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field3",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field3",
+          "parent_path": "Level5Type.level6.level6.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level6Field",
+          "type": "xsd:float",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6Field",
+          "parent_path": "Level5Type.level6.level6",
+          "is_nested": true
+        }
+      ]
+    },
+    {
+      "name": "Level6Type",
+      "type": "complex",
+      "description": "Complex type: Level6Type",
+      "properties": [
+        {
+          "name": "level7",
+          "type": "tns:Level7Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7"
+        },
+        {
+          "name": "level6Field",
+          "type": "xsd:float",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6Field"
+        },
+        {
+          "name": "level7",
+          "type": "tns:Level7Type",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7"
+        },
+        {
+          "name": "level6Field",
+          "type": "xsd:float",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level6Field"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "level7Field1",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field1",
+          "parent_path": "Level6Type.level7.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field2",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field2",
+          "parent_path": "Level6Type.level7.level7",
+          "is_nested": true
+        },
+        {
+          "name": "level7Field3",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field3",
+          "parent_path": "Level6Type.level7.level7",
+          "is_nested": true
+        }
+      ]
+    },
+    {
+      "name": "Level7Type",
+      "type": "complex",
+      "description": "Complex type: Level7Type",
+      "properties": [
+        {
+          "name": "level7Field1",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field1"
+        },
+        {
+          "name": "level7Field2",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field2"
+        },
+        {
+          "name": "level7Field3",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field3"
+        },
+        {
+          "name": "level7Field1",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field1"
+        },
+        {
+          "name": "level7Field2",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field2"
+        },
+        {
+          "name": "level7Field3",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: level7Field3"
+        }
+      ],
+      "nested_attributes": []
+    }
+  ],
+  "authentication": [
+    {
+      "type": "SOAP",
+      "description": "SOAP-based authentication",
+      "scheme": "bearer"
+    }
+  ],
+  "rate_limits": [],
+  "error_codes": [],
+  "examples": [],
+  "tags": [
+    "SOAP",
+    "WSDL"
+  ],
+  "contact_info": {},
+  "license_info": {},
+  "external_docs": [],
+  "servers": [
+    {
+      "url": "http://example.com/DeepNestedService",
+      "description": "SOAP endpoint: DeepNestedService/DeepNestedServicePort"
+    }
+  ],
+  "security_schemes": [],
+  "sealId": "105961",
+  "application": "PROFILE"
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:detail="http://detail.com/account"
+            targetNamespace="http://detail.com/account"
+            elementFormDefault="qualified">
+    
+    <!-- Account Detail namespace definitions -->
+    <xsd:complexType name="AccountDetail">
+        <xsd:sequence>
+            <xsd:element name="ABEAccountDetail" type="tns:ABEAccountDetail"/>
+           <xsd:element name="DDAAccountDetail" type="tns:DDAAccountDetail"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ABEAccountDetail">
+        <xsd:sequence>
+            <xsd:element name="accountId" type="xsd:string"/>
+            <xsd:element name="accountName" type="xsd:string"/>
+            <xsd:element name="accountNumber" type="xsd:string"/>
+            <xsd:element name="accountType" type="xsd:string"/>
+            <xsd:element name="balance" type="xsd:decimal"/>
+            <xsd:element name="currency" type="xsd:string"/>
+            <xsd:element name="status" type="xsd:string"/>
+            <xsd:element name="openDate" type="xsd:date"/>
+            <xsd:element name="lastTransactionDate" type="xsd:dateTime"/>
+        </xsd:sequence>
+    </xsd:complexType>
+     <xsd:complexType name="DDAAccountDetail">
+        <xsd:sequence>
+            <xsd:element name="ddaccountId" type="xsd:string"/>
+            <xsd:element name="ddaccountName" type="xsd:string"/>
+            <xsd:element name="ddaccountNumber" type="xsd:string"/>
+            <xsd:element name="ddaccountType" type="xsd:string"/>
+            <xsd:element name="ddbalance" type="xsd:decimal"/>
+            <xsd:element name="ddurrency" type="xsd:string"/>
+            <xsd:element name="ddstatus" type="xsd:string"/>
+            <xsd:element name="ddopenDate" type="xsd:date"/>
+            <xsd:element name="ddlastTransactionDate" type="xsd:dateTime"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="AccountSummary">
+        <xsd:sequence>
+            <xsd:element name="totalAccounts" type="xsd:int"/>
+            <xsd:element name="totalBalance" type="xsd:decimal"/>
+            <xsd:element name="currency" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="AccountFilter">
+        <xsd:sequence>
+            <xsd:element name="accountType" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="status" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="minBalance" type="xsd:decimal" minOccurs="0"/>
+            <xsd:element name="maxBalance" type="xsd:decimal" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+</xsd:schema>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://example.com/">
+    <types>
+        <xsd:schema targetNamespace="http://example.com/">
+            <!-- AccountDetailRes - Root response element -->
+            <xsd:element name="AccountDetailRes">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="accountDetail" type="tns:AccountDetail"/>
+                        <xsd:element name="status" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <!-- AccountDetail - Referenced from account-detail.xsd -->
+            <xsd:complexType name="AccountDetail">
+                <xsd:sequence>
+                    <xsd:element name="abeAccountDetail" type="tns:ABEAccountDetail"/>
+                    <xsd:element name="accountType" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- ABEAccountDetail - Contains the actual account fields -->
+            <xsd:complexType name="ABEAccountDetail">
+                <xsd:sequence>
+                    <xsd:element name="accountId" type="xsd:string"/>
+                    <xsd:element name="accountName" type="xsd:string"/>
+                    <xsd:element name="accountNumber" type="xsd:string"/>
+                    <xsd:element name="balance" type="xsd:decimal"/>
+                    <xsd:element name="currency" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Simple request -->
+            <xsd:element name="AccountDetailReq">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="accountId" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+    
+    <!-- Messages -->
+    <message name="AccountDetailReqMessage">
+        <part name="parameters" element="tns:AccountDetailReq"/>
+    </message>
+    
+    <message name="AccountDetailResMessage">
+        <part name="parameters" element="tns:AccountDetailRes"/>
+    </message>
+    
+    <!-- Port Type -->
+    <portType name="AccountServicePortType">
+        <operation name="GetAccountDetail">
+            <input message="tns:AccountDetailReqMessage"/>
+            <output message="tns:AccountDetailResMessage"/>
+        </operation>
+    </portType>
+    
+    <!-- Binding -->
+    <binding name="AccountServiceBinding" type="tns:AccountServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetAccountDetail">
+            <soap:operation soapAction="http://example.com/GetAccountDetail"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    
+    <!-- Service -->
+    <service name="AccountService">
+        <port name="AccountServicePort" binding="tns:AccountServiceBinding">
+            <soap:address location="http://example.com/AccountService"/>
+        </port>
+    </service>
+</definitions>

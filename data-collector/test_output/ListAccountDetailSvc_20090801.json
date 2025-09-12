@@ -1,0 +1,2411 @@
+{
+  "api_name": "ListAccountDetailSvc_20090801",
+  "version": "1.0.0",
+  "description": "SOAP service: ListAccountDetailSvc_20090801",
+  "base_url": "http://listaccount.com/service/ListAccountDetailSvc_20090801",
+  "category": "SOAP",
+  "documentation_url": "",
+  "api_type": "SOAP",
+  "format": "WSDL",
+  "endpoints": [
+    {
+      "path": "/ListAccountDetail",
+      "method": "POST",
+      "summary": "SOAP operation: ListAccountDetail",
+      "description": "SOAP operation ListAccountDetail",
+      "operation_name": "ListAccountDetail",
+      "soap_headers": [],
+      "request": {
+        "message_name": "tns:ListAccountDetailReq",
+        "all_attributes": [
+          {
+            "name": "tns:ListAccountDetailReq",
+            "type": "tns:ListAccountDetailReq",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: tns:ListAccountDetailReq",
+            "is_nested": false,
+            "complex_type": {
+              "name": "ListAccountDetailReq",
+              "attributes": [
+                {
+                  "name": "requestId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: requestId"
+                },
+                {
+                  "name": "timestamp",
+                  "type": "xsd:dateTime",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: timestamp"
+                },
+                {
+                  "name": "version",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: version"
+                },
+                {
+                  "name": "requestId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: requestId"
+                },
+                {
+                  "name": "timestamp",
+                  "type": "xsd:dateTime",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: timestamp"
+                },
+                {
+                  "name": "version",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: version"
+                },
+                {
+                  "name": "accountDetailKey",
+                  "type": "tns:AccountDetailKey",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountDetailKey"
+                },
+                {
+                  "name": "filter",
+                  "type": "detail:AccountFilter",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: filter"
+                },
+                {
+                  "name": "pagination",
+                  "type": "jisi:PaginationType",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: pagination"
+                },
+                {
+                  "name": "includeInactive",
+                  "type": "xsd:boolean",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: includeInactive"
+                },
+                {
+                  "name": "accountDetailKey",
+                  "type": "tns:AccountDetailKey",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountDetailKey"
+                },
+                {
+                  "name": "filter",
+                  "type": "detail:AccountFilter",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: filter"
+                },
+                {
+                  "name": "pagination",
+                  "type": "jisi:PaginationType",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: pagination"
+                },
+                {
+                  "name": "includeInactive",
+                  "type": "xsd:boolean",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: includeInactive"
+                }
+              ],
+              "sequences": [
+                {
+                  "elements": [
+                    {
+                      "name": "requestId",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: requestId"
+                    },
+                    {
+                      "name": "timestamp",
+                      "type": "xsd:dateTime",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: timestamp"
+                    },
+                    {
+                      "name": "version",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: version"
+                    }
+                  ]
+                },
+                {
+                  "elements": [
+                    {
+                      "name": "accountDetailKey",
+                      "type": "tns:AccountDetailKey",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: accountDetailKey"
+                    },
+                    {
+                      "name": "filter",
+                      "type": "detail:AccountFilter",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: filter"
+                    },
+                    {
+                      "name": "pagination",
+                      "type": "jisi:PaginationType",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: pagination"
+                    },
+                    {
+                      "name": "includeInactive",
+                      "type": "xsd:boolean",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: includeInactive"
+                    }
+                  ]
+                }
+              ],
+              "nested_attributes": [
+                {
+                  "name": "accountId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountId",
+                  "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+                  "is_nested": true
+                },
+                {
+                  "name": "accountNumber",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountNumber",
+                  "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+                  "is_nested": true
+                },
+                {
+                  "name": "customerId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: customerId",
+                  "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+                  "is_nested": true
+                },
+                {
+                  "name": "accountType",
+                  "type": "xsd:string",
+                  "min_occurs": "0",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountType",
+                  "parent_path": "ListAccountDetailReq.filter.filter",
+                  "is_nested": true
+                },
+                {
+                  "name": "status",
+                  "type": "xsd:string",
+                  "min_occurs": "0",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: status",
+                  "parent_path": "ListAccountDetailReq.filter.filter",
+                  "is_nested": true
+                },
+                {
+                  "name": "minBalance",
+                  "type": "xsd:decimal",
+                  "min_occurs": "0",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: minBalance",
+                  "parent_path": "ListAccountDetailReq.filter.filter",
+                  "is_nested": true
+                },
+                {
+                  "name": "maxBalance",
+                  "type": "xsd:decimal",
+                  "min_occurs": "0",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: maxBalance",
+                  "parent_path": "ListAccountDetailReq.filter.filter",
+                  "is_nested": true
+                },
+                {
+                  "name": "pageNumber",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: pageNumber",
+                  "parent_path": "ListAccountDetailReq.pagination.pagination",
+                  "is_nested": true
+                },
+                {
+                  "name": "pageSize",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: pageSize",
+                  "parent_path": "ListAccountDetailReq.pagination.pagination",
+                  "is_nested": true
+                },
+                {
+                  "name": "totalRecords",
+                  "type": "xsd:long",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: totalRecords",
+                  "parent_path": "ListAccountDetailReq.pagination.pagination",
+                  "is_nested": true
+                }
+              ]
+            },
+            "nested_attributes": []
+          },
+          {
+            "name": "accountId",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: accountId",
+            "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+            "is_nested": true
+          },
+          {
+            "name": "accountNumber",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: accountNumber",
+            "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+            "is_nested": true
+          },
+          {
+            "name": "customerId",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: customerId",
+            "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+            "is_nested": true
+          },
+          {
+            "name": "accountType",
+            "type": "xsd:string",
+            "min_occurs": "0",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: accountType",
+            "parent_path": "ListAccountDetailReq.filter.filter",
+            "is_nested": true
+          },
+          {
+            "name": "status",
+            "type": "xsd:string",
+            "min_occurs": "0",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: status",
+            "parent_path": "ListAccountDetailReq.filter.filter",
+            "is_nested": true
+          },
+          {
+            "name": "minBalance",
+            "type": "xsd:decimal",
+            "min_occurs": "0",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: minBalance",
+            "parent_path": "ListAccountDetailReq.filter.filter",
+            "is_nested": true
+          },
+          {
+            "name": "maxBalance",
+            "type": "xsd:decimal",
+            "min_occurs": "0",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: maxBalance",
+            "parent_path": "ListAccountDetailReq.filter.filter",
+            "is_nested": true
+          },
+          {
+            "name": "pageNumber",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: pageNumber",
+            "parent_path": "ListAccountDetailReq.pagination.pagination",
+            "is_nested": true
+          },
+          {
+            "name": "pageSize",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: pageSize",
+            "parent_path": "ListAccountDetailReq.pagination.pagination",
+            "is_nested": true
+          },
+          {
+            "name": "totalRecords",
+            "type": "xsd:long",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: totalRecords",
+            "parent_path": "ListAccountDetailReq.pagination.pagination",
+            "is_nested": true
+          }
+        ]
+      },
+      "response": {
+        "message_name": "tns:ListAccountDetailRes",
+        "all_attributes": [
+          {
+            "name": "tns:ListAccountDetailRes",
+            "type": "tns:ListAccountDetailRes",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: tns:ListAccountDetailRes",
+            "is_nested": false,
+            "complex_type": {
+              "name": "ListAccountDetailRes",
+              "attributes": [
+                {
+                  "name": "responseId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: responseId"
+                },
+                {
+                  "name": "timestamp",
+                  "type": "xsd:dateTime",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: timestamp"
+                },
+                {
+                  "name": "status",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: status"
+                },
+                {
+                  "name": "message",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: message"
+                },
+                {
+                  "name": "responseId",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: responseId"
+                },
+                {
+                  "name": "timestamp",
+                  "type": "xsd:dateTime",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: timestamp"
+                },
+                {
+                  "name": "status",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: status"
+                },
+                {
+                  "name": "message",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: message"
+                },
+                {
+                  "name": "accountDetails",
+                  "type": "tns:AccountDetailListType",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountDetails"
+                },
+                {
+                  "name": "summary",
+                  "type": "detail:AccountSummary",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: summary"
+                },
+                {
+                  "name": "pagination",
+                  "type": "jisi:PaginationType",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: pagination"
+                },
+                {
+                  "name": "accountDetails",
+                  "type": "tns:AccountDetailListType",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: accountDetails"
+                },
+                {
+                  "name": "summary",
+                  "type": "detail:AccountSummary",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: summary"
+                },
+                {
+                  "name": "pagination",
+                  "type": "jisi:PaginationType",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: pagination"
+                }
+              ],
+              "sequences": [
+                {
+                  "elements": [
+                    {
+                      "name": "responseId",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: responseId"
+                    },
+                    {
+                      "name": "timestamp",
+                      "type": "xsd:dateTime",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: timestamp"
+                    },
+                    {
+                      "name": "status",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: status"
+                    },
+                    {
+                      "name": "message",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: message"
+                    }
+                  ]
+                },
+                {
+                  "elements": [
+                    {
+                      "name": "accountDetails",
+                      "type": "tns:AccountDetailListType",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: accountDetails"
+                    },
+                    {
+                      "name": "summary",
+                      "type": "detail:AccountSummary",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: summary"
+                    },
+                    {
+                      "name": "pagination",
+                      "type": "jisi:PaginationType",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": false,
+                      "description": "Element: pagination"
+                    }
+                  ]
+                }
+              ],
+              "nested_attributes": [
+                {
+                  "name": "accountDetail",
+                  "type": "tns:AccountDetail",
+                  "min_occurs": "1",
+                  "max_occurs": "unbounded",
+                  "nillable": false,
+                  "description": "Element: accountDetail",
+                  "parent_path": "ListAccountDetailRes.accountDetails.accountDetails",
+                  "is_nested": true
+                },
+                {
+                  "name": "customerName",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: customerName",
+                  "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "branchCode",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: branchCode",
+                  "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "branchName",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: branchName",
+                  "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "relationshipManager",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: relationshipManager",
+                  "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "lastLoginDate",
+                  "type": "xsd:dateTime",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: lastLoginDate",
+                  "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                  "is_nested": true
+                },
+                {
+                  "name": "totalAccounts",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: totalAccounts",
+                  "parent_path": "ListAccountDetailRes.summary.summary",
+                  "is_nested": true
+                },
+                {
+                  "name": "totalBalance",
+                  "type": "xsd:decimal",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: totalBalance",
+                  "parent_path": "ListAccountDetailRes.summary.summary",
+                  "is_nested": true
+                },
+                {
+                  "name": "currency",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: currency",
+                  "parent_path": "ListAccountDetailRes.summary.summary",
+                  "is_nested": true
+                },
+                {
+                  "name": "pageNumber",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: pageNumber",
+                  "parent_path": "ListAccountDetailRes.pagination.pagination",
+                  "is_nested": true
+                },
+                {
+                  "name": "pageSize",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: pageSize",
+                  "parent_path": "ListAccountDetailRes.pagination.pagination",
+                  "is_nested": true
+                },
+                {
+                  "name": "totalRecords",
+                  "type": "xsd:long",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": false,
+                  "description": "Element: totalRecords",
+                  "parent_path": "ListAccountDetailRes.pagination.pagination",
+                  "is_nested": true
+                }
+              ]
+            },
+            "nested_attributes": []
+          },
+          {
+            "name": "accountDetail",
+            "type": "tns:AccountDetail",
+            "min_occurs": "1",
+            "max_occurs": "unbounded",
+            "nillable": false,
+            "description": "Element: accountDetail",
+            "parent_path": "ListAccountDetailRes.accountDetails.accountDetails",
+            "is_nested": true
+          },
+          {
+            "name": "customerName",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: customerName",
+            "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "branchCode",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: branchCode",
+            "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "branchName",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: branchName",
+            "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "relationshipManager",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: relationshipManager",
+            "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "lastLoginDate",
+            "type": "xsd:dateTime",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: lastLoginDate",
+            "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+            "is_nested": true
+          },
+          {
+            "name": "totalAccounts",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: totalAccounts",
+            "parent_path": "ListAccountDetailRes.summary.summary",
+            "is_nested": true
+          },
+          {
+            "name": "totalBalance",
+            "type": "xsd:decimal",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: totalBalance",
+            "parent_path": "ListAccountDetailRes.summary.summary",
+            "is_nested": true
+          },
+          {
+            "name": "currency",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: currency",
+            "parent_path": "ListAccountDetailRes.summary.summary",
+            "is_nested": true
+          },
+          {
+            "name": "pageNumber",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: pageNumber",
+            "parent_path": "ListAccountDetailRes.pagination.pagination",
+            "is_nested": true
+          },
+          {
+            "name": "pageSize",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: pageSize",
+            "parent_path": "ListAccountDetailRes.pagination.pagination",
+            "is_nested": true
+          },
+          {
+            "name": "totalRecords",
+            "type": "xsd:long",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: totalRecords",
+            "parent_path": "ListAccountDetailRes.pagination.pagination",
+            "is_nested": true
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "tns:ListAccountDetailReq",
+          "type": "tns:ListAccountDetailReq",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: tns:ListAccountDetailReq",
+          "is_nested": false,
+          "complex_type": {
+            "name": "ListAccountDetailReq",
+            "attributes": [
+              {
+                "name": "requestId",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: requestId"
+              },
+              {
+                "name": "timestamp",
+                "type": "xsd:dateTime",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: timestamp"
+              },
+              {
+                "name": "version",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: version"
+              },
+              {
+                "name": "requestId",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: requestId"
+              },
+              {
+                "name": "timestamp",
+                "type": "xsd:dateTime",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: timestamp"
+              },
+              {
+                "name": "version",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: version"
+              },
+              {
+                "name": "accountDetailKey",
+                "type": "tns:AccountDetailKey",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: accountDetailKey"
+              },
+              {
+                "name": "filter",
+                "type": "detail:AccountFilter",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: filter"
+              },
+              {
+                "name": "pagination",
+                "type": "jisi:PaginationType",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: pagination"
+              },
+              {
+                "name": "includeInactive",
+                "type": "xsd:boolean",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: includeInactive"
+              },
+              {
+                "name": "accountDetailKey",
+                "type": "tns:AccountDetailKey",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: accountDetailKey"
+              },
+              {
+                "name": "filter",
+                "type": "detail:AccountFilter",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: filter"
+              },
+              {
+                "name": "pagination",
+                "type": "jisi:PaginationType",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: pagination"
+              },
+              {
+                "name": "includeInactive",
+                "type": "xsd:boolean",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: includeInactive"
+              }
+            ],
+            "sequences": [
+              {
+                "elements": [
+                  {
+                    "name": "requestId",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: requestId"
+                  },
+                  {
+                    "name": "timestamp",
+                    "type": "xsd:dateTime",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: timestamp"
+                  },
+                  {
+                    "name": "version",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: version"
+                  }
+                ]
+              },
+              {
+                "elements": [
+                  {
+                    "name": "accountDetailKey",
+                    "type": "tns:AccountDetailKey",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountDetailKey"
+                  },
+                  {
+                    "name": "filter",
+                    "type": "detail:AccountFilter",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: filter"
+                  },
+                  {
+                    "name": "pagination",
+                    "type": "jisi:PaginationType",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: pagination"
+                  },
+                  {
+                    "name": "includeInactive",
+                    "type": "xsd:boolean",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: includeInactive"
+                  }
+                ]
+              }
+            ],
+            "nested_attributes": [
+              {
+                "name": "accountId",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: accountId",
+                "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+                "is_nested": true
+              },
+              {
+                "name": "accountNumber",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: accountNumber",
+                "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+                "is_nested": true
+              },
+              {
+                "name": "customerId",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: customerId",
+                "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+                "is_nested": true
+              },
+              {
+                "name": "accountType",
+                "type": "xsd:string",
+                "min_occurs": "0",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: accountType",
+                "parent_path": "ListAccountDetailReq.filter.filter",
+                "is_nested": true
+              },
+              {
+                "name": "status",
+                "type": "xsd:string",
+                "min_occurs": "0",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: status",
+                "parent_path": "ListAccountDetailReq.filter.filter",
+                "is_nested": true
+              },
+              {
+                "name": "minBalance",
+                "type": "xsd:decimal",
+                "min_occurs": "0",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: minBalance",
+                "parent_path": "ListAccountDetailReq.filter.filter",
+                "is_nested": true
+              },
+              {
+                "name": "maxBalance",
+                "type": "xsd:decimal",
+                "min_occurs": "0",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: maxBalance",
+                "parent_path": "ListAccountDetailReq.filter.filter",
+                "is_nested": true
+              },
+              {
+                "name": "pageNumber",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: pageNumber",
+                "parent_path": "ListAccountDetailReq.pagination.pagination",
+                "is_nested": true
+              },
+              {
+                "name": "pageSize",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: pageSize",
+                "parent_path": "ListAccountDetailReq.pagination.pagination",
+                "is_nested": true
+              },
+              {
+                "name": "totalRecords",
+                "type": "xsd:long",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": false,
+                "description": "Element: totalRecords",
+                "parent_path": "ListAccountDetailReq.pagination.pagination",
+                "is_nested": true
+              }
+            ]
+          },
+          "nested_attributes": []
+        },
+        {
+          "name": "accountId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountId",
+          "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+          "is_nested": true
+        },
+        {
+          "name": "accountNumber",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountNumber",
+          "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+          "is_nested": true
+        },
+        {
+          "name": "customerId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: customerId",
+          "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+          "is_nested": true
+        },
+        {
+          "name": "accountType",
+          "type": "xsd:string",
+          "min_occurs": "0",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountType",
+          "parent_path": "ListAccountDetailReq.filter.filter",
+          "is_nested": true
+        },
+        {
+          "name": "status",
+          "type": "xsd:string",
+          "min_occurs": "0",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: status",
+          "parent_path": "ListAccountDetailReq.filter.filter",
+          "is_nested": true
+        },
+        {
+          "name": "minBalance",
+          "type": "xsd:decimal",
+          "min_occurs": "0",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: minBalance",
+          "parent_path": "ListAccountDetailReq.filter.filter",
+          "is_nested": true
+        },
+        {
+          "name": "maxBalance",
+          "type": "xsd:decimal",
+          "min_occurs": "0",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: maxBalance",
+          "parent_path": "ListAccountDetailReq.filter.filter",
+          "is_nested": true
+        },
+        {
+          "name": "pageNumber",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pageNumber",
+          "parent_path": "ListAccountDetailReq.pagination.pagination",
+          "is_nested": true
+        },
+        {
+          "name": "pageSize",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pageSize",
+          "parent_path": "ListAccountDetailReq.pagination.pagination",
+          "is_nested": true
+        },
+        {
+          "name": "totalRecords",
+          "type": "xsd:long",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: totalRecords",
+          "parent_path": "ListAccountDetailReq.pagination.pagination",
+          "is_nested": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Successful response",
+          "content": [
+            {
+              "name": "tns:ListAccountDetailRes",
+              "type": "tns:ListAccountDetailRes",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: tns:ListAccountDetailRes",
+              "is_nested": false,
+              "complex_type": {
+                "name": "ListAccountDetailRes",
+                "attributes": [
+                  {
+                    "name": "responseId",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: responseId"
+                  },
+                  {
+                    "name": "timestamp",
+                    "type": "xsd:dateTime",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: timestamp"
+                  },
+                  {
+                    "name": "status",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: status"
+                  },
+                  {
+                    "name": "message",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: message"
+                  },
+                  {
+                    "name": "responseId",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: responseId"
+                  },
+                  {
+                    "name": "timestamp",
+                    "type": "xsd:dateTime",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: timestamp"
+                  },
+                  {
+                    "name": "status",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: status"
+                  },
+                  {
+                    "name": "message",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: message"
+                  },
+                  {
+                    "name": "accountDetails",
+                    "type": "tns:AccountDetailListType",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountDetails"
+                  },
+                  {
+                    "name": "summary",
+                    "type": "detail:AccountSummary",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: summary"
+                  },
+                  {
+                    "name": "pagination",
+                    "type": "jisi:PaginationType",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: pagination"
+                  },
+                  {
+                    "name": "accountDetails",
+                    "type": "tns:AccountDetailListType",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: accountDetails"
+                  },
+                  {
+                    "name": "summary",
+                    "type": "detail:AccountSummary",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: summary"
+                  },
+                  {
+                    "name": "pagination",
+                    "type": "jisi:PaginationType",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: pagination"
+                  }
+                ],
+                "sequences": [
+                  {
+                    "elements": [
+                      {
+                        "name": "responseId",
+                        "type": "xsd:string",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: responseId"
+                      },
+                      {
+                        "name": "timestamp",
+                        "type": "xsd:dateTime",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: timestamp"
+                      },
+                      {
+                        "name": "status",
+                        "type": "xsd:string",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: status"
+                      },
+                      {
+                        "name": "message",
+                        "type": "xsd:string",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: message"
+                      }
+                    ]
+                  },
+                  {
+                    "elements": [
+                      {
+                        "name": "accountDetails",
+                        "type": "tns:AccountDetailListType",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: accountDetails"
+                      },
+                      {
+                        "name": "summary",
+                        "type": "detail:AccountSummary",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: summary"
+                      },
+                      {
+                        "name": "pagination",
+                        "type": "jisi:PaginationType",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": false,
+                        "description": "Element: pagination"
+                      }
+                    ]
+                  }
+                ],
+                "nested_attributes": [
+                  {
+                    "name": "accountDetail",
+                    "type": "tns:AccountDetail",
+                    "min_occurs": "1",
+                    "max_occurs": "unbounded",
+                    "nillable": false,
+                    "description": "Element: accountDetail",
+                    "parent_path": "ListAccountDetailRes.accountDetails.accountDetails",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "customerName",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: customerName",
+                    "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "branchCode",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: branchCode",
+                    "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "branchName",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: branchName",
+                    "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "relationshipManager",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: relationshipManager",
+                    "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "lastLoginDate",
+                    "type": "xsd:dateTime",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: lastLoginDate",
+                    "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "totalAccounts",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: totalAccounts",
+                    "parent_path": "ListAccountDetailRes.summary.summary",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "totalBalance",
+                    "type": "xsd:decimal",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: totalBalance",
+                    "parent_path": "ListAccountDetailRes.summary.summary",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "currency",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: currency",
+                    "parent_path": "ListAccountDetailRes.summary.summary",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "pageNumber",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: pageNumber",
+                    "parent_path": "ListAccountDetailRes.pagination.pagination",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "pageSize",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: pageSize",
+                    "parent_path": "ListAccountDetailRes.pagination.pagination",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "totalRecords",
+                    "type": "xsd:long",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": false,
+                    "description": "Element: totalRecords",
+                    "parent_path": "ListAccountDetailRes.pagination.pagination",
+                    "is_nested": true
+                  }
+                ]
+              },
+              "nested_attributes": []
+            },
+            {
+              "name": "accountDetail",
+              "type": "tns:AccountDetail",
+              "min_occurs": "1",
+              "max_occurs": "unbounded",
+              "nillable": false,
+              "description": "Element: accountDetail",
+              "parent_path": "ListAccountDetailRes.accountDetails.accountDetails",
+              "is_nested": true
+            },
+            {
+              "name": "customerName",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: customerName",
+              "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "branchCode",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: branchCode",
+              "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "branchName",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: branchName",
+              "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "relationshipManager",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: relationshipManager",
+              "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "lastLoginDate",
+              "type": "xsd:dateTime",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: lastLoginDate",
+              "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+              "is_nested": true
+            },
+            {
+              "name": "totalAccounts",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: totalAccounts",
+              "parent_path": "ListAccountDetailRes.summary.summary",
+              "is_nested": true
+            },
+            {
+              "name": "totalBalance",
+              "type": "xsd:decimal",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: totalBalance",
+              "parent_path": "ListAccountDetailRes.summary.summary",
+              "is_nested": true
+            },
+            {
+              "name": "currency",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: currency",
+              "parent_path": "ListAccountDetailRes.summary.summary",
+              "is_nested": true
+            },
+            {
+              "name": "pageNumber",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: pageNumber",
+              "parent_path": "ListAccountDetailRes.pagination.pagination",
+              "is_nested": true
+            },
+            {
+              "name": "pageSize",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: pageSize",
+              "parent_path": "ListAccountDetailRes.pagination.pagination",
+              "is_nested": true
+            },
+            {
+              "name": "totalRecords",
+              "type": "xsd:long",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: totalRecords",
+              "parent_path": "ListAccountDetailRes.pagination.pagination",
+              "is_nested": true
+            }
+          ]
+        }
+      },
+      "tags": [
+        "ListAccountDetailPortType"
+      ]
+    }
+  ],
+  "data_types": [
+    {
+      "name": "AccountDetailKey",
+      "type": "complex",
+      "description": "Complex type: AccountDetailKey",
+      "properties": [
+        {
+          "name": "accountId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountId"
+        },
+        {
+          "name": "accountNumber",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountNumber"
+        },
+        {
+          "name": "customerId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: customerId"
+        },
+        {
+          "name": "accountId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountId"
+        },
+        {
+          "name": "accountNumber",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountNumber"
+        },
+        {
+          "name": "customerId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: customerId"
+        }
+      ],
+      "nested_attributes": []
+    },
+    {
+      "name": "AccountDetail",
+      "type": "complex",
+      "description": "Complex type: AccountDetail",
+      "properties": [
+        {
+          "name": "customerName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: customerName"
+        },
+        {
+          "name": "branchCode",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: branchCode"
+        },
+        {
+          "name": "branchName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: branchName"
+        },
+        {
+          "name": "relationshipManager",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: relationshipManager"
+        },
+        {
+          "name": "lastLoginDate",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: lastLoginDate"
+        },
+        {
+          "name": "customerName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: customerName"
+        },
+        {
+          "name": "branchCode",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: branchCode"
+        },
+        {
+          "name": "branchName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: branchName"
+        },
+        {
+          "name": "relationshipManager",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: relationshipManager"
+        },
+        {
+          "name": "lastLoginDate",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: lastLoginDate"
+        }
+      ],
+      "nested_attributes": []
+    },
+    {
+      "name": "ListAccountDetailReq",
+      "type": "complex",
+      "description": "Complex type: ListAccountDetailReq",
+      "properties": [
+        {
+          "name": "requestId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: requestId"
+        },
+        {
+          "name": "timestamp",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: timestamp"
+        },
+        {
+          "name": "version",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: version"
+        },
+        {
+          "name": "requestId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: requestId"
+        },
+        {
+          "name": "timestamp",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: timestamp"
+        },
+        {
+          "name": "version",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: version"
+        },
+        {
+          "name": "accountDetailKey",
+          "type": "tns:AccountDetailKey",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountDetailKey"
+        },
+        {
+          "name": "filter",
+          "type": "detail:AccountFilter",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: filter"
+        },
+        {
+          "name": "pagination",
+          "type": "jisi:PaginationType",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pagination"
+        },
+        {
+          "name": "includeInactive",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: includeInactive"
+        },
+        {
+          "name": "accountDetailKey",
+          "type": "tns:AccountDetailKey",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountDetailKey"
+        },
+        {
+          "name": "filter",
+          "type": "detail:AccountFilter",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: filter"
+        },
+        {
+          "name": "pagination",
+          "type": "jisi:PaginationType",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pagination"
+        },
+        {
+          "name": "includeInactive",
+          "type": "xsd:boolean",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: includeInactive"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "accountId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountId",
+          "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+          "is_nested": true
+        },
+        {
+          "name": "accountNumber",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountNumber",
+          "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+          "is_nested": true
+        },
+        {
+          "name": "customerId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: customerId",
+          "parent_path": "ListAccountDetailReq.accountDetailKey.accountDetailKey",
+          "is_nested": true
+        },
+        {
+          "name": "accountType",
+          "type": "xsd:string",
+          "min_occurs": "0",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountType",
+          "parent_path": "ListAccountDetailReq.filter.filter",
+          "is_nested": true
+        },
+        {
+          "name": "status",
+          "type": "xsd:string",
+          "min_occurs": "0",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: status",
+          "parent_path": "ListAccountDetailReq.filter.filter",
+          "is_nested": true
+        },
+        {
+          "name": "minBalance",
+          "type": "xsd:decimal",
+          "min_occurs": "0",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: minBalance",
+          "parent_path": "ListAccountDetailReq.filter.filter",
+          "is_nested": true
+        },
+        {
+          "name": "maxBalance",
+          "type": "xsd:decimal",
+          "min_occurs": "0",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: maxBalance",
+          "parent_path": "ListAccountDetailReq.filter.filter",
+          "is_nested": true
+        },
+        {
+          "name": "pageNumber",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pageNumber",
+          "parent_path": "ListAccountDetailReq.pagination.pagination",
+          "is_nested": true
+        },
+        {
+          "name": "pageSize",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pageSize",
+          "parent_path": "ListAccountDetailReq.pagination.pagination",
+          "is_nested": true
+        },
+        {
+          "name": "totalRecords",
+          "type": "xsd:long",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: totalRecords",
+          "parent_path": "ListAccountDetailReq.pagination.pagination",
+          "is_nested": true
+        }
+      ]
+    },
+    {
+      "name": "ListAccountDetailRes",
+      "type": "complex",
+      "description": "Complex type: ListAccountDetailRes",
+      "properties": [
+        {
+          "name": "responseId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: responseId"
+        },
+        {
+          "name": "timestamp",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: timestamp"
+        },
+        {
+          "name": "status",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: status"
+        },
+        {
+          "name": "message",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: message"
+        },
+        {
+          "name": "responseId",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: responseId"
+        },
+        {
+          "name": "timestamp",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: timestamp"
+        },
+        {
+          "name": "status",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: status"
+        },
+        {
+          "name": "message",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: message"
+        },
+        {
+          "name": "accountDetails",
+          "type": "tns:AccountDetailListType",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountDetails"
+        },
+        {
+          "name": "summary",
+          "type": "detail:AccountSummary",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: summary"
+        },
+        {
+          "name": "pagination",
+          "type": "jisi:PaginationType",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pagination"
+        },
+        {
+          "name": "accountDetails",
+          "type": "tns:AccountDetailListType",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: accountDetails"
+        },
+        {
+          "name": "summary",
+          "type": "detail:AccountSummary",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: summary"
+        },
+        {
+          "name": "pagination",
+          "type": "jisi:PaginationType",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pagination"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "accountDetail",
+          "type": "tns:AccountDetail",
+          "min_occurs": "1",
+          "max_occurs": "unbounded",
+          "nillable": false,
+          "description": "Element: accountDetail",
+          "parent_path": "ListAccountDetailRes.accountDetails.accountDetails",
+          "is_nested": true
+        },
+        {
+          "name": "customerName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: customerName",
+          "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "branchCode",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: branchCode",
+          "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "branchName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: branchName",
+          "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "relationshipManager",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: relationshipManager",
+          "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "lastLoginDate",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: lastLoginDate",
+          "parent_path": "ListAccountDetailRes.accountDetails.accountDetails.accountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "totalAccounts",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: totalAccounts",
+          "parent_path": "ListAccountDetailRes.summary.summary",
+          "is_nested": true
+        },
+        {
+          "name": "totalBalance",
+          "type": "xsd:decimal",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: totalBalance",
+          "parent_path": "ListAccountDetailRes.summary.summary",
+          "is_nested": true
+        },
+        {
+          "name": "currency",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: currency",
+          "parent_path": "ListAccountDetailRes.summary.summary",
+          "is_nested": true
+        },
+        {
+          "name": "pageNumber",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pageNumber",
+          "parent_path": "ListAccountDetailRes.pagination.pagination",
+          "is_nested": true
+        },
+        {
+          "name": "pageSize",
+          "type": "xsd:int",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: pageSize",
+          "parent_path": "ListAccountDetailRes.pagination.pagination",
+          "is_nested": true
+        },
+        {
+          "name": "totalRecords",
+          "type": "xsd:long",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: totalRecords",
+          "parent_path": "ListAccountDetailRes.pagination.pagination",
+          "is_nested": true
+        }
+      ]
+    },
+    {
+      "name": "AccountDetailListType",
+      "type": "complex",
+      "description": "Complex type: AccountDetailListType",
+      "properties": [
+        {
+          "name": "accountDetail",
+          "type": "tns:AccountDetail",
+          "min_occurs": "1",
+          "max_occurs": "unbounded",
+          "nillable": false,
+          "description": "Element: accountDetail"
+        },
+        {
+          "name": "accountDetail",
+          "type": "tns:AccountDetail",
+          "min_occurs": "1",
+          "max_occurs": "unbounded",
+          "nillable": false,
+          "description": "Element: accountDetail"
+        }
+      ],
+      "nested_attributes": [
+        {
+          "name": "customerName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: customerName",
+          "parent_path": "AccountDetailListType.accountDetail.accountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "branchCode",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: branchCode",
+          "parent_path": "AccountDetailListType.accountDetail.accountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "branchName",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: branchName",
+          "parent_path": "AccountDetailListType.accountDetail.accountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "relationshipManager",
+          "type": "xsd:string",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: relationshipManager",
+          "parent_path": "AccountDetailListType.accountDetail.accountDetail",
+          "is_nested": true
+        },
+        {
+          "name": "lastLoginDate",
+          "type": "xsd:dateTime",
+          "min_occurs": "1",
+          "max_occurs": "1",
+          "nillable": false,
+          "description": "Element: lastLoginDate",
+          "parent_path": "AccountDetailListType.accountDetail.accountDetail",
+          "is_nested": true
+        }
+      ]
+    }
+  ],
+  "authentication": [
+    {
+      "type": "SOAP",
+      "description": "SOAP-based authentication",
+      "scheme": "bearer"
+    }
+  ],
+  "rate_limits": [],
+  "error_codes": [],
+  "examples": [],
+  "tags": [
+    "SOAP",
+    "WSDL"
+  ],
+  "contact_info": {},
+  "license_info": {},
+  "external_docs": [],
+  "servers": [
+    {
+      "url": "http://listaccount.com/service/ListAccountDetailSvc_20090801",
+      "description": "SOAP endpoint: ListAccountDetailSvc_20090801/ListAccountDetailPort"
+    }
+  ],
+  "security_schemes": [],
+  "sealId": "105961",
+  "application": "PROFILE"
+}

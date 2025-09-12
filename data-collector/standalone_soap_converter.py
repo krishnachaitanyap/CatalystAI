@@ -125,6 +125,25 @@ class WSDLConnector:
             tree = ET.parse(main_wsdl_file)
             root = tree.getroot()
             
+            # Extract XSD imports from the WSDL
+            for import_elem in root.findall('.//xsd:import', self.namespaces):
+                schema_location = import_elem.get('schemaLocation')
+                namespace = import_elem.get('namespace', '')
+                if schema_location:
+                    # Check if the imported XSD is in the same directory
+                    base_dir = os.path.dirname(main_wsdl_file)
+                    import_path = os.path.join(base_dir, schema_location)
+                    
+                    if os.path.exists(import_path) and import_path not in self.xsd_dependencies:
+                        try:
+                            import_tree = ET.parse(import_path)
+                            import_root = import_tree.getroot()
+                            import_schema_info = self._extract_schema_info(import_root, import_path)
+                            self.xsd_dependencies[import_path] = import_schema_info
+                            logger.info(f"✅ Loaded XSD import: {schema_location}")
+                        except Exception as e:
+                            logger.warning(f"⚠️ Failed to load XSD import {schema_location}: {str(e)}")
+            
             # Set target namespace
             target_namespace = root.get('targetNamespace', '')
             self.namespaces['tns'] = target_namespace
@@ -159,7 +178,7 @@ class WSDLConnector:
         for complex_type in xsd_root.findall('.//xsd:complexType', self.namespaces):
             name = complex_type.get('name')
             if name:
-                schema_info['complex_types'][name] = self._extract_complex_type_details(complex_type)
+                schema_info['complex_types'][name] = self._extract_complex_type_details(complex_type, xsd_root)
         
         # Extract simple types
         for simple_type in xsd_root.findall('.//xsd:simpleType', self.namespaces):
@@ -217,30 +236,43 @@ class WSDLConnector:
             logger.warning(f"⚠️ Error resolving XSD import {import_location}: {str(e)}")
             return None
     
-    def _resolve_type_reference(self, type_name: str, root: ET.Element) -> Optional[ET.Element]:
-        """Resolve a type reference across all loaded XSD dependencies"""
+    def _resolve_type_reference_with_root(self, type_name: str, root: ET.Element) -> tuple[Optional[ET.Element], Optional[ET.Element]]:
+        """Resolve a type reference across all loaded XSD dependencies and return both element and root"""
         # First check in the main WSDL/XSD
         complex_type_elem = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
         if complex_type_elem is not None:
-            return complex_type_elem
+            return complex_type_elem, root
         
         # Then check in XSD dependencies
         for xsd_file, schema_info in self.xsd_dependencies.items():
             # Check in main schema
             if type_name in schema_info.get('complex_types', {}):
-                # Return a mock element with the type information
-                mock_element = ET.Element('complexType', name=type_name)
-                mock_element.text = f"Referenced from {xsd_file}"
-                return mock_element
+                # Load the actual XSD file and find the complex type
+                try:
+                    xsd_tree = ET.parse(xsd_file)
+                    xsd_root = xsd_tree.getroot()
+                    external_type = xsd_root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+                    if external_type is not None:
+                        logger.debug(f"✅ Found external type {type_name} in {xsd_file}")
+                        return external_type, xsd_root
+                except Exception as e:
+                    logger.warning(f"⚠️ Error loading external XSD {xsd_file}: {str(e)}")
             
             # Check in resolved imports
             for import_location, import_schema in schema_info.get('resolved_imports', {}).items():
                 if type_name in import_schema.get('complex_types', {}):
-                    mock_element = ET.Element('complexType', name=type_name)
-                    mock_element.text = f"Referenced from {import_location}"
-                    return mock_element
+                    # Load the actual imported XSD file and find the complex type
+                    try:
+                        import_tree = ET.parse(import_location)
+                        import_root = import_tree.getroot()
+                        external_type = import_root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+                        if external_type is not None:
+                            logger.debug(f"✅ Found external type {type_name} in imported file {import_location}")
+                            return external_type, import_root
+                    except Exception as e:
+                        logger.warning(f"⚠️ Error loading imported XSD {import_location}: {str(e)}")
         
-        return None
+        return None, None
     
     def _convert_wsdl_to_common(self, root: ET.Element, file_path: str) -> CommonAPISpec:
         """Convert WSDL to CommonAPISpec format"""
@@ -471,7 +503,7 @@ class WSDLConnector:
         # Check for complex type
         if element_type and ':' in element_type:
             prefix, type_name = element_type.split(':', 1)
-            complex_type_elem = self._resolve_type_reference(type_name, root)
+            complex_type_elem, _ = self._resolve_type_reference_with_root(type_name, root)
             
             if complex_type_elem is not None:
                 nested_details = self._extract_complex_type_details(complex_type_elem, root)
@@ -569,6 +601,39 @@ class WSDLConnector:
             'sequences': [],
             'nested_attributes': []
         }
+        
+        # Handle inheritance (xsd:extension)
+        for complex_content in complex_type.findall('.//xsd:complexContent', self.namespaces):
+            for extension in complex_content.findall('.//xsd:extension', self.namespaces):
+                base_type = extension.get('base', '')
+                if base_type and ':' in base_type:
+                    # Extract base type name
+                    prefix, base_type_name = base_type.split(':', 1)
+                    
+                    # Check for circular inheritance using a more specific key
+                    inheritance_key = f"{type_name}->{base_type_name}"
+                    if inheritance_key in visited_types:
+                        logger.warning(f"⚠️ Circular inheritance detected: {type_name} -> {base_type_name}")
+                        continue
+                    
+                    logger.debug(f"🔗 Processing inheritance: {type_name} extends {base_type}")
+                    
+                    # Create a new visited set for inheritance to avoid false circular references
+                    inheritance_visited = visited_types.copy()
+                    inheritance_visited.add(inheritance_key)  # Add inheritance key to prevent circular inheritance
+                    
+                    # Resolve the base type
+                    base_type_elem, base_root = self._resolve_type_reference_with_root(base_type_name, root)
+                    if base_type_elem is not None:
+                        # Extract base type details with inheritance-aware visited set
+                        base_details = self._extract_complex_type_details(base_type_elem, base_root, inheritance_visited)
+                        
+                        # Merge base type attributes into current type
+                        details['attributes'].extend(base_details.get('attributes', []))
+                        details['sequences'].extend(base_details.get('sequences', []))
+                        details['nested_attributes'].extend(base_details.get('nested_attributes', []))
+                        
+                        logger.debug(f"✅ Merged {len(base_details.get('attributes', []))} attributes from base type {base_type_name}")
         
         # Extract sequences
         for sequence in complex_type.findall('.//xsd:sequence', self.namespaces):
@@ -668,19 +733,22 @@ class WSDLConnector:
                 return []
                 
             # Use enhanced type resolution that checks XSD dependencies
-            complex_type_elem = self._resolve_type_reference(type_name, root)
+            complex_type_elem, external_root = self._resolve_type_reference_with_root(type_name, root)
             
             if complex_type_elem is not None:
                 # Add current path to visited types before recursive call
                 visited_types.add(path_key)
                 
+                # Use the appropriate root element (external_root if from external XSD, otherwise root)
+                search_root = external_root if external_root is not None else root
+                
                 # Recursively extract nested complex type details
-                nested_details = self._extract_complex_type_details(complex_type_elem, root, visited_types.copy())
+                nested_details = self._extract_complex_type_details(complex_type_elem, search_root, visited_types.copy())
                 
                 # Extract nested attributes recursively with depth limiting
                 nested_attributes = self._extract_nested_attributes(
                     complex_type_elem, 
-                    root, 
+                    search_root, 
                     current_path, 
                     visited_types.copy(),
                     depth + 1,

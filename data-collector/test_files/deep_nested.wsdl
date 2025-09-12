@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://example.com/">
+    <types>
+        <xsd:schema targetNamespace="http://example.com/">
+            <!-- Deep nested response with 7+ levels -->
+            <xsd:element name="DeepNestedResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="level1" type="tns:Level1Type"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <!-- Level 1 -->
+            <xsd:complexType name="Level1Type">
+                <xsd:sequence>
+                    <xsd:element name="level2" type="tns:Level2Type"/>
+                    <xsd:element name="level1Field" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Level 2 -->
+            <xsd:complexType name="Level2Type">
+                <xsd:sequence>
+                    <xsd:element name="level3" type="tns:Level3Type"/>
+                    <xsd:element name="level2Field" type="xsd:int"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Level 3 -->
+            <xsd:complexType name="Level3Type">
+                <xsd:sequence>
+                    <xsd:element name="level4" type="tns:Level4Type"/>
+                    <xsd:element name="level3Field" type="xsd:boolean"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Level 4 -->
+            <xsd:complexType name="Level4Type">
+                <xsd:sequence>
+                    <xsd:element name="level5" type="tns:Level5Type"/>
+                    <xsd:element name="level4Field" type="xsd:dateTime"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Level 5 -->
+            <xsd:complexType name="Level5Type">
+                <xsd:sequence>
+                    <xsd:element name="level6" type="tns:Level6Type"/>
+                    <xsd:element name="level5Field" type="xsd:decimal"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Level 6 -->
+            <xsd:complexType name="Level6Type">
+                <xsd:sequence>
+                    <xsd:element name="level7" type="tns:Level7Type"/>
+                    <xsd:element name="level6Field" type="xsd:float"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Level 7 (Leaf level) -->
+            <xsd:complexType name="Level7Type">
+                <xsd:sequence>
+                    <xsd:element name="level7Field1" type="xsd:string"/>
+                    <xsd:element name="level7Field2" type="xsd:int"/>
+                    <xsd:element name="level7Field3" type="xsd:boolean"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Simple request -->
+            <xsd:element name="DeepNestedRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="requestId" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+    
+    <!-- Messages -->
+    <message name="DeepNestedRequestMessage">
+        <part name="parameters" element="tns:DeepNestedRequest"/>
+    </message>
+    
+    <message name="DeepNestedResponseMessage">
+        <part name="parameters" element="tns:DeepNestedResponse"/>
+    </message>
+    
+    <!-- Port Type -->
+    <portType name="DeepNestedServicePortType">
+        <operation name="GetDeepNestedData">
+            <input message="tns:DeepNestedRequestMessage"/>
+            <output message="tns:DeepNestedResponseMessage"/>
+        </operation>
+    </portType>
+    
+    <!-- Binding -->
+    <binding name="DeepNestedServiceBinding" type="tns:DeepNestedServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetDeepNestedData">
+            <soap:operation soapAction="http://example.com/GetDeepNestedData"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    
+    <!-- Service -->
+    <service name="DeepNestedService">
+        <port name="DeepNestedServicePort" binding="tns:DeepNestedServiceBinding">
+            <soap:address location="http://example.com/DeepNestedService"/>
+        </port>
+    </service>
+</definitions>

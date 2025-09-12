@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://listaccount.com/service"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:jisi="http://jisi.com/2007"
+             xmlns:detail="http://detail.com/account"
+             targetNamespace="http://listaccount.com/service">
+    
+    <types>
+        <xsd:schema targetNamespace="http://listaccount.com/service"
+                    elementFormDefault="qualified">
+            
+            <!-- Import external XSD files -->
+            <xsd:import namespace="http://jisi.com/2007" schemaLocation="jisi-2007.xsd"/>
+            <xsd:import namespace="http://detail.com/account" schemaLocation="account-detail.xsd"/>
+            
+            <!-- AccountDetailKey - Key for account identification -->
+            <xsd:complexType name="AccountDetailKey">
+                <xsd:sequence>
+                    <xsd:element name="accountId" type="xsd:string"/>
+                    <xsd:element name="accountNumber" type="xsd:string"/>
+                    <xsd:element name="customerId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- AccountDetail - Extension of detail.AccountDetail from account-detail.xsd -->
+            <xsd:complexType name="AccountDetail">
+                <xsd:complexContent>
+                    <xsd:extension base="detail:AccountDetail">
+                        <xsd:sequence>
+                            <xsd:element name="customerName" type="xsd:string"/>
+                            <xsd:element name="branchCode" type="xsd:string"/>
+                            <xsd:element name="branchName" type="xsd:string"/>
+                            <xsd:element name="relationshipManager" type="xsd:string"/>
+                            <xsd:element name="lastLoginDate" type="xsd:dateTime"/>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            
+            <!-- ListAccountDetailReq - Request message -->
+            <xsd:complexType name="ListAccountDetailReq">
+                <xsd:complexContent>
+                    <xsd:extension base="jisi:BaseRequestType">
+                        <xsd:sequence>
+                            <xsd:element name="accountDetailKey" type="tns:AccountDetailKey"/>
+                            <xsd:element name="filter" type="detail:AccountFilter"/>
+                            <xsd:element name="pagination" type="jisi:PaginationType"/>
+                            <xsd:element name="includeInactive" type="xsd:boolean"/>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            
+            <!-- ListAccountDetailRes - Response message -->
+            <xsd:complexType name="ListAccountDetailRes">
+                <xsd:complexContent>
+                    <xsd:extension base="jisi:BaseResponseType">
+                        <xsd:sequence>
+                            <xsd:element name="accountDetails" type="tns:AccountDetailListType"/>
+                            <xsd:element name="summary" type="detail:AccountSummary"/>
+                            <xsd:element name="pagination" type="jisi:PaginationType"/>
+                        </xsd:sequence>
+                    </xsd:extension>
+                </xsd:complexContent>
+            </xsd:complexType>
+            
+            <!-- AccountDetailListType - List of account details -->
+            <xsd:complexType name="AccountDetailListType">
+                <xsd:sequence>
+                    <xsd:element name="accountDetail" type="tns:AccountDetail" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Root elements for messages -->
+            <xsd:element name="ListAccountDetailReq" type="tns:ListAccountDetailReq"/>
+            <xsd:element name="ListAccountDetailRes" type="tns:ListAccountDetailRes"/>
+            
+        </xsd:schema>
+    </types>
+    
+    <!-- Messages -->
+    <message name="ListAccountDetailReq">
+        <part name="parameters" element="tns:ListAccountDetailReq"/>
+    </message>
+    
+    <message name="ListAccountDetailRes">
+        <part name="parameters" element="tns:ListAccountDetailRes"/>
+    </message>
+    
+    <!-- Port Type -->
+    <portType name="ListAccountDetailPortType">
+        <operation name="ListAccountDetail">
+            <input message="tns:ListAccountDetailReq"/>
+            <output message="tns:ListAccountDetailRes"/>
+        </operation>
+    </portType>
+    
+    <!-- Binding -->
+    <binding name="ListAccountDetailSoapBinding" type="tns:ListAccountDetailPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="ListAccountDetail">
+            <soap:operation soapAction="http://listaccount.com/service/ListAccountDetail"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    
+    <!-- Service -->
+    <service name="ListAccountDetailSvc_20090801">
+        <port name="ListAccountDetailPort" binding="tns:ListAccountDetailSoapBinding">
+            <soap:address location="http://listaccount.com/service/ListAccountDetailSvc_20090801"/>
+        </port>
+    </service>
+    
+</definitions>
