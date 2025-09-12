@@ -379,19 +379,24 @@ Examples:
     python soap_converter.py --input-dir ./soap_files --output-dir ./output
     python soap_converter.py -i ./wsdl_files -o ./json_output
     python soap_converter.py  # Uses default directories: ./input and ./output
+    
+Environment Variables:
+    export SOAP_INPUT_DIR=/path/to/wsdl/files
+    export SOAP_OUTPUT_DIR=/path/to/output
+    python soap_converter.py  # Uses environment variables
         """
     )
     
     parser.add_argument(
         '--input-dir', '-i',
-        default='./input',
-        help='Directory containing WSDL and XSD files (default: ./input)'
+        default=os.getenv('SOAP_INPUT_DIR', './input'),
+        help='Directory containing WSDL and XSD files (default: ./input or SOAP_INPUT_DIR env var)'
     )
     
     parser.add_argument(
         '--output-dir', '-o',
-        default='./output',
-        help='Directory to output CommonAPISpec JSON files (default: ./output)'
+        default=os.getenv('SOAP_OUTPUT_DIR', './output'),
+        help='Directory to output CommonAPISpec JSON files (default: ./output or SOAP_OUTPUT_DIR env var)'
     )
     
     parser.add_argument(

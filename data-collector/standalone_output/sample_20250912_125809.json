@@ -1,0 +1,59 @@
+{
+  "api_name": "UserService",
+  "version": "1.0.0",
+  "description": "SOAP service: UserService",
+  "base_url": "http://example.com/UserService",
+  "category": "SOAP",
+  "documentation_url": "",
+  "api_type": "SOAP",
+  "format": "WSDL",
+  "endpoints": [
+    {
+      "path": "/GetUser",
+      "method": "POST",
+      "summary": "SOAP operation: GetUser",
+      "description": "SOAP operation GetUser",
+      "operation_name": "GetUser",
+      "soap_headers": [],
+      "input_message": {},
+      "output_message": {},
+      "parameters": [],
+      "responses": {
+        "200": {
+          "description": "Successful response",
+          "content": []
+        }
+      },
+      "tags": [
+        "UserServicePortType"
+      ]
+    }
+  ],
+  "data_types": [],
+  "authentication": [
+    {
+      "type": "SOAP",
+      "description": "SOAP-based authentication",
+      "scheme": "bearer"
+    }
+  ],
+  "rate_limits": [],
+  "error_codes": [],
+  "examples": [],
+  "tags": [
+    "SOAP",
+    "WSDL"
+  ],
+  "contact_info": {},
+  "license_info": {},
+  "external_docs": [],
+  "servers": [
+    {
+      "url": "http://example.com/UserService",
+      "description": "SOAP endpoint: UserService/UserServicePort"
+    }
+  ],
+  "security_schemes": [],
+  "sealId": "105961",
+  "application": "PROFILE"
+}
