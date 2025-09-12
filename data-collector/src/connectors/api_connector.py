@@ -25,6 +25,7 @@ import json
 import yaml
 import xml.etree.ElementTree as ET
 import sys
+import uuid
 from typing import Dict, List, Any, Optional, Union
 from dataclasses import dataclass, asdict
 from datetime import datetime
@@ -2587,7 +2588,7 @@ Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
             
                 documents.append(doc_content)
                 metadatas.append(metadata)
-                ids.append(f"{api_id}_chunk_{chunk.chunk_index}")
+                ids.append(f"{api_id}_uploaded_{uuid.uuid4().hex[:8]}_{chunk.chunk_index}")
             
             # Add all chunks to ChromaDB
             collection.add(
@@ -2688,7 +2689,7 @@ Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
                     ids = []
                     
                     for i, chunk in enumerate(chunks):
-                        chunk_id = f"{spec_id}_chunk_{i}"
+                        chunk_id = f"{spec_id}_json_{uuid.uuid4().hex[:8]}_{i}"
                         documents.append(chunk.content)
                         
                         # Convert metadata values to ChromaDB-compatible types
