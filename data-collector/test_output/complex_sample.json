@@ -349,200 +349,200 @@
                   "description": "Element: timestamp",
                   "parent_path": ".status.status",
                   "is_nested": true
-                },
-                {
-                  "name": "id",
-                  "type": "xsd:int",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: id",
-                  "parent_path": ".user.user",
-                  "is_nested": true
-                },
-                {
-                  "name": "name",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: name",
-                  "parent_path": ".user.user",
-                  "is_nested": true
-                },
-                {
-                  "name": "email",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: email",
-                  "parent_path": ".user.user",
-                  "is_nested": true
-                },
-                {
-                  "name": "profile",
-                  "type": "tns:ProfileType",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: profile",
-                  "parent_path": ".user.user",
-                  "is_nested": true
-                },
-                {
-                  "name": "firstName",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: firstName",
-                  "parent_path": ".user.user.profile",
-                  "is_nested": true
-                },
-                {
-                  "name": "lastName",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: lastName",
-                  "parent_path": ".user.user.profile",
-                  "is_nested": true
-                },
-                {
-                  "name": "preferences",
-                  "type": "tns:PreferencesType",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: preferences",
-                  "parent_path": ".user.user.profile",
-                  "is_nested": true
-                },
-                {
-                  "name": "theme",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: theme",
-                  "parent_path": ".user.user.profile.preferences",
-                  "is_nested": true
-                },
-                {
-                  "name": "language",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: language",
-                  "parent_path": ".user.user.profile.preferences",
-                  "is_nested": true
-                },
-                {
-                  "name": "notifications",
-                  "type": "xsd:boolean",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: notifications",
-                  "parent_path": ".user.user.profile.preferences",
-                  "is_nested": true
-                },
-                {
-                  "name": "addresses",
-                  "type": "tns:AddressListType",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: addresses",
-                  "parent_path": ".user.user",
-                  "is_nested": true
-                },
-                {
-                  "name": "address",
-                  "type": "tns:AddressType",
-                  "min_occurs": "1",
-                  "max_occurs": "unbounded",
-                  "nillable": false,
-                  "description": "Element: address",
-                  "parent_path": ".user.user.addresses",
-                  "is_nested": true
-                },
-                {
-                  "name": "street",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: street",
-                  "parent_path": ".user.user.addresses.address",
-                  "is_nested": true
-                },
-                {
-                  "name": "city",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: city",
-                  "parent_path": ".user.user.addresses.address",
-                  "is_nested": true
-                },
-                {
-                  "name": "country",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: country",
-                  "parent_path": ".user.user.addresses.address",
-                  "is_nested": true
-                },
-                {
-                  "name": "postalCode",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: postalCode",
-                  "parent_path": ".user.user.addresses.address",
-                  "is_nested": true
-                },
-                {
-                  "name": "code",
-                  "type": "xsd:int",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: code",
-                  "parent_path": ".status.status",
-                  "is_nested": true
-                },
-                {
-                  "name": "message",
-                  "type": "xsd:string",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: message",
-                  "parent_path": ".status.status",
-                  "is_nested": true
-                },
-                {
-                  "name": "timestamp",
-                  "type": "xsd:dateTime",
-                  "min_occurs": "1",
-                  "max_occurs": "1",
-                  "nillable": false,
-                  "description": "Element: timestamp",
-                  "parent_path": ".status.status",
-                  "is_nested": true
                 }
               ]
             },
             "nested_attributes": []
+          },
+          {
+            "name": "id",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: id",
+            "parent_path": ".user.user",
+            "is_nested": true
+          },
+          {
+            "name": "name",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: name",
+            "parent_path": ".user.user",
+            "is_nested": true
+          },
+          {
+            "name": "email",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: email",
+            "parent_path": ".user.user",
+            "is_nested": true
+          },
+          {
+            "name": "profile",
+            "type": "tns:ProfileType",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: profile",
+            "parent_path": ".user.user",
+            "is_nested": true
+          },
+          {
+            "name": "firstName",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: firstName",
+            "parent_path": ".user.user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "lastName",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: lastName",
+            "parent_path": ".user.user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "preferences",
+            "type": "tns:PreferencesType",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: preferences",
+            "parent_path": ".user.user.profile",
+            "is_nested": true
+          },
+          {
+            "name": "theme",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: theme",
+            "parent_path": ".user.user.profile.preferences",
+            "is_nested": true
+          },
+          {
+            "name": "language",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: language",
+            "parent_path": ".user.user.profile.preferences",
+            "is_nested": true
+          },
+          {
+            "name": "notifications",
+            "type": "xsd:boolean",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: notifications",
+            "parent_path": ".user.user.profile.preferences",
+            "is_nested": true
+          },
+          {
+            "name": "addresses",
+            "type": "tns:AddressListType",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: addresses",
+            "parent_path": ".user.user",
+            "is_nested": true
+          },
+          {
+            "name": "address",
+            "type": "tns:AddressType",
+            "min_occurs": "1",
+            "max_occurs": "unbounded",
+            "nillable": false,
+            "description": "Element: address",
+            "parent_path": ".user.user.addresses",
+            "is_nested": true
+          },
+          {
+            "name": "street",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: street",
+            "parent_path": ".user.user.addresses.address",
+            "is_nested": true
+          },
+          {
+            "name": "city",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: city",
+            "parent_path": ".user.user.addresses.address",
+            "is_nested": true
+          },
+          {
+            "name": "country",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: country",
+            "parent_path": ".user.user.addresses.address",
+            "is_nested": true
+          },
+          {
+            "name": "postalCode",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: postalCode",
+            "parent_path": ".user.user.addresses.address",
+            "is_nested": true
+          },
+          {
+            "name": "code",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: code",
+            "parent_path": ".status.status",
+            "is_nested": true
+          },
+          {
+            "name": "message",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: message",
+            "parent_path": ".status.status",
+            "is_nested": true
+          },
+          {
+            "name": "timestamp",
+            "type": "xsd:dateTime",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": false,
+            "description": "Element: timestamp",
+            "parent_path": ".status.status",
+            "is_nested": true
           }
         ]
       },
@@ -878,200 +878,200 @@
                     "description": "Element: timestamp",
                     "parent_path": ".status.status",
                     "is_nested": true
-                  },
-                  {
-                    "name": "id",
-                    "type": "xsd:int",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: id",
-                    "parent_path": ".user.user",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "name",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: name",
-                    "parent_path": ".user.user",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "email",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: email",
-                    "parent_path": ".user.user",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "profile",
-                    "type": "tns:ProfileType",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: profile",
-                    "parent_path": ".user.user",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "firstName",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: firstName",
-                    "parent_path": ".user.user.profile",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "lastName",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: lastName",
-                    "parent_path": ".user.user.profile",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "preferences",
-                    "type": "tns:PreferencesType",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: preferences",
-                    "parent_path": ".user.user.profile",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "theme",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: theme",
-                    "parent_path": ".user.user.profile.preferences",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "language",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: language",
-                    "parent_path": ".user.user.profile.preferences",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "notifications",
-                    "type": "xsd:boolean",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: notifications",
-                    "parent_path": ".user.user.profile.preferences",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "addresses",
-                    "type": "tns:AddressListType",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: addresses",
-                    "parent_path": ".user.user",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "address",
-                    "type": "tns:AddressType",
-                    "min_occurs": "1",
-                    "max_occurs": "unbounded",
-                    "nillable": false,
-                    "description": "Element: address",
-                    "parent_path": ".user.user.addresses",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "street",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: street",
-                    "parent_path": ".user.user.addresses.address",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "city",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: city",
-                    "parent_path": ".user.user.addresses.address",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "country",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: country",
-                    "parent_path": ".user.user.addresses.address",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "postalCode",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: postalCode",
-                    "parent_path": ".user.user.addresses.address",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "code",
-                    "type": "xsd:int",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: code",
-                    "parent_path": ".status.status",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "message",
-                    "type": "xsd:string",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: message",
-                    "parent_path": ".status.status",
-                    "is_nested": true
-                  },
-                  {
-                    "name": "timestamp",
-                    "type": "xsd:dateTime",
-                    "min_occurs": "1",
-                    "max_occurs": "1",
-                    "nillable": false,
-                    "description": "Element: timestamp",
-                    "parent_path": ".status.status",
-                    "is_nested": true
                   }
                 ]
               },
               "nested_attributes": []
+            },
+            {
+              "name": "id",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: id",
+              "parent_path": ".user.user",
+              "is_nested": true
+            },
+            {
+              "name": "name",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: name",
+              "parent_path": ".user.user",
+              "is_nested": true
+            },
+            {
+              "name": "email",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: email",
+              "parent_path": ".user.user",
+              "is_nested": true
+            },
+            {
+              "name": "profile",
+              "type": "tns:ProfileType",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: profile",
+              "parent_path": ".user.user",
+              "is_nested": true
+            },
+            {
+              "name": "firstName",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: firstName",
+              "parent_path": ".user.user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "lastName",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: lastName",
+              "parent_path": ".user.user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "preferences",
+              "type": "tns:PreferencesType",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: preferences",
+              "parent_path": ".user.user.profile",
+              "is_nested": true
+            },
+            {
+              "name": "theme",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: theme",
+              "parent_path": ".user.user.profile.preferences",
+              "is_nested": true
+            },
+            {
+              "name": "language",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: language",
+              "parent_path": ".user.user.profile.preferences",
+              "is_nested": true
+            },
+            {
+              "name": "notifications",
+              "type": "xsd:boolean",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: notifications",
+              "parent_path": ".user.user.profile.preferences",
+              "is_nested": true
+            },
+            {
+              "name": "addresses",
+              "type": "tns:AddressListType",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: addresses",
+              "parent_path": ".user.user",
+              "is_nested": true
+            },
+            {
+              "name": "address",
+              "type": "tns:AddressType",
+              "min_occurs": "1",
+              "max_occurs": "unbounded",
+              "nillable": false,
+              "description": "Element: address",
+              "parent_path": ".user.user.addresses",
+              "is_nested": true
+            },
+            {
+              "name": "street",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: street",
+              "parent_path": ".user.user.addresses.address",
+              "is_nested": true
+            },
+            {
+              "name": "city",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: city",
+              "parent_path": ".user.user.addresses.address",
+              "is_nested": true
+            },
+            {
+              "name": "country",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: country",
+              "parent_path": ".user.user.addresses.address",
+              "is_nested": true
+            },
+            {
+              "name": "postalCode",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: postalCode",
+              "parent_path": ".user.user.addresses.address",
+              "is_nested": true
+            },
+            {
+              "name": "code",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: code",
+              "parent_path": ".status.status",
+              "is_nested": true
+            },
+            {
+              "name": "message",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: message",
+              "parent_path": ".status.status",
+              "is_nested": true
+            },
+            {
+              "name": "timestamp",
+              "type": "xsd:dateTime",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": false,
+              "description": "Element: timestamp",
+              "parent_path": ".status.status",
+              "is_nested": true
             }
           ]
         }
@@ -1278,116 +1278,6 @@
           "description": "Element: postalCode",
           "parent_path": "UserType.addresses.addresses.address",
           "is_nested": true
-        },
-        {
-          "name": "firstName",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: firstName",
-          "parent_path": "UserType.profile.profile",
-          "is_nested": true
-        },
-        {
-          "name": "lastName",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: lastName",
-          "parent_path": "UserType.profile.profile",
-          "is_nested": true
-        },
-        {
-          "name": "preferences",
-          "type": "tns:PreferencesType",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: preferences",
-          "parent_path": "UserType.profile.profile",
-          "is_nested": true
-        },
-        {
-          "name": "theme",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: theme",
-          "parent_path": "UserType.profile.profile.preferences",
-          "is_nested": true
-        },
-        {
-          "name": "language",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: language",
-          "parent_path": "UserType.profile.profile.preferences",
-          "is_nested": true
-        },
-        {
-          "name": "notifications",
-          "type": "xsd:boolean",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: notifications",
-          "parent_path": "UserType.profile.profile.preferences",
-          "is_nested": true
-        },
-        {
-          "name": "address",
-          "type": "tns:AddressType",
-          "min_occurs": "1",
-          "max_occurs": "unbounded",
-          "nillable": false,
-          "description": "Element: address",
-          "parent_path": "UserType.addresses.addresses",
-          "is_nested": true
-        },
-        {
-          "name": "street",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: street",
-          "parent_path": "UserType.addresses.addresses.address",
-          "is_nested": true
-        },
-        {
-          "name": "city",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: city",
-          "parent_path": "UserType.addresses.addresses.address",
-          "is_nested": true
-        },
-        {
-          "name": "country",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: country",
-          "parent_path": "UserType.addresses.addresses.address",
-          "is_nested": true
-        },
-        {
-          "name": "postalCode",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: postalCode",
-          "parent_path": "UserType.addresses.addresses.address",
-          "is_nested": true
         }
       ]
     },
@@ -1446,36 +1336,6 @@
         }
       ],
       "nested_attributes": [
-        {
-          "name": "theme",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: theme",
-          "parent_path": "ProfileType.preferences.preferences",
-          "is_nested": true
-        },
-        {
-          "name": "language",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: language",
-          "parent_path": "ProfileType.preferences.preferences",
-          "is_nested": true
-        },
-        {
-          "name": "notifications",
-          "type": "xsd:boolean",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: notifications",
-          "parent_path": "ProfileType.preferences.preferences",
-          "is_nested": true
-        },
         {
           "name": "theme",
           "type": "xsd:string",
@@ -1587,46 +1447,6 @@
         }
       ],
       "nested_attributes": [
-        {
-          "name": "street",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: street",
-          "parent_path": "AddressListType.address.address",
-          "is_nested": true
-        },
-        {
-          "name": "city",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: city",
-          "parent_path": "AddressListType.address.address",
-          "is_nested": true
-        },
-        {
-          "name": "country",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: country",
-          "parent_path": "AddressListType.address.address",
-          "is_nested": true
-        },
-        {
-          "name": "postalCode",
-          "type": "xsd:string",
-          "min_occurs": "1",
-          "max_occurs": "1",
-          "nillable": false,
-          "description": "Element: postalCode",
-          "parent_path": "AddressListType.address.address",
-          "is_nested": true
-        },
         {
           "name": "street",
           "type": "xsd:string",

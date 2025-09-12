@@ -418,9 +418,23 @@ class WSDLConnector:
                     logger.debug(f"✅ Extracted type: {type_details}")
         
         logger.debug(f"📋 Message {message_name} has {len(all_attributes)} attributes")
+        
+        # Flatten all nested attributes into the main all_attributes array
+        flattened_attributes = []
+        for attr in all_attributes:
+            flattened_attributes.append(attr)
+            # Add nested attributes from complex_type.nested_attributes
+            if 'complex_type' in attr and 'nested_attributes' in attr['complex_type']:
+                nested_attrs = attr['complex_type']['nested_attributes']
+                flattened_attributes.extend(nested_attrs)
+            # Add nested attributes from direct nested_attributes field (only if not already added from complex_type)
+            elif 'nested_attributes' in attr:
+                nested_attrs = attr['nested_attributes']
+                flattened_attributes.extend(nested_attrs)
+        
         return {
             'message_name': message_name,
-            'all_attributes': all_attributes
+            'all_attributes': flattened_attributes
         }
     
     def _extract_element_details(self, element_name: str, root: ET.Element) -> Dict[str, Any]:
@@ -608,11 +622,8 @@ class WSDLConnector:
             
             details['attributes'].append(element_details)
             
-            # Check if this element has nested complex type (recursive extraction)
-            if root is not None:
-                element_path = f"{type_name}.{element.get('name', '')}"
-                nested_attributes = self._extract_nested_attributes(element, root, element_path, visited_types.copy(), 0, 0)
-                details['nested_attributes'].extend(nested_attributes)
+            # Note: Nested attributes are already extracted in the sequence processing above
+            # No need to extract them again here to avoid duplicates
         
         return details
     
