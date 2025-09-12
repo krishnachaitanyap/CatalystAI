@@ -15,7 +15,7 @@
       "description": "SOAP operation GetUser",
       "operation_name": "GetUser",
       "soap_headers": [],
-      "input_message": {
+      "request": {
         "message_name": "tns:GetUserRequestMessage",
         "all_attributes": [
           {
@@ -90,7 +90,7 @@
           }
         ]
       },
-      "output_message": {
+      "response": {
         "message_name": "tns:GetUserResponseMessage",
         "all_attributes": [
           {

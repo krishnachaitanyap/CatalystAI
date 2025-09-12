@@ -322,8 +322,8 @@ class WSDLConnector:
                     'description': operation['description'],
                     'operation_name': operation['operation_name'],
                     'soap_headers': operation.get('soap_headers', []),
-                    'input_message': operation.get('input_message', {}),
-                    'output_message': operation.get('output_message', {}),
+                    'request': operation.get('request', {}),
+                    'response': operation.get('response', {}),
                     'parameters': operation.get('parameters', []),
                     'responses': operation.get('responses', {}),
                     'tags': [port_type_name] if port_type_name else []
@@ -345,29 +345,29 @@ class WSDLConnector:
             input_elem = operation.find('wsdl:input', self.namespaces)
             output_elem = operation.find('wsdl:output', self.namespaces)
             
-            input_message = {}
-            output_message = {}
+            request = {}
+            response = {}
             
             if input_elem is not None:
                 message_name = input_elem.get('message', '')
-                input_message = self._extract_message_details(message_name, root)
+                request = self._extract_message_details(message_name, root)
             
             if output_elem is not None:
                 message_name = output_elem.get('message', '')
-                output_message = self._extract_message_details(message_name, root)
+                response = self._extract_message_details(message_name, root)
             
             operation_data = {
                 'operation_name': operation_name,
                 'summary': f"SOAP operation: {operation_name}",
                 'description': f"SOAP operation {operation_name}",
                 'soap_headers': [],
-                'input_message': input_message,
-                'output_message': output_message,
-                'parameters': input_message.get('all_attributes', []),
+                'request': request,
+                'response': response,
+                'parameters': request.get('all_attributes', []),
                 'responses': {
                     '200': {
                         'description': 'Successful response',
-                        'content': output_message.get('all_attributes', [])
+                        'content': response.get('all_attributes', [])
                     }
                 }
             }
