@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://example.com/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             targetNamespace="http://example.com/">
+    <types>
+        <xsd:schema targetNamespace="http://example.com/">
+            <!-- Input Request -->
+            <xsd:element name="GetUserRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="userId" type="xsd:string"/>
+                        <xsd:element name="includeProfile" type="xsd:boolean"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <!-- Output Response with nested attributes -->
+            <xsd:element name="GetUserResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="user" type="tns:UserType"/>
+                        <xsd:element name="status" type="tns:StatusType"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <!-- User Type with nested attributes -->
+            <xsd:complexType name="UserType">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:int"/>
+                    <xsd:element name="name" type="xsd:string"/>
+                    <xsd:element name="email" type="xsd:string"/>
+                    <xsd:element name="profile" type="tns:ProfileType"/>
+                    <xsd:element name="addresses" type="tns:AddressListType"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Profile Type with more nesting -->
+            <xsd:complexType name="ProfileType">
+                <xsd:sequence>
+                    <xsd:element name="firstName" type="xsd:string"/>
+                    <xsd:element name="lastName" type="xsd:string"/>
+                    <xsd:element name="preferences" type="tns:PreferencesType"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Preferences Type (leaf level) -->
+            <xsd:complexType name="PreferencesType">
+                <xsd:sequence>
+                    <xsd:element name="theme" type="xsd:string"/>
+                    <xsd:element name="language" type="xsd:string"/>
+                    <xsd:element name="notifications" type="xsd:boolean"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Address List Type -->
+            <xsd:complexType name="AddressListType">
+                <xsd:sequence>
+                    <xsd:element name="address" type="tns:AddressType" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Address Type (leaf level) -->
+            <xsd:complexType name="AddressType">
+                <xsd:sequence>
+                    <xsd:element name="street" type="xsd:string"/>
+                    <xsd:element name="city" type="xsd:string"/>
+                    <xsd:element name="country" type="xsd:string"/>
+                    <xsd:element name="postalCode" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <!-- Status Type -->
+            <xsd:complexType name="StatusType">
+                <xsd:sequence>
+                    <xsd:element name="code" type="xsd:int"/>
+                    <xsd:element name="message" type="xsd:string"/>
+                    <xsd:element name="timestamp" type="xsd:dateTime"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </types>
+    
+    <!-- Messages -->
+    <message name="GetUserRequestMessage">
+        <part name="parameters" element="tns:GetUserRequest"/>
+    </message>
+    
+    <message name="GetUserResponseMessage">
+        <part name="parameters" element="tns:GetUserResponse"/>
+    </message>
+    
+    <!-- Port Type -->
+    <portType name="UserServicePortType">
+        <operation name="GetUser">
+            <input message="tns:GetUserRequestMessage"/>
+            <output message="tns:GetUserResponseMessage"/>
+        </operation>
+    </portType>
+    
+    <!-- Binding -->
+    <binding name="UserServiceBinding" type="tns:UserServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetUser">
+            <soap:operation soapAction="http://example.com/GetUser"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    
+    <!-- Service -->
+    <service name="UserService">
+        <port name="UserServicePort" binding="tns:UserServiceBinding">
+            <soap:address location="http://example.com/UserService"/>
+        </port>
+    </service>
+</definitions>

@@ -378,8 +378,21 @@ class WSDLConnector:
     
     def _extract_message_details(self, message_name: str, root: ET.Element) -> Dict[str, Any]:
         """Extract message details from WSDL"""
-        message_elem = root.find(f'.//wsdl:message[@name="{message_name}"]', self.namespaces)
+        logger.debug(f"🔍 Extracting message: {message_name}")
+        
+        # Handle qualified message names (e.g., "tns:GetUserRequestMessage")
+        if ':' in message_name:
+            prefix, local_name = message_name.split(':', 1)
+            # Try with namespace prefix first
+            message_elem = root.find(f'.//wsdl:message[@name="{message_name}"]', self.namespaces)
+            if message_elem is None:
+                # Try without prefix
+                message_elem = root.find(f'.//wsdl:message[@name="{local_name}"]', self.namespaces)
+        else:
+            message_elem = root.find(f'.//wsdl:message[@name="{message_name}"]', self.namespaces)
+        
         if message_elem is None:
+            logger.warning(f"⚠️ Message not found: {message_name}")
             return {}
         
         all_attributes = []
@@ -389,17 +402,22 @@ class WSDLConnector:
             part_type = part.get('type', '')
             part_element = part.get('element', '')
             
+            logger.debug(f"🔍 Part: {part_name}, type: {part_type}, element: {part_element}")
+            
             if part_element:
                 # Extract element details
                 element_details = self._extract_element_details(part_element, root)
                 if element_details:
                     all_attributes.append(element_details)
+                    logger.debug(f"✅ Extracted element: {element_details}")
             elif part_type:
                 # Extract type details
                 type_details = self._extract_type_details(part_type, root)
                 if type_details:
                     all_attributes.append(type_details)
+                    logger.debug(f"✅ Extracted type: {type_details}")
         
+        logger.debug(f"📋 Message {message_name} has {len(all_attributes)} attributes")
         return {
             'message_name': message_name,
             'all_attributes': all_attributes
@@ -407,7 +425,17 @@ class WSDLConnector:
     
     def _extract_element_details(self, element_name: str, root: ET.Element) -> Dict[str, Any]:
         """Extract element details from WSDL/XSD"""
-        element_elem = root.find(f'.//xsd:element[@name="{element_name}"]', self.namespaces)
+        # Handle qualified element names (e.g., "tns:GetUserRequest")
+        if ':' in element_name:
+            prefix, local_name = element_name.split(':', 1)
+            # Try with namespace prefix first
+            element_elem = root.find(f'.//xsd:element[@name="{element_name}"]', self.namespaces)
+            if element_elem is None:
+                # Try without prefix
+                element_elem = root.find(f'.//xsd:element[@name="{local_name}"]', self.namespaces)
+        else:
+            element_elem = root.find(f'.//xsd:element[@name="{element_name}"]', self.namespaces)
+        
         if element_elem is None:
             return {}
         
@@ -445,6 +473,23 @@ class WSDLConnector:
                     0
                 )
                 element_details['nested_attributes'] = nested_attributes
+        
+        # Also check for inline complex type definition
+        inline_complex_type = element_elem.find('xsd:complexType', self.namespaces)
+        if inline_complex_type is not None:
+            nested_details = self._extract_complex_type_details(inline_complex_type, root)
+            element_details['complex_type'] = nested_details
+            
+            # Extract nested attributes
+            nested_attributes = self._extract_nested_attributes(
+                inline_complex_type, 
+                root, 
+                element_name, 
+                set(), 
+                0, 
+                0
+            )
+            element_details['nested_attributes'] = nested_attributes
         
         return element_details
     
@@ -788,10 +833,11 @@ class WSDLConnector:
 class StandaloneSOAPConverter:
     """Standalone SOAP converter with all functionality self-contained"""
     
-    def __init__(self, input_dir: str, output_dir: str, chunking_strategy: str = "ENDPOINT_BASED"):
+    def __init__(self, input_dir: str, output_dir: str, chunking_strategy: str = "ENDPOINT_BASED", use_timestamp: bool = False):
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
         self.chunking_strategy = chunking_strategy
+        self.use_timestamp = use_timestamp
         self.wsdl_connector = WSDLConnector()
         
         # Create output directory if it doesn't exist
@@ -849,8 +895,11 @@ class StandaloneSOAPConverter:
             common_spec = self.wsdl_connector.parse_wsdl_files_with_dependencies(file_paths)
             
             # Generate output filename
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_filename = f"{service_name}_{timestamp}.json"
+            if self.use_timestamp:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                output_filename = f"{service_name}_{timestamp}.json"
+            else:
+                output_filename = f"{service_name}.json"
             output_path = self.output_dir / output_filename
             
             # Convert to JSON and save
@@ -968,6 +1017,12 @@ Environment Variables:
         help='Enable verbose logging'
     )
     
+    parser.add_argument(
+        '--timestamp',
+        action='store_true',
+        help='Include timestamp in output filenames (default: overwrite existing files)'
+    )
+    
     args = parser.parse_args()
     
     if args.verbose:
@@ -977,7 +1032,8 @@ Environment Variables:
         converter = StandaloneSOAPConverter(
             input_dir=args.input_dir,
             output_dir=args.output_dir,
-            chunking_strategy=args.chunking_strategy
+            chunking_strategy=args.chunking_strategy,
+            use_timestamp=args.timestamp
         )
         
         converter.process_all_files()
