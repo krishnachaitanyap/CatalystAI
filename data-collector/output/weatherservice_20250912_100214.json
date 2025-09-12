@@ -1,0 +1,1146 @@
+{
+  "api_name": "WeatherService",
+  "version": "1.0.0",
+  "description": "Get current weather information for a city",
+  "base_url": "http://localhost:8080/WeatherService.asmx",
+  "category": "soap",
+  "endpoints": [
+    {
+      "path": "/GetWeather",
+      "method": "POST",
+      "summary": "GetWeather",
+      "description": "Get current weather information for a city",
+      "parameters": [
+        {
+          "name": "parameters",
+          "in": "body",
+          "description": "SOAP part: parameters",
+          "required": true,
+          "type": "object",
+          "element": "tns:GetWeatherRequest",
+          "type_name": "",
+          "soap_part": true,
+          "schema_details": {
+            "element_name": "GetWeatherRequest",
+            "qualified_name": "tns:GetWeatherRequest",
+            "attributes": [
+              {
+                "name": "CityName",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              },
+              {
+                "name": "CountryCode",
+                "type": "xsd:string",
+                "min_occurs": "0",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              }
+            ],
+            "complex_type": {
+              "type": "complex",
+              "attributes": [
+                {
+                  "name": "CityName",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                },
+                {
+                  "name": "CountryCode",
+                  "type": "xsd:string",
+                  "min_occurs": "0",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                }
+              ],
+              "elements": [],
+              "sequences": [
+                {
+                  "elements": [
+                    {
+                      "name": "CityName",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    },
+                    {
+                      "name": "CountryCode",
+                      "type": "xsd:string",
+                      "min_occurs": "0",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    }
+                  ]
+                }
+              ],
+              "nested_attributes": [],
+              "inherited_attributes": []
+            },
+            "description": "",
+            "type": "",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nested_attributes": []
+          },
+          "attributes": [
+            {
+              "name": "CityName",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            },
+            {
+              "name": "CountryCode",
+              "type": "xsd:string",
+              "min_occurs": "0",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            }
+          ],
+          "nested_attributes": [],
+          "searchable_content": "element GetWeatherRequest attribute CityName type xsd:string attribute CountryCode type xsd:string field CityName data type xsd:string field CountryCode data type xsd:string"
+        }
+      ],
+      "request_body": {
+        "description": "SOAP request body",
+        "required": true,
+        "content_type": "text/xml",
+        "soap_envelope": true,
+        "parts": [
+          {
+            "name": "parameters",
+            "element": "tns:GetWeatherRequest",
+            "type": "",
+            "schema_details": {
+              "element_name": "GetWeatherRequest",
+              "qualified_name": "tns:GetWeatherRequest",
+              "attributes": [
+                {
+                  "name": "CityName",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                },
+                {
+                  "name": "CountryCode",
+                  "type": "xsd:string",
+                  "min_occurs": "0",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                }
+              ],
+              "complex_type": {
+                "type": "complex",
+                "attributes": [
+                  {
+                    "name": "CityName",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  },
+                  {
+                    "name": "CountryCode",
+                    "type": "xsd:string",
+                    "min_occurs": "0",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  }
+                ],
+                "elements": [],
+                "sequences": [
+                  {
+                    "elements": [
+                      {
+                        "name": "CityName",
+                        "type": "xsd:string",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": "false",
+                        "description": ""
+                      },
+                      {
+                        "name": "CountryCode",
+                        "type": "xsd:string",
+                        "min_occurs": "0",
+                        "max_occurs": "1",
+                        "nillable": "false",
+                        "description": ""
+                      }
+                    ]
+                  }
+                ],
+                "nested_attributes": [],
+                "inherited_attributes": []
+              },
+              "description": "",
+              "type": "",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nested_attributes": []
+            },
+            "attributes": [
+              {
+                "name": "CityName",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              },
+              {
+                "name": "CountryCode",
+                "type": "xsd:string",
+                "min_occurs": "0",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              }
+            ],
+            "nested_attributes": [],
+            "searchable_content": "element GetWeatherRequest attribute CityName type xsd:string attribute CountryCode type xsd:string field CityName data type xsd:string field CountryCode data type xsd:string"
+          }
+        ],
+        "all_attributes": [
+          {
+            "name": "CityName",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": ""
+          },
+          {
+            "name": "CountryCode",
+            "type": "xsd:string",
+            "min_occurs": "0",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": ""
+          }
+        ],
+        "searchable_content": "element GetWeatherRequest attribute CityName type xsd:string attribute CountryCode type xsd:string field CityName data type xsd:string field CountryCode data type xsd:string"
+      },
+      "responses": {
+        "200": {
+          "description": "SOAP response",
+          "content_type": "text/xml",
+          "soap_envelope": true,
+          "parts": [
+            {
+              "name": "parameters",
+              "element": "tns:GetWeatherResponse",
+              "type": "",
+              "schema_details": {
+                "element_name": "GetWeatherResponse",
+                "qualified_name": "tns:GetWeatherResponse",
+                "attributes": [
+                  {
+                    "name": "Temperature",
+                    "type": "xsd:float",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  },
+                  {
+                    "name": "Humidity",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  },
+                  {
+                    "name": "Description",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  },
+                  {
+                    "name": "WindSpeed",
+                    "type": "xsd:float",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  },
+                  {
+                    "name": "Pressure",
+                    "type": "xsd:float",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  }
+                ],
+                "complex_type": {
+                  "type": "complex",
+                  "attributes": [
+                    {
+                      "name": "Temperature",
+                      "type": "xsd:float",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    },
+                    {
+                      "name": "Humidity",
+                      "type": "xsd:int",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    },
+                    {
+                      "name": "Description",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    },
+                    {
+                      "name": "WindSpeed",
+                      "type": "xsd:float",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    },
+                    {
+                      "name": "Pressure",
+                      "type": "xsd:float",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    }
+                  ],
+                  "elements": [],
+                  "sequences": [
+                    {
+                      "elements": [
+                        {
+                          "name": "Temperature",
+                          "type": "xsd:float",
+                          "min_occurs": "1",
+                          "max_occurs": "1",
+                          "nillable": "false",
+                          "description": ""
+                        },
+                        {
+                          "name": "Humidity",
+                          "type": "xsd:int",
+                          "min_occurs": "1",
+                          "max_occurs": "1",
+                          "nillable": "false",
+                          "description": ""
+                        },
+                        {
+                          "name": "Description",
+                          "type": "xsd:string",
+                          "min_occurs": "1",
+                          "max_occurs": "1",
+                          "nillable": "false",
+                          "description": ""
+                        },
+                        {
+                          "name": "WindSpeed",
+                          "type": "xsd:float",
+                          "min_occurs": "1",
+                          "max_occurs": "1",
+                          "nillable": "false",
+                          "description": ""
+                        },
+                        {
+                          "name": "Pressure",
+                          "type": "xsd:float",
+                          "min_occurs": "1",
+                          "max_occurs": "1",
+                          "nillable": "false",
+                          "description": ""
+                        }
+                      ]
+                    }
+                  ],
+                  "nested_attributes": [],
+                  "inherited_attributes": []
+                },
+                "description": "",
+                "type": "",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nested_attributes": []
+              },
+              "attributes": [
+                {
+                  "name": "Temperature",
+                  "type": "xsd:float",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                },
+                {
+                  "name": "Humidity",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                },
+                {
+                  "name": "Description",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                },
+                {
+                  "name": "WindSpeed",
+                  "type": "xsd:float",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                },
+                {
+                  "name": "Pressure",
+                  "type": "xsd:float",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                }
+              ],
+              "nested_attributes": [],
+              "searchable_content": "element GetWeatherResponse attribute Temperature type xsd:float attribute Humidity type xsd:int attribute Description type xsd:string attribute WindSpeed type xsd:float attribute Pressure type xsd:float field Temperature data type xsd:float field Humidity data type xsd:int field Description data type xsd:string field WindSpeed data type xsd:float field Pressure data type xsd:float"
+            }
+          ],
+          "all_attributes": [
+            {
+              "name": "Temperature",
+              "type": "xsd:float",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            },
+            {
+              "name": "Humidity",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            },
+            {
+              "name": "Description",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            },
+            {
+              "name": "WindSpeed",
+              "type": "xsd:float",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            },
+            {
+              "name": "Pressure",
+              "type": "xsd:float",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            }
+          ],
+          "searchable_content": "element GetWeatherResponse attribute Temperature type xsd:float attribute Humidity type xsd:int attribute Description type xsd:string attribute WindSpeed type xsd:float attribute Pressure type xsd:float field Temperature data type xsd:float field Humidity data type xsd:int field Description data type xsd:string field WindSpeed data type xsd:float field Pressure data type xsd:float"
+        }
+      },
+      "tags": [
+        "soap"
+      ],
+      "operation_id": "GetWeather",
+      "deprecated": false,
+      "soap_action": "http://tempuri.org/GetWeather"
+    },
+    {
+      "path": "/GetForecast",
+      "method": "POST",
+      "summary": "GetForecast",
+      "description": "Get weather forecast for a city for specified number of days",
+      "parameters": [
+        {
+          "name": "parameters",
+          "in": "body",
+          "description": "SOAP part: parameters",
+          "required": true,
+          "type": "object",
+          "element": "tns:GetForecastRequest",
+          "type_name": "",
+          "soap_part": true,
+          "schema_details": {
+            "element_name": "GetForecastRequest",
+            "qualified_name": "tns:GetForecastRequest",
+            "attributes": [
+              {
+                "name": "CityName",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              },
+              {
+                "name": "Days",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              }
+            ],
+            "complex_type": {
+              "type": "complex",
+              "attributes": [
+                {
+                  "name": "CityName",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                },
+                {
+                  "name": "Days",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                }
+              ],
+              "elements": [],
+              "sequences": [
+                {
+                  "elements": [
+                    {
+                      "name": "CityName",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    },
+                    {
+                      "name": "Days",
+                      "type": "xsd:int",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    }
+                  ]
+                }
+              ],
+              "nested_attributes": [],
+              "inherited_attributes": []
+            },
+            "description": "",
+            "type": "",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nested_attributes": []
+          },
+          "attributes": [
+            {
+              "name": "CityName",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            },
+            {
+              "name": "Days",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            }
+          ],
+          "nested_attributes": [],
+          "searchable_content": "element GetForecastRequest attribute CityName type xsd:string attribute Days type xsd:int field CityName data type xsd:string field Days data type xsd:int"
+        }
+      ],
+      "request_body": {
+        "description": "SOAP request body",
+        "required": true,
+        "content_type": "text/xml",
+        "soap_envelope": true,
+        "parts": [
+          {
+            "name": "parameters",
+            "element": "tns:GetForecastRequest",
+            "type": "",
+            "schema_details": {
+              "element_name": "GetForecastRequest",
+              "qualified_name": "tns:GetForecastRequest",
+              "attributes": [
+                {
+                  "name": "CityName",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                },
+                {
+                  "name": "Days",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                }
+              ],
+              "complex_type": {
+                "type": "complex",
+                "attributes": [
+                  {
+                    "name": "CityName",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  },
+                  {
+                    "name": "Days",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  }
+                ],
+                "elements": [],
+                "sequences": [
+                  {
+                    "elements": [
+                      {
+                        "name": "CityName",
+                        "type": "xsd:string",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": "false",
+                        "description": ""
+                      },
+                      {
+                        "name": "Days",
+                        "type": "xsd:int",
+                        "min_occurs": "1",
+                        "max_occurs": "1",
+                        "nillable": "false",
+                        "description": ""
+                      }
+                    ]
+                  }
+                ],
+                "nested_attributes": [],
+                "inherited_attributes": []
+              },
+              "description": "",
+              "type": "",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nested_attributes": []
+            },
+            "attributes": [
+              {
+                "name": "CityName",
+                "type": "xsd:string",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              },
+              {
+                "name": "Days",
+                "type": "xsd:int",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nillable": "false",
+                "description": ""
+              }
+            ],
+            "nested_attributes": [],
+            "searchable_content": "element GetForecastRequest attribute CityName type xsd:string attribute Days type xsd:int field CityName data type xsd:string field Days data type xsd:int"
+          }
+        ],
+        "all_attributes": [
+          {
+            "name": "CityName",
+            "type": "xsd:string",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": ""
+          },
+          {
+            "name": "Days",
+            "type": "xsd:int",
+            "min_occurs": "1",
+            "max_occurs": "1",
+            "nillable": "false",
+            "description": ""
+          }
+        ],
+        "searchable_content": "element GetForecastRequest attribute CityName type xsd:string attribute Days type xsd:int field CityName data type xsd:string field Days data type xsd:int"
+      },
+      "responses": {
+        "200": {
+          "description": "SOAP response",
+          "content_type": "text/xml",
+          "soap_envelope": true,
+          "parts": [
+            {
+              "name": "parameters",
+              "element": "tns:GetForecastResponse",
+              "type": "",
+              "schema_details": {
+                "element_name": "GetForecastResponse",
+                "qualified_name": "tns:GetForecastResponse",
+                "attributes": [
+                  {
+                    "name": "ForecastDays",
+                    "type": "xsd:int",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": ""
+                  },
+                  {
+                    "name": "DailyForecast",
+                    "type": "tns:DailyForecast",
+                    "min_occurs": "1",
+                    "max_occurs": "unbounded",
+                    "nillable": "false",
+                    "description": ""
+                  }
+                ],
+                "complex_type": {
+                  "type": "complex",
+                  "attributes": [
+                    {
+                      "name": "ForecastDays",
+                      "type": "xsd:int",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": ""
+                    },
+                    {
+                      "name": "DailyForecast",
+                      "type": "tns:DailyForecast",
+                      "min_occurs": "1",
+                      "max_occurs": "unbounded",
+                      "nillable": "false",
+                      "description": ""
+                    }
+                  ],
+                  "elements": [],
+                  "sequences": [
+                    {
+                      "elements": [
+                        {
+                          "name": "ForecastDays",
+                          "type": "xsd:int",
+                          "min_occurs": "1",
+                          "max_occurs": "1",
+                          "nillable": "false",
+                          "description": ""
+                        },
+                        {
+                          "name": "DailyForecast",
+                          "type": "tns:DailyForecast",
+                          "min_occurs": "1",
+                          "max_occurs": "unbounded",
+                          "nillable": "false",
+                          "description": ""
+                        }
+                      ]
+                    }
+                  ],
+                  "nested_attributes": [
+                    {
+                      "name": "Date",
+                      "type": "xsd:date",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": "",
+                      "parent_path": "DailyForecast",
+                      "is_nested": true
+                    },
+                    {
+                      "name": "HighTemp",
+                      "type": "xsd:float",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": "",
+                      "parent_path": "DailyForecast",
+                      "is_nested": true
+                    },
+                    {
+                      "name": "LowTemp",
+                      "type": "xsd:float",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": "",
+                      "parent_path": "DailyForecast",
+                      "is_nested": true
+                    },
+                    {
+                      "name": "Description",
+                      "type": "xsd:string",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": "",
+                      "parent_path": "DailyForecast",
+                      "is_nested": true
+                    },
+                    {
+                      "name": "PrecipitationChance",
+                      "type": "xsd:float",
+                      "min_occurs": "1",
+                      "max_occurs": "1",
+                      "nillable": "false",
+                      "description": "",
+                      "parent_path": "DailyForecast",
+                      "is_nested": true
+                    }
+                  ],
+                  "inherited_attributes": []
+                },
+                "description": "",
+                "type": "",
+                "min_occurs": "1",
+                "max_occurs": "1",
+                "nested_attributes": [
+                  {
+                    "name": "Date",
+                    "type": "xsd:date",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "DailyForecast",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "HighTemp",
+                    "type": "xsd:float",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "DailyForecast",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "LowTemp",
+                    "type": "xsd:float",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "DailyForecast",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "Description",
+                    "type": "xsd:string",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "DailyForecast",
+                    "is_nested": true
+                  },
+                  {
+                    "name": "PrecipitationChance",
+                    "type": "xsd:float",
+                    "min_occurs": "1",
+                    "max_occurs": "1",
+                    "nillable": "false",
+                    "description": "",
+                    "parent_path": "DailyForecast",
+                    "is_nested": true
+                  }
+                ]
+              },
+              "attributes": [
+                {
+                  "name": "ForecastDays",
+                  "type": "xsd:int",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": ""
+                },
+                {
+                  "name": "DailyForecast",
+                  "type": "tns:DailyForecast",
+                  "min_occurs": "1",
+                  "max_occurs": "unbounded",
+                  "nillable": "false",
+                  "description": ""
+                }
+              ],
+              "nested_attributes": [
+                {
+                  "name": "Date",
+                  "type": "xsd:date",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "DailyForecast",
+                  "is_nested": true
+                },
+                {
+                  "name": "HighTemp",
+                  "type": "xsd:float",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "DailyForecast",
+                  "is_nested": true
+                },
+                {
+                  "name": "LowTemp",
+                  "type": "xsd:float",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "DailyForecast",
+                  "is_nested": true
+                },
+                {
+                  "name": "Description",
+                  "type": "xsd:string",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "DailyForecast",
+                  "is_nested": true
+                },
+                {
+                  "name": "PrecipitationChance",
+                  "type": "xsd:float",
+                  "min_occurs": "1",
+                  "max_occurs": "1",
+                  "nillable": "false",
+                  "description": "",
+                  "parent_path": "DailyForecast",
+                  "is_nested": true
+                }
+              ],
+              "searchable_content": "element GetForecastResponse attribute ForecastDays type xsd:int attribute DailyForecast type tns:DailyForecast field ForecastDays data type xsd:int field DailyForecast data type tns:DailyForecast"
+            }
+          ],
+          "all_attributes": [
+            {
+              "name": "ForecastDays",
+              "type": "xsd:int",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": ""
+            },
+            {
+              "name": "DailyForecast",
+              "type": "tns:DailyForecast",
+              "min_occurs": "1",
+              "max_occurs": "unbounded",
+              "nillable": "false",
+              "description": ""
+            },
+            {
+              "name": "Date",
+              "type": "xsd:date",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "DailyForecast",
+              "is_nested": true
+            },
+            {
+              "name": "HighTemp",
+              "type": "xsd:float",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "DailyForecast",
+              "is_nested": true
+            },
+            {
+              "name": "LowTemp",
+              "type": "xsd:float",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "DailyForecast",
+              "is_nested": true
+            },
+            {
+              "name": "Description",
+              "type": "xsd:string",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "DailyForecast",
+              "is_nested": true
+            },
+            {
+              "name": "PrecipitationChance",
+              "type": "xsd:float",
+              "min_occurs": "1",
+              "max_occurs": "1",
+              "nillable": "false",
+              "description": "",
+              "parent_path": "DailyForecast",
+              "is_nested": true
+            }
+          ],
+          "searchable_content": "element GetForecastResponse attribute ForecastDays type xsd:int attribute DailyForecast type tns:DailyForecast field ForecastDays data type xsd:int field DailyForecast data type tns:DailyForecast"
+        }
+      },
+      "tags": [
+        "soap"
+      ],
+      "operation_id": "GetForecast",
+      "deprecated": false,
+      "soap_action": "http://tempuri.org/GetForecast"
+    }
+  ],
+  "authentication": {
+    "type": "soap",
+    "schemes": [
+      {
+        "name": "SOAP Authentication",
+        "type": "soap",
+        "description": "SOAP-specific authentication mechanisms",
+        "ws_security": true,
+        "basic_auth": true,
+        "certificate_auth": true
+      }
+    ],
+    "description": "SOAP services typically use WS-Security, Basic Auth, or Certificate-based authentication"
+  },
+  "rate_limits": {
+    "description": "Not specified in WSDL"
+  },
+  "documentation_url": "",
+  "integration_steps": [
+    "Obtain WSDL file or URL",
+    "Generate client stubs using WSDL",
+    "Configure SOAP client",
+    "Implement authentication (WS-Security, Basic Auth, etc.)",
+    "Handle SOAP faults and errors",
+    "Implement request/response logging",
+    "Test with SOAP client tools",
+    "Deploy with proper error handling"
+  ],
+  "best_practices": [
+    "Always use HTTPS for SOAP endpoints",
+    "Implement proper SOAP fault handling",
+    "Use WS-Security for authentication",
+    "Validate SOAP messages against schema",
+    "Implement request/response logging",
+    "Use connection pooling for SOAP clients",
+    "Handle timeouts appropriately",
+    "Implement retry logic for transient failures",
+    "Monitor SOAP service performance",
+    "Use appropriate SOAP version (1.1 or 1.2)"
+  ],
+  "common_use_cases": [
+    "SOAP Service Integration",
+    "Enterprise Integration",
+    "Legacy System Integration"
+  ],
+  "tags": [
+    "soap",
+    "wsdl",
+    "enterprise"
+  ],
+  "contact_info": {},
+  "license_info": {},
+  "external_docs": [],
+  "examples": [
+    {
+      "endpoint": "SOAP GetWeather",
+      "soap_action": "http://tempuri.org/GetWeather",
+      "request_example": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Header>\n        <!-- Authentication headers -->\n    </soap:Header>\n    <soap:Body>\n        <GetWeather>\n            <!-- Request parameters -->\n        </GetWeather>\n    </soap:Body>\n</soap:Envelope>",
+      "response_example": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <GetWeatherResponse>\n            <!-- Response data -->\n        </GetWeatherResponse>\n    </soap:Body>\n</soap:Envelope>"
+    },
+    {
+      "endpoint": "SOAP GetForecast",
+      "soap_action": "http://tempuri.org/GetForecast",
+      "request_example": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Header>\n        <!-- Authentication headers -->\n    </soap:Header>\n    <soap:Body>\n        <GetForecast>\n            <!-- Request parameters -->\n        </GetForecast>\n    </soap:Body>\n</soap:Envelope>",
+      "response_example": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n    <soap:Body>\n        <GetForecastResponse>\n            <!-- Response data -->\n        </GetForecastResponse>\n    </soap:Body>\n</soap:Envelope>"
+    }
+  ],
+  "sealId": "105961",
+  "application": "PROFILE",
+  "namespaces": {
+    "ns2": "http://schemas.xmlsoap.org/wsdl/soap/",
+    "wsdl": "http://schemas.xmlsoap.org/wsdl/",
+    "xs": "http://www.w3.org/2001/XMLSchema",
+    "targetNamespace": "http://tempuri.org/"
+  },
+  "schema_version": "1.0",
+  "created_at": "2025-09-12T10:02:11.361125",
+  "updated_at": "2025-09-12T10:02:11.361132"
+}

@@ -2605,6 +2605,13 @@ Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
             print(f"📏 Average chunk size: {chunking_metrics.get('average_chunk_size', 0):.0f} characters")
             print(f"🎯 Chunk types: {', '.join(chunking_metrics.get('chunk_types', []))}")
             
+            # Write CommonAPISpec to JSON file
+            try:
+                json_file_path = self.write_common_spec_to_json(common_spec)
+                print(f"💾 Backup JSON written to: {json_file_path}")
+            except Exception as json_error:
+                print(f"⚠️ Warning: Failed to write JSON backup: {str(json_error)}")
+            
             return True
             
         except Exception as e:
@@ -2618,6 +2625,44 @@ Chunk {chunk.chunk_index + 1} of {chunk.total_chunks}
     def get_last_metrics(self):
         """Get the last metrics data"""
         return self.last_metrics
+    
+    def write_common_spec_to_json(self, common_spec: CommonAPISpec, output_dir: str = "output") -> str:
+        """
+        Write CommonAPISpec as JSON to the output directory
+        
+        Args:
+            common_spec: The CommonAPISpec object to write
+            output_dir: Directory to write the JSON file (default: "output")
+            
+        Returns:
+            str: Path to the written JSON file
+        """
+        try:
+            # Create output directory if it doesn't exist
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+                print(f"📁 Created output directory: {output_dir}")
+            
+            # Generate filename from API name and timestamp
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            safe_name = "".join(c for c in common_spec.api_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
+            safe_name = safe_name.replace(' ', '_').lower()
+            filename = f"{safe_name}_{timestamp}.json"
+            file_path = os.path.join(output_dir, filename)
+            
+            # Convert CommonAPISpec to dictionary
+            spec_dict = asdict(common_spec)
+            
+            # Write to JSON file
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(spec_dict, f, indent=2, ensure_ascii=False)
+            
+            print(f"✅ Written CommonAPISpec to: {file_path}")
+            return file_path
+            
+        except Exception as e:
+            print(f"❌ Error writing CommonAPISpec to JSON: {str(e)}")
+            raise e
     
     def load_json_files_from_output(self, output_dir: str = "output") -> int:
         """
