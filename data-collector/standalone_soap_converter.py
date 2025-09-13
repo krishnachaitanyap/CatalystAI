@@ -583,17 +583,61 @@ class WSDLConnector:
             'is_nested': False
         }
     
+    def _get_qualified_name(self, element: ET.Element, type_name: str, root: ET.Element = None) -> str:
+        """Get fully qualified name for a type, including namespace URI (Java-inspired approach)"""
+        # Use the provided root element
+        if root is None:
+            root = element
+        
+        # Find the namespace URI for the type
+        namespace_uri = None
+        if ':' in type_name:
+            prefix = type_name.split(':', 1)[0]
+            # Look for namespace declaration in the root element
+            for attr_name, attr_value in root.attrib.items():
+                if attr_name.startswith('xmlns') and (attr_name == f'xmlns:{prefix}' or (prefix == 'tns' and attr_name == 'xmlns')):
+                    namespace_uri = attr_value
+                    break
+        
+        # If no namespace found, use the target namespace
+        if namespace_uri is None:
+            namespace_uri = root.get('targetNamespace', '')
+        
+        # Fallback to a simple qualified name if no namespace found
+        if not namespace_uri:
+            return f"default#{type_name}"
+        
+        return f"{namespace_uri}#{type_name}"
+    
+    def _is_cross_namespace_inheritance(self, type_name: str, base_type: str) -> bool:
+        """Check if this is cross-namespace inheritance (same local name, different namespace)"""
+        if ':' not in type_name or ':' not in base_type:
+            return False
+        
+        type_prefix, type_local = type_name.split(':', 1)
+        base_prefix, base_local = base_type.split(':', 1)
+        
+        # Cross-namespace inheritance: same local name but different prefixes
+        return type_local == base_local and type_prefix != base_prefix
+    
     def _extract_complex_type_details(self, complex_type: ET.Element, root: ET.Element, visited_types: set = None) -> Dict[str, Any]:
-        """Extract details from a complex type definition"""
         if visited_types is None:
             visited_types = set()
         
         type_name = complex_type.get('name', '')
-        if type_name in visited_types:
-            logger.warning(f"⚠️ Circular reference detected for type: {type_name}")
+        
+        # Create a namespace-aware qualified name for circular reference detection
+        # This is inspired by Java libraries that use fully qualified names
+        qualified_name = self._get_qualified_name(complex_type, type_name, root)
+        
+        # For complex type details, we use qualified names to distinguish between
+        # types with the same local name but different namespaces
+        if qualified_name in visited_types:
+            logger.warning(f"⚠️ Circular reference detected for qualified type: {qualified_name}")
             return {}
         
-        visited_types.add(type_name)
+        # Add current qualified type to visited set
+        visited_types.add(qualified_name)
         
         details = {
             'name': type_name,
@@ -610,26 +654,27 @@ class WSDLConnector:
                     # Extract base type name
                     prefix, base_type_name = base_type.split(':', 1)
                     
-                    # Check for circular inheritance using a more specific key
-                    inheritance_key = f"{type_name}->{base_type_name}"
+                    # Check for circular inheritance using qualified names
+                    # This is inspired by Java libraries that use fully qualified names for circular reference detection
+                    base_qualified_name = self._get_qualified_name(complex_type, base_type, root)
+                    inheritance_key = f"{qualified_name}->{base_qualified_name}"
+                    
                     if inheritance_key in visited_types:
-                        logger.warning(f"⚠️ Circular inheritance detected: {type_name} -> {base_type_name}")
+                        logger.warning(f"⚠️ Circular inheritance detected: {qualified_name} -> {base_qualified_name}")
                         continue
                     
-                    # Additional check: if the base type name is the same as current type name,
-                    # but they're in different namespaces, this is NOT circular inheritance
-                    if type_name == base_type_name:
-                        logger.debug(f"🔗 Same name inheritance (different namespace): {type_name} extends {base_type}")
-                        # This is likely a valid inheritance across namespaces, not circular
-                        # Don't add to visited types to allow processing
-                        inheritance_visited = visited_types.copy()
+                    # Check if this is cross-namespace inheritance (inspired by Java library patterns)
+                    if self._is_cross_namespace_inheritance(type_name, base_type):
+                        logger.debug(f"🔗 Cross-namespace inheritance detected: {type_name} extends {base_type}")
+                        # For cross-namespace inheritance, use a fresh visited set to allow processing
+                        # This prevents false circular reference detection while still preventing true circular references
+                        inheritance_visited = set()
+                        inheritance_visited.add(inheritance_key)
                     else:
                         logger.debug(f"🔗 Processing inheritance: {type_name} extends {base_type}")
-                        # Create a new visited set for inheritance that excludes the current type
-                        # This allows the base type to be fully processed without false circular references
+                        # For same-namespace inheritance, use the existing visited set
                         inheritance_visited = visited_types.copy()
-                        inheritance_visited.discard(type_name)  # Remove current type to allow base type processing
-                        inheritance_visited.add(inheritance_key)  # Add inheritance key to prevent circular inheritance
+                        inheritance_visited.add(inheritance_key)
                     
                     # Resolve the base type
                     base_type_elem, base_root = self._resolve_type_reference_with_root(base_type_name, root)

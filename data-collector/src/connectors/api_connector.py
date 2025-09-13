@@ -959,6 +959,26 @@ class WSDLConnector:
                 except Exception as e:
                     print(f"⚠️ Warning: Could not load XSD dependency {xsd_file}: {str(e)}")
             
+            # Extract XSD imports from the WSDL
+            for import_elem in root.findall('.//xsd:import', self.namespaces):
+                schema_location = import_elem.get('schemaLocation')
+                namespace = import_elem.get('namespace', '')
+                if schema_location:
+                    # Check if the imported XSD is in the same directory
+                    import os
+                    base_dir = os.path.dirname(main_wsdl_file)
+                    import_path = os.path.join(base_dir, schema_location)
+                    
+                    if os.path.exists(import_path) and import_path not in self.xsd_dependencies:
+                        try:
+                            import_tree = ET.parse(import_path)
+                            import_root = import_tree.getroot()
+                            import_schema_info = self._extract_schema_info(import_root, import_path)
+                            self.xsd_dependencies[import_path] = import_schema_info
+                            print(f"✅ Loaded XSD import: {schema_location}")
+                        except Exception as e:
+                            print(f"⚠️ Failed to load XSD import {schema_location}: {str(e)}")
+            
             # Convert WSDL to common structure with dependencies
             return self._convert_wsdl_to_common(root, main_wsdl_file)
             
@@ -990,7 +1010,7 @@ class WSDLConnector:
         for complex_type in xsd_root.findall('.//xsd:complexType', self.namespaces):
             name = complex_type.get('name')
             if name:
-                schema_info['complex_types'][name] = self._extract_complex_type_details(complex_type)
+                schema_info['complex_types'][name] = self._extract_complex_type_details(complex_type, xsd_root)
         
         # Extract simple types
         for simple_type in xsd_root.findall('.//xsd:simpleType', self.namespaces):
@@ -1050,30 +1070,81 @@ class WSDLConnector:
             print(f"⚠️ Error resolving XSD import {import_location}: {str(e)}")
             return None
     
-    def _resolve_type_reference(self, type_name: str, root: ET.Element) -> Optional[ET.Element]:
-        """Resolve a type reference across all loaded XSD dependencies"""
+    def _get_qualified_name(self, element: ET.Element, type_name: str, root: ET.Element = None) -> str:
+        """Get fully qualified name for a type, including namespace URI"""
+        # Use the provided root element or find it from the element
+        if root is None:
+            # For ElementTree, we need to find the root differently
+            # Since we can't traverse parents easily, we'll use a simpler approach
+            root = element
+        
+        # Find the namespace URI for the type
+        namespace_uri = None
+        if ':' in type_name:
+            prefix = type_name.split(':', 1)[0]
+            # Look for namespace declaration in the root element
+            for attr_name, attr_value in root.attrib.items():
+                if attr_name.startswith('xmlns') and (attr_name == f'xmlns:{prefix}' or (prefix == 'tns' and attr_name == 'xmlns')):
+                    namespace_uri = attr_value
+                    break
+        
+        # If no namespace found, use the target namespace
+        if namespace_uri is None:
+            namespace_uri = root.get('targetNamespace', '')
+        
+        # Fallback to a simple qualified name if no namespace found
+        if not namespace_uri:
+            return f"default#{type_name}"
+        
+        return f"{namespace_uri}#{type_name}"
+    
+    def _is_cross_namespace_inheritance(self, type_name: str, base_type: str) -> bool:
+        """Check if this is cross-namespace inheritance (same local name, different namespace)"""
+        if ':' not in type_name or ':' not in base_type:
+            return False
+        
+        type_prefix, type_local = type_name.split(':', 1)
+        base_prefix, base_local = base_type.split(':', 1)
+        
+        # Cross-namespace inheritance: same local name but different prefixes
+        return type_local == base_local and type_prefix != base_prefix
+    
+    def _resolve_type_reference_with_root(self, type_name: str, root: ET.Element) -> tuple[Optional[ET.Element], Optional[ET.Element]]:
         # First check in the main WSDL/XSD
         complex_type_elem = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
         if complex_type_elem is not None:
-            return complex_type_elem
+            return complex_type_elem, root
         
         # Then check in XSD dependencies
         for xsd_file, schema_info in self.xsd_dependencies.items():
             # Check in main schema
             if type_name in schema_info.get('complex_types', {}):
-                # Return a mock element with the type information
-                mock_element = ET.Element('complexType', name=type_name)
-                mock_element.text = f"Referenced from {xsd_file}"
-                return mock_element
+                # Load the actual XSD file and find the complex type
+                try:
+                    xsd_tree = ET.parse(xsd_file)
+                    xsd_root = xsd_tree.getroot()
+                    external_type = xsd_root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+                    if external_type is not None:
+                        print(f"✅ Found external type {type_name} in {xsd_file}")
+                        return external_type, xsd_root
+                except Exception as e:
+                    print(f"⚠️ Error loading external XSD {xsd_file}: {str(e)}")
             
             # Check in resolved imports
             for import_location, import_schema in schema_info.get('resolved_imports', {}).items():
                 if type_name in import_schema.get('complex_types', {}):
-                    mock_element = ET.Element('complexType', name=type_name)
-                    mock_element.text = f"Referenced from {import_location}"
-                    return mock_element
+                    # Load the actual imported XSD file and find the complex type
+                    try:
+                        import_tree = ET.parse(import_location)
+                        import_root = import_tree.getroot()
+                        external_type = import_root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+                        if external_type is not None:
+                            print(f"✅ Found external type {type_name} in imported file {import_location}")
+                            return external_type, import_root
+                    except Exception as e:
+                        print(f"⚠️ Error loading imported XSD {import_location}: {str(e)}")
         
-        return None
+        return None, None
     
     def parse_wsdl_url(self, url: str) -> CommonAPISpec:
         
@@ -1422,7 +1493,16 @@ class WSDLConnector:
         elif schema_details['type'] and ':' in schema_details['type']:
             # Handle qualified type names (e.g., "tns:GetWeatherRequest")
             prefix, type_name = schema_details['type'].split(':', 1)
+            
+            # First check in the main WSDL/XSD
             referenced_complex_type = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
+            
+            # If not found in main WSDL, check external XSD dependencies
+            if referenced_complex_type is None:
+                referenced_complex_type, external_root = self._resolve_type_reference_with_root(type_name, root)
+                if referenced_complex_type is not None and external_root is not None:
+                    # Use the external root for proper context
+                    root = external_root
             
             if referenced_complex_type is not None:
                 schema_details['complex_type'] = self._extract_complex_type_details(referenced_complex_type, root)
@@ -1444,10 +1524,14 @@ class WSDLConnector:
         # Get the type name to track circular references
         type_name = complex_type.get('name', '')
         
-        # For complex type details, we use a simpler check since we're not tracking paths here
-        # This method is called from _extract_nested_attributes which handles path-based detection
-        if type_name in visited_types:
-            print(f"⚠️ Circular reference detected for type: {type_name}")
+        # Create a namespace-aware qualified name for circular reference detection
+        # This is inspired by Java libraries that use fully qualified names
+        qualified_name = self._get_qualified_name(complex_type, type_name, root)
+        
+        # For complex type details, we use qualified names to distinguish between
+        # types with the same local name but different namespaces
+        if qualified_name in visited_types:
+            print(f"⚠️ Circular reference detected for qualified type: {qualified_name}")
             return {
                 'type': 'complex',
                 'attributes': [],
@@ -1458,8 +1542,8 @@ class WSDLConnector:
                 'circular_reference': True
             }
         
-        # Add current type to visited set
-        visited_types.add(type_name)
+        # Add current qualified type to visited set
+        visited_types.add(qualified_name)
         
         details = {
             'type': 'complex',
@@ -1470,22 +1554,48 @@ class WSDLConnector:
             'inherited_attributes': []  # New field for inherited attributes
         }
         
-        # Check for complexContent with extension (inheritance)
-        complex_content = complex_type.find('xsd:complexContent', self.namespaces)
-        if complex_content is not None:
-            extension = complex_content.find('xsd:extension', self.namespaces)
-            if extension is not None:
+        # Handle inheritance (xsd:extension)
+        for complex_content in complex_type.findall('.//xsd:complexContent', self.namespaces):
+            for extension in complex_content.findall('.//xsd:extension', self.namespaces):
                 base_type = extension.get('base', '')
-                print(f"Found inheritance: extending {base_type}")
-                
-                # Extract inherited attributes from base type
                 if base_type and ':' in base_type:
-                    prefix, type_name = base_type.split(':', 1)
-                    base_complex_type = root.find(f'.//xsd:complexType[@name="{type_name}"]', self.namespaces)
-                    if base_complex_type is not None:
-                        base_details = self._extract_complex_type_details(base_complex_type, root, visited_types.copy())
-                        details['inherited_attributes'] = base_details.get('attributes', [])
+                    # Extract base type name
+                    prefix, base_type_name = base_type.split(':', 1)
+                    
+                    # Check for circular inheritance using qualified names
+                    # This is inspired by Java libraries that use fully qualified names for circular reference detection
+                    base_qualified_name = self._get_qualified_name(complex_type, base_type)
+                    inheritance_key = f"{qualified_name}->{base_qualified_name}"
+                    
+                    if inheritance_key in visited_types:
+                        print(f"⚠️ Circular inheritance detected: {qualified_name} -> {base_qualified_name}")
+                        continue
+                    
+                    # Check if this is cross-namespace inheritance (inspired by Java library patterns)
+                    if self._is_cross_namespace_inheritance(type_name, base_type):
+                        print(f"🔗 Cross-namespace inheritance detected: {type_name} extends {base_type}")
+                        # For cross-namespace inheritance, use a fresh visited set to allow processing
+                        # This prevents false circular reference detection while still preventing true circular references
+                        inheritance_visited = set()
+                        inheritance_visited.add(inheritance_key)
+                    else:
+                        print(f"🔗 Processing inheritance: {type_name} extends {base_type}")
+                        # For same-namespace inheritance, use the existing visited set
+                        inheritance_visited = visited_types.copy()
+                        inheritance_visited.add(inheritance_key)
+                    
+                    # Resolve the base type
+                    base_type_elem, base_root = self._resolve_type_reference_with_root(base_type_name, root)
+                    if base_type_elem is not None:
+                        # Extract base type details with inheritance-aware visited set
+                        base_details = self._extract_complex_type_details(base_type_elem, base_root, inheritance_visited)
+                        
+                        # Merge base type attributes into current type
                         details['attributes'].extend(base_details.get('attributes', []))
+                        details['sequences'].extend(base_details.get('sequences', []))
+                        details['nested_attributes'].extend(base_details.get('nested_attributes', []))
+                        
+                        print(f"✅ Merged {len(base_details.get('attributes', []))} attributes from base type {base_type_name}")
                 
                 # Extract sequences from extension
                 sequences = extension.findall('xsd:sequence', self.namespaces)
@@ -1624,7 +1734,7 @@ class WSDLConnector:
                 return []
                 
             # Use enhanced type resolution that checks XSD dependencies
-            complex_type_elem = self._resolve_type_reference(type_name, root)
+            complex_type_elem, _ = self._resolve_type_reference_with_root(type_name, root)
             
             if complex_type_elem is not None:
                 # Add current path to visited types before recursive call
@@ -1864,6 +1974,20 @@ class WSDLConnector:
                 schema_info['complex_types'].append(complex_type_info)
             
             types_info['schemas'].append(schema_info)
+        
+        # Extract complex types from external XSD dependencies
+        for xsd_file, schema_info in self.xsd_dependencies.items():
+            for type_name, type_details in schema_info.get('complex_types', {}).items():
+                # Check if this type is not already in complex_types
+                if not any(ct['name'] == type_name for ct in types_info['complex_types']):
+                    complex_type_info = {
+                        'name': type_name,
+                        'elements': type_details.get('attributes', []),
+                        'nested_attributes': type_details.get('nested_attributes', []),
+                        'source_file': xsd_file,
+                        'description': f"Complex type: {type_name} (from {xsd_file})"
+                    }
+                    types_info['complex_types'].append(complex_type_info)
         
         return types_info
     
