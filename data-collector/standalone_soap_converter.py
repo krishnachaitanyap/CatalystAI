@@ -550,7 +550,7 @@ class WSDLConnector:
             }
         
         prefix, local_type_name = type_name.split(':', 1)
-        complex_type_elem = self._resolve_type_reference(local_type_name, root)
+        complex_type_elem, _ = self._resolve_type_reference_with_root(local_type_name, root)
         
         if complex_type_elem is not None:
             type_details = {
@@ -616,11 +616,20 @@ class WSDLConnector:
                         logger.warning(f"⚠️ Circular inheritance detected: {type_name} -> {base_type_name}")
                         continue
                     
-                    logger.debug(f"🔗 Processing inheritance: {type_name} extends {base_type}")
-                    
-                    # Create a new visited set for inheritance to avoid false circular references
-                    inheritance_visited = visited_types.copy()
-                    inheritance_visited.add(inheritance_key)  # Add inheritance key to prevent circular inheritance
+                    # Additional check: if the base type name is the same as current type name,
+                    # but they're in different namespaces, this is NOT circular inheritance
+                    if type_name == base_type_name:
+                        logger.debug(f"🔗 Same name inheritance (different namespace): {type_name} extends {base_type}")
+                        # This is likely a valid inheritance across namespaces, not circular
+                        # Don't add to visited types to allow processing
+                        inheritance_visited = visited_types.copy()
+                    else:
+                        logger.debug(f"🔗 Processing inheritance: {type_name} extends {base_type}")
+                        # Create a new visited set for inheritance that excludes the current type
+                        # This allows the base type to be fully processed without false circular references
+                        inheritance_visited = visited_types.copy()
+                        inheritance_visited.discard(type_name)  # Remove current type to allow base type processing
+                        inheritance_visited.add(inheritance_key)  # Add inheritance key to prevent circular inheritance
                     
                     # Resolve the base type
                     base_type_elem, base_root = self._resolve_type_reference_with_root(base_type_name, root)
@@ -824,7 +833,7 @@ class WSDLConnector:
         """Extract data types from WSDL"""
         data_types = []
         
-        # Extract complex types
+        # Extract complex types from main WSDL
         for complex_type in root.findall('.//xsd:complexType', self.namespaces):
             type_name = complex_type.get('name', '')
             if type_name:
@@ -836,6 +845,19 @@ class WSDLConnector:
                     'properties': type_details.get('attributes', []),
                     'nested_attributes': type_details.get('nested_attributes', [])
                 })
+        
+        # Extract complex types from external XSD dependencies
+        for xsd_file, schema_info in self.xsd_dependencies.items():
+            for type_name, type_details in schema_info.get('complex_types', {}).items():
+                # Check if this type is not already in data_types
+                if not any(dt['name'] == type_name for dt in data_types):
+                    data_types.append({
+                        'name': type_name,
+                        'type': 'complex',
+                        'description': f"Complex type: {type_name} (from {xsd_file})",
+                        'properties': type_details.get('attributes', []),
+                        'nested_attributes': type_details.get('nested_attributes', [])
+                    })
         
         # Extract simple types
         for simple_type in root.findall('.//xsd:simpleType', self.namespaces):
