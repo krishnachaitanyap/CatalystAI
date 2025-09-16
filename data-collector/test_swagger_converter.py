@@ -614,6 +614,12 @@ def run_tests():
             json.dump(openapi3_spec, f, indent=2)
         print(f"   ✅ Created {openapi3_file.name}")
         
+        # YAML test file
+        yaml_file = input_dir / "test_yaml.yaml"
+        with open(yaml_file, 'w') as f:
+            yaml.dump(swagger2_spec, f, default_flow_style=False, indent=2)
+        print(f"   ✅ Created {yaml_file.name}")
+        
         # Test the converter
         print("\n🔄 Testing converter...")
         

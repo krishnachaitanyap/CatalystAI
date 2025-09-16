@@ -31,6 +31,7 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional, Set, Union
 from datetime import datetime
 import traceback
+import yaml
 import hashlib
 from functools import lru_cache
 from collections import defaultdict, deque
@@ -60,6 +61,30 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+
+def parse_json_or_yaml(file_path: Path) -> Optional[Dict[str, Any]]:
+    """Parse JSON or YAML file and return the parsed content"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Try JSON first
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError:
+            pass
+        
+        # Try YAML
+        try:
+            return yaml.safe_load(content)
+        except yaml.YAMLError as e:
+            logger.warning(f"Failed to parse YAML file {file_path}: {str(e)}")
+            return None
+            
+    except Exception as e:
+        logger.warning(f"Error reading file {file_path}: {str(e)}")
+        return None
 
 
 class IntelligentCache:
@@ -585,27 +610,18 @@ class SwaggerConverter:
         # Filter out non-Swagger files by checking content
         valid_files = []
         for file_path in swagger_files:
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                    
-                # Try to parse as JSON first
-                try:
-                    spec = json.loads(content)
-                except json.JSONDecodeError:
-                    # Try YAML parsing (would need PyYAML)
-                    logger.warning(f"Skipping non-JSON file: {file_path}")
-                    continue
-                
-                # Check if it's a Swagger/OpenAPI file
-                if self._is_swagger_file(spec):
-                    valid_files.append(file_path)
-                else:
-                    logger.info(f"Skipping non-Swagger file: {file_path}")
-                    
-            except Exception as e:
-                logger.warning(f"Error checking file {file_path}: {str(e)}")
+            # Parse JSON or YAML file
+            spec = parse_json_or_yaml(file_path)
+            
+            if spec is None:
+                logger.warning(f"Skipping unparseable file: {file_path}")
                 continue
+            
+            # Check if it's a Swagger/OpenAPI file
+            if self._is_swagger_file(spec):
+                valid_files.append(file_path)
+            else:
+                logger.info(f"Skipping non-Swagger file: {file_path}")
         
         logger.info(f"🔍 Found {len(valid_files)} Swagger/OpenAPI files")
         return valid_files
@@ -623,11 +639,11 @@ class SwaggerConverter:
         try:
             logger.info(f"🔄 Processing: {file_path.name}")
             
-            # Read and parse the file
-            with open(file_path, 'r', encoding='utf-8') as f:
-                content = f.read()
+            # Parse JSON or YAML file
+            spec = parse_json_or_yaml(file_path)
             
-            spec = json.loads(content)
+            if spec is None:
+                raise ValueError(f"Failed to parse file: {file_path}")
             
             # Parse the specification
             parsed_spec = self.swagger_parser.parse_swagger_spec(spec, str(file_path))
